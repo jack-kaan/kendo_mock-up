@@ -2560,9 +2560,9 @@ const AvatarSpaceModal = ({ user, onClose }) => {
 
                     <div className="space-y-2">
 
-                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 멋진  찌름이네요!</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 멋진 아바타 방이에요. 호구세트는 얼마에요?</p>
 
-                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 저도 연습해야겠습니다.</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 옛날 싸이월드 생각나네요 ㅎㅎㅎ</p>
 
                     </div>
 
