@@ -380,7 +380,7 @@ const allRankings = {
 
 const mockMatchHistory = [
 
-    { id: 1, opponent: mockUsers[0], result: 'win', date: '2024-05-20', score: '2-1', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '김형섭 선수의 머리치기가 매우 인상적인 경기였습니다. 한승오 선수는 침착하게 받아치며 점수를 획득했습니다.', likes: 128, dislikes: 5, comments: [{id: 1, text: '정말 멋진 경기였어요!'}, {id: 2, text: '두 분 다 대단하시네요.'}] },
+    { id: 1, opponent: mockUsers[0], result: 'win', date: '2024-05-20', score: '2-1', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '김형섭 선수의 머리치기가 매우 인상적인 경기였습니다. 한승오 선수는 침착하게 받아치며 점수를 획득했습니다.', likes: 128, dislikes: 5, comments: [{id: 1, text: '멋진 아바타 방이에요. 호구세트는 얼마에요?'}, {id: 2, text: '옛날 싸이월드 생각나네요 ㅎㅎㅎ'}] },
 
     { id: 2, opponent: mockUsers[1], result: 'loss', date: '2024-05-18', score: '0-1', status: 'completed', privacy: 'private', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', likes: 0, dislikes: 0, comments: [], privacySettings: { video: true, comments: false, likes: false, commentary: false } },
 
