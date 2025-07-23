@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Swords, Trophy, User as UserIcon, MapPin, Star, Shield, BarChart2, Settings, Users, MessageSquare, ThumbsUp, Share2, Award, BookOpen, Video, ShieldCheck, CheckCircle2, Store, Tag, X, ThumbsDown, Lock, Unlock, CheckSquare, Square, ArrowUp, ArrowDown, Flame, ChevronDown, Megaphone, Send, FileUp, Plane, Info, Gift, PlusCircle, Heart, Edit3, ChevronsLeft, ChevronsRight, FileText, BarChart as BarChartIcon } from 'lucide-react';
+import { Home, Swords, Trophy, User as UserIcon, MapPin, Star, Shield, BarChart2, Settings, Users, MessageSquare, ThumbsUp, Share2, Award, BookOpen, Video, ShieldCheck, CheckCircle2, Store, Tag, X, ThumbsDown, Lock, Unlock, CheckSquare, Square, ArrowUp, ArrowDown, Flame, ChevronDown, Megaphone, Send, FileUp, Plane, Info, Gift, PlusCircle, Heart, Edit3, ChevronsLeft, ChevronsRight, FileText, BarChart as BarChartIcon, Calendar } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -34,6 +34,8 @@ type KendoUser = {
     vsHigherRank: { wins: number; losses: number; draws: number };
     interestingStats: { label: string; value: string }[];
   };
+  specialty: string;
+  characteristics: string[];
 };
 
 type Match = {
@@ -169,15 +171,17 @@ const currentUser = {
         { label: '최다 득점 경기', value: '5점 (vs 이정현)' },
         { label: '심판 판정 항의 횟수', value: '0회' },
     ]
-  }
+  },
+  specialty: '받아허리치기',
+  characteristics: ['수비적', '침착함', '기회를 잘 포착함', '지구력 좋음', '예의 바름'],
 };
 
 const mockUsers = [
-  { id: 2, name: '김형섭', dojang: '주이회', location: '대전', platformRank: 1550, officialRank: '2단', wins: 51, losses: 10, badges: ['5-Win Streak'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=HS', avatarItems: { jukdoCount: 5 }, rankHistory: [{date: '2024-01-01', rank: 1500}, {date: '2024-03-01', rank: 1520}, {date: '2024-05-01', rank: 1540}, {date: '2024-07-01', rank: 1550}], detailedStats: currentUser.detailedStats },
-  { id: 3, name: '이노연', dojang: '주이회', location: '대전', platformRank: 1580, officialRank: '2단', wins: 30, losses: 8, badges: ['First Match'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=NY', avatarItems: { jukdoCount: 2 }, rankHistory: [{date: '2024-01-01', rank: 1590}, {date: '2024-03-01', rank: 1585}, {date: '2024-05-01', rank: 1580}, {date: '2024-07-01', rank: 1580}], detailedStats: currentUser.detailedStats },
-  { id: 4, name: '문준형', dojang: '평송센터', location: '대전', platformRank: 1450, officialRank: '4단', wins: 78, losses: 20, badges: ['Weekly Activity King'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH', avatarItems: { jukdoCount: 4 }, rankHistory: [{date: '2024-01-01', rank: 1400}, {date: '2024-03-01', rank: 1420}, {date: '2024-05-01', rank: 1460}, {date: '2024-07-01', rank: 1450}], detailedStats: currentUser.detailedStats },
-  { id: 5, name: '이정현', dojang: '원검도관', location: '서울', platformRank: 1420, officialRank: '2단', wins: 25, losses: 12, badges: [], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH2', avatarItems: { jukdoCount: 1 }, rankHistory: [{date: '2024-01-01', rank: 1410}, {date: '2024-03-01', rank: 1400}, {date: '2024-05-01', rank: 1415}, {date: '2024-07-01', rank: 1420}], detailedStats: currentUser.detailedStats },
-  { id: 6, name: '남경오', dojang: '경호관', location: '구미', platformRank: 1490, officialRank: '5단', wins: 18, losses: 5, badges: ['Mentor'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=KH', avatarItems: { jukdoCount: 6 }, rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1485}, {date: '2024-05-01', rank: 1495}, {date: '2024-07-01', rank: 1490}], detailedStats: currentUser.detailedStats },
+  { id: 2, name: '김형섭', dojang: '주이회', location: '대전', platformRank: 1550, officialRank: '2단', wins: 51, losses: 10, badges: ['5-Win Streak'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=HS', avatarItems: { jukdoCount: 5 }, rankHistory: [{date: '2024-01-01', rank: 1500}, {date: '2024-03-01', rank: 1520}, {date: '2024-05-01', rank: 1540}, {date: '2024-07-01', rank: 1550}], detailedStats: currentUser.detailedStats, specialty: '빠른 머리치기', characteristics: ['공격적', '스피드가 빠름', '압박이 강함'] },
+  { id: 3, name: '이노연', dojang: '주이회', location: '대전', platformRank: 1580, officialRank: '2단', wins: 30, losses: 8, badges: ['First Match'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=NY', avatarItems: { jukdoCount: 2 }, rankHistory: [{date: '2024-01-01', rank: 1590}, {date: '2024-03-01', rank: 1585}, {date: '2024-05-01', rank: 1580}, {date: '2024-07-01', rank: 1580}], detailedStats: currentUser.detailedStats, specialty: '손목치기', characteristics: ['신중함', '정확도가 높음', '방어가 견고함'] },
+  { id: 4, name: '문준형', dojang: '평송센터', location: '대전', platformRank: 1450, officialRank: '4단', wins: 78, losses: 20, badges: ['Weekly Activity King'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH', avatarItems: { jukdoCount: 4 }, rankHistory: [{date: '2024-01-01', rank: 1400}, {date: '2024-03-01', rank: 1420}, {date: '2024-05-01', rank: 1460}, {date: '2024-07-01', rank: 1450}], detailedStats: currentUser.detailedStats, specialty: '퇴격머리치기', characteristics: ['노련함', '변칙적', '체력이 좋음'] },
+  { id: 5, name: '이정현', dojang: '원검도관', location: '서울', platformRank: 1420, officialRank: '2단', wins: 25, losses: 12, badges: [], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH2', avatarItems: { jukdoCount: 1 }, rankHistory: [{date: '2024-01-01', rank: 1410}, {date: '2024-03-01', rank: 1400}, {date: '2024-05-01', rank: 1415}, {date: '2024-07-01', rank: 1420}], detailedStats: currentUser.detailedStats, specialty: '찌름', characteristics: ['과감함', '한방이 있음', '예측이 어려움'] },
+  { id: 6, name: '남경오', dojang: '경호관', location: '구미', platformRank: 1490, officialRank: '5단', wins: 18, losses: 5, badges: ['Mentor'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=KH', avatarItems: { jukdoCount: 6 }, rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1485}, {date: '2024-05-01', rank: 1495}, {date: '2024-07-01', rank: 1490}], detailedStats: currentUser.detailedStats, specialty: '상단', characteristics: ['기세가 강함', '압도적', '경험이 많음'] },
 ];
 
 const allUsers = [currentUser, ...mockUsers];
@@ -207,6 +211,7 @@ const mockMatchHistory = [
     { id: 8, opponent: mockUsers[3], result: 'loss', date: '2024-04-10', score: '1-2', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '접전 끝에 아쉽게 패배했습니다.', likes: 70, dislikes: 8, comments: [] },
     { id: 5, opponent: mockUsers[3], date: '2025-07-28', time: '18:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
     { id: 6, opponent: mockUsers[2], date: '2025-08-04', time: '19:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
+    { id: 9, opponent: mockUsers[4], date: '2025-08-10', time: '20:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
 ];
 
 const communityPosts = [
@@ -237,8 +242,8 @@ const tradePosts = [
 ];
 
 const mockChats = [
-    { id: 101, type: 'club', partner: { id: 1001, name: '대전 카이스트 주이회', avatarUrl: 'https://placehold.co/100x100/0f766e/e0f2f1?text=K', members: 35 }, lastMessage: "김형섭: 이번 주 금요일 정기 수련 공지입니다.", timestamp: "10:45 AM", unread: 2, messages: Array.from({ length: 20 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '김형섭' : '이노연'), text: `안녕하세요, 채팅 메시지 ${i+1}입니다.`, timestamp: `10:${45+i} AM` })) },
-    { id: 102, type: 'group', partner: { id: 1002, name: '주말반 단톡방', avatarUrl: 'https://placehold.co/100x100/4a044e/f3e8ff?text=주말', members: 21 }, lastMessage: "이노연: 다들 고생하셨습니다!", timestamp: "어제", unread: 5, messages: Array.from({ length: 20 }, (_, i) => ({ id: i, sender: i % 2 === 0 ? 'me' : '이노연', text: `주말 수련 정말 좋았어요! ${i+1}`, timestamp: `어제 20:${11+i}`})) },
+    { id: 101, type: 'club', partner: { id: 1001, name: '대전 카이스트 주이회', avatarUrl: 'https://placehold.co/100x100/0f766e/e0f2f1?text=K', members: 35 }, lastMessage: "김형섭: 이번 주 금요일 정기 수련 공지입니다.", timestamp: "10:45 AM", unread: 2, messages: Array.from({ length: 5 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '김형섭' : '이노연'), text: `안녕하세요, 채팅 메시지 ${i+1}입니다.`, timestamp: `10:${45+i} AM` })) },
+    { id: 102, type: 'group', partner: { id: 1002, name: '주말반 단톡방', avatarUrl: 'https://placehold.co/100x100/4a044e/f3e8ff?text=주말', members: 21 }, lastMessage: "이노연: 다들 고생하셨습니다!", timestamp: "어제", unread: 5, messages: Array.from({ length: 5 }, (_, i) => ({ id: i, sender: i % 2 === 0 ? 'me' : '이노연', text: `주말 수련 정말 좋았어요! ${i+1}`, timestamp: `어제 20:${11+i}`})) },
     { id: 103, type: 'group', partner: { id: 1003, name: '4단 승단 준비방', avatarUrl: 'https://placehold.co/100x100/7f1d1d/fee2e2?text=4단', members: 5 }, lastMessage: "문준형: 본국검법 영상 공유합니다.", timestamp: "2일 전", unread: 0, messages: [] },
     { id: 1, type: 'private', partner: mockUsers[0], lastMessage: "네, 좋습니다. 그럼 토요일 2시에 뵙겠습니다.", timestamp: "10:45 AM", unread: 0, messages: [
         {id: 1, sender: 'me', text: '김형섭님, 이번주 토요일에 대련 가능하신가요?', timestamp: '10:40 AM'},
@@ -250,6 +255,10 @@ const mockChats = [
         {id: 1, sender: 'other', text: '한승오님, 어제 대련 즐거웠습니다.', timestamp: '어제'},
         {id: 2, sender: 'other', text: '고생하셨습니다. 덕분에 많이 배웠습니다!', timestamp: '어제'},
     ]},
+    { id: 104, type: 'group', partner: { id: 1004, name: '대전지역 교류회', avatarUrl: 'https://placehold.co/100x100/065f46/d1fae5?text=교류', members: 42 }, lastMessage: "주최자: 다음 달 교류전 장소 투표합니다.", timestamp: "3일 전", unread: 0, messages: Array.from({ length: 3 }, (_, i) => ({id: i, sender: '주최자', text: `교류전 공지사항 ${i+1}`, timestamp: `3일 전`})) },
+    { id: 105, type: 'group', partner: { id: 1005, name: '장비 관리 정보방', avatarUrl: 'https://placehold.co/100x100/7c2d12/ffedd5?text=장비', members: 58 }, lastMessage: "남경오: 죽도 기름칠은 한 달에 한 번이 좋습니다.", timestamp: "4일 전", unread: 3, messages: [] },
+    { id: 3, type: 'private', partner: mockUsers[2], lastMessage: "네 알겠습니다. 다음에 뵙겠습니다.", timestamp: "5일 전", unread: 0, messages: [] },
+    { id: 4, type: 'private', partner: mockUsers[3], lastMessage: "영상 잘 봤습니다. 자세가 정말 좋으시네요.", timestamp: "6일 전", unread: 0, messages: [] },
 ];
 
 // --- NEW DATA FOR ANNOUNCEMENTS & SHOP ---
@@ -370,16 +379,31 @@ const shopItems = [
 ];
 
 const questList = [
-    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true },
-    { id: 2, text: "퇴격으로만 승리하기", current: 0, target: 1, unit: "승", selected: false },
-    { id: 3, text: "3연승 달성하기", current: 1, target: 3, unit: "연승", selected: false },
-    { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", selected: true },
-    { id: 5, text: "하루에 5명과 대련하기", current: 2, target: 5, unit: "명", selected: false },
-    { id: 6, text: "새로운 기술로 득점하기", current: 0, target: 1, unit: "회", selected: false },
-    { id: 7, text: "다른 도장 방문하여 교류전하기", current: 2, target: 3, unit: "회", selected: true },
-    { id: 8, text: "한판승 3회 달성하기", current: 1, target: 3, unit: "회", selected: false },
-    { id: 9, text: "커뮤니티에 후기글 작성하기", current: 0, target: 1, unit: "회", selected: false },
-    { id: 10, text: "대련 영상 3개 업로드하기", current: 1, target: 3, unit: "개", selected: false },
+    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요. 공식 경기 및 연습 대련 모두 포함됩니다.' },
+    { id: 2, text: "퇴격으로만 승리하기", current: 0, target: 1, unit: "승", selected: false, description: '오직 퇴격 기술(퇴격머리, 퇴격손목, 퇴격허리)로만 득점하여 한 판을 승리해야 합니다.' },
+    { id: 3, text: "3연승 달성하기", current: 1, target: 3, unit: "연승", selected: false, description: '무승부나 패배 없이 3번 연속으로 대련에서 승리하세요.' },
+    { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", selected: true, description: '자신보다 공인 단수가 2단 이상 높은 상대를 이겨야 합니다.' },
+    { id: 5, text: "하루에 5명과 대련하기", current: 2, target: 5, unit: "명", selected: false, description: '하루 동안 5명의 다른 상대와 대련을 완료하세요.' },
+    { id: 6, text: "새로운 기술로 득점하기", current: 0, target: 1, unit: "회", selected: false, description: '평소에 잘 사용하지 않던 기술로 득점에 성공하세요. (예: 받아허리치기, 발목치기)' },
+    { id: 7, text: "다른 도장 방문하여 교류전하기", current: 2, target: 3, unit: "회", selected: true, description: '소속된 도장이 아닌 다른 도장을 방문하여 3회 이상 교류전을 진행하세요.' },
+    { id: 8, text: "한판승 3회 달성하기", current: 1, target: 3, unit: "회", selected: false, description: '상대에게 한 점도 내주지 않고 2점을 먼저 획득하여 승리하는 경기를 3회 만드세요.' },
+    { id: 9, text: "커뮤니티에 후기글 작성하기", current: 0, target: 1, unit: "회", selected: false, description: '대련 후기나 수련 일지를 커뮤니티 수다방에 작성하여 공유하세요.' },
+    { id: 10, text: "대련 영상 3개 업로드하기", current: 1, target: 3, unit: "개", selected: false, description: '자신의 대련 영상을 3개 이상 커뮤니티에 업로드하여 다른 사람들의 조언을 구해보세요.' },
+];
+
+const mockPointHistory = [
+    { date: '2025-07-21', change: '+10', reason: '김형섭님과 대련 승리' },
+    { date: '2025-07-19', change: '-8', reason: '이노연님과 대련 패배' },
+    { date: '2025-07-15', change: '+5', reason: '커뮤니티 활동 보상' },
+    { date: '2025-07-12', change: '+12', reason: '문준형님과 대련 승리' },
+    { date: '2025-07-10', change: '-1500', reason: '기프트콘 교환' },
+    { date: '2025-07-01', change: '+20', reason: '이달의 퀘스트 완료' },
+];
+
+const mockGoals = [
+    { id: 1, text: '사범자격심사 도전', completed: true },
+    { id: 2, text: '4단 강습회 참석', completed: false },
+    { id: 3, text: 'vs100명 대련', completed: false, current: 57, target: 100 },
 ];
 
 // --- [NEW] DATA FOR THEORY EXAM ---
@@ -478,14 +502,15 @@ const Card = ({ children, className, onClick }) => (
   </div>
 );
 
-const UserAvatar = ({ user, size = 'md' }) => {
+const UserAvatar = ({ user, size = 'md', onClick }) => {
     const sizeClasses = { sm: 'w-10 h-10', md: 'w-16 h-16', lg: 'w-24 h-24' };
     const defaultAvatar = user?.name === '익명' 
         ? 'https://placehold.co/100x100/475569/94a3b8?text=익명'
         : `https://placehold.co/100x100/1e293b/94a3b8?text=??`;
     
     return (
-        <img src={user?.avatarUrl || defaultAvatar} alt={user?.name || 'User Avatar'} className={cn('bg-slate-700 border-2 border-slate-600 rounded-full flex-shrink-0 object-cover', sizeClasses[size])}
+        <img src={user?.avatarUrl || defaultAvatar} alt={user?.name || 'User Avatar'} className={cn('bg-slate-700 border-2 border-slate-600 rounded-full flex-shrink-0 object-cover', sizeClasses[size], onClick && 'cursor-pointer')}
+            onClick={onClick}
             onError={(e) => { const target = e.target; target.onerror = null; target.src = defaultAvatar; }}
         />
     );
@@ -753,7 +778,7 @@ const GoalSettingModal = ({ onClose }) => {
                     <h3 className="text-sm font-medium text-slate-300 mb-2">기본 목표</h3>
                     <label className="flex items-center gap-2 cursor-pointer bg-slate-700/50 p-2 rounded-lg">
                         <input type="checkbox" className="w-4 h-4 accent-blue-500" />
-                        <span>100인 베기</span>
+                        <span>vs100명 대련</span>
                     </label>
                 </div>
                 <div className="flex gap-3 mt-4">
@@ -766,17 +791,169 @@ const GoalSettingModal = ({ onClose }) => {
     );
 };
 
+// --- [NEW] Home Screen Modals ---
+const PointHistoryModal = ({ history, onClose }) => (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                <h2 className="text-lg font-bold">포인트 누적 히스토리</h2>
+                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+                <div className="space-y-2">
+                    {history.map((item, index) => (
+                        <div key={index} className="bg-slate-700/50 p-3 rounded-lg flex justify-between items-center">
+                            <div>
+                                <p className="text-sm font-semibold">{item.reason}</p>
+                                <p className="text-xs text-slate-400">{item.date}</p>
+                            </div>
+                            <span className={cn("font-bold", item.change.startsWith('+') ? 'text-green-400' : 'text-red-400')}>{item.change}P</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+const MatchActionModal = ({ opponent, type, onClose }) => {
+    const title = type === 'cancel' ? '대련 취소' : '대련 연장';
+    return (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white">
+                <h2 className="text-xl font-bold text-center mb-4">{title}</h2>
+                <p className="text-center text-sm text-slate-400 mb-4">{opponent.name}님에게 {type === 'cancel' ? '취소' : '연장'} 요청 메시지를 보냅니다.</p>
+                {type === 'postpone' && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-slate-300 mb-1">날짜 제안</label>
+                        <input type="date" className="w-full bg-slate-700 border border-slate-600 rounded-lg p-2 text-white" />
+                    </div>
+                )}
+                <textarea rows={3} placeholder="메시지를 입력하세요..." className="w-full bg-slate-700 border border-slate-600 rounded-lg p-2 text-white placeholder:text-slate-500 mb-4"></textarea>
+                <div className="flex gap-3">
+                    <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
+                    <button onClick={() => { alert('메시지를 발송했습니다.'); onClose(); }} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">발송</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const OpponentDetailModal = ({ opponent, onClose }) => {
+    const [action, setAction] = React.useState(null); // 'cancel' or 'postpone'
+
+    if (action) {
+        return <MatchActionModal opponent={opponent} type={action} onClose={() => { setAction(null); onClose(); }} />;
+    }
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">상대 정보</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto space-y-4">
+                    <div className="flex items-center gap-4">
+                        <UserAvatar user={opponent} size="lg" />
+                        <div>
+                            <p className="text-2xl font-bold">{opponent.name}</p>
+                            <p className="text-md text-slate-300">{opponent.officialRank} / {opponent.location}</p>
+                            <p className="text-md font-semibold text-blue-400">{opponent.platformRank}P</p>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                        <div className="bg-slate-700/50 p-2 rounded-lg">
+                            <p className="text-xs text-slate-400">전적</p>
+                            <p className="font-bold">{opponent.wins + opponent.losses}전</p>
+                        </div>
+                        <div className="bg-slate-700/50 p-2 rounded-lg">
+                            <p className="text-xs text-slate-400">승</p>
+                            <p className="font-bold text-green-400">{opponent.wins}승</p>
+                        </div>
+                        <div className="bg-slate-700/50 p-2 rounded-lg">
+                            <p className="text-xs text-slate-400">패</p>
+                            <p className="font-bold text-red-400">{opponent.losses}패</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-slate-300 mb-2">특기</h4>
+                        <p className="bg-slate-700/50 p-2 rounded-lg text-sm font-medium">{opponent.specialty}</p>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-slate-300 mb-2">특징</h4>
+                        <div className="flex flex-wrap gap-2">
+                            {opponent.characteristics.map(char => (
+                                <span key={char} className="bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-1 rounded-full">{char}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="p-4 flex-shrink-0 border-t border-slate-700 flex gap-3">
+                    <button onClick={() => setAction('cancel')} className="w-full bg-red-600/80 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
+                    <button onClick={() => setAction('postpone')} className="w-full bg-yellow-600/80 hover:bg-yellow-700 text-white font-bold py-3 rounded-lg transition-colors">연장</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const QuestDetailModal = ({ quest, onClose }) => (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white">
+            <h2 className="text-xl font-bold text-center mb-2">{quest.text}</h2>
+            <p className="text-center text-sm text-slate-400 mb-4">{quest.description}</p>
+            <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">닫기</button>
+        </div>
+    </div>
+);
+
+const GoalChecklistModal = ({ goals, onClose }) => {
+    const [checkedGoals, setCheckedGoals] = React.useState(goals.filter(g => g.completed).map(g => g.id));
+
+    const handleToggle = (goalId) => {
+        setCheckedGoals(prev => 
+            prev.includes(goalId) ? prev.filter(id => id !== goalId) : [...prev, goalId]
+        );
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                 <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">2025년 목표</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto space-y-3">
+                    {goals.map(goal => (
+                         <label key={goal.id} className="flex items-center gap-3 cursor-pointer bg-slate-700/50 p-3 rounded-lg">
+                            <input type="checkbox" checked={checkedGoals.includes(goal.id)} onChange={() => handleToggle(goal.id)} className="w-5 h-5 accent-blue-500" />
+                            <span className={cn("flex-grow", checkedGoals.includes(goal.id) && "line-through text-slate-500")}>{goal.text}</span>
+                            {goal.target && (
+                                <span className="text-sm font-semibold">{goal.current} / {goal.target}</span>
+                            )}
+                        </label>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 const HomeScreen = ({ user, onNavigate }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
-  const [isGoalModalOpen, setIsGoalModalOpen] = React.useState(false);
-  const [isGifticonModalOpen, setIsGifticonModalOpen] = React.useState(false);
-  const [isQuestModalOpen, setIsQuestModalOpen] = React.useState(false);
-  const [activeQuests, setActiveQuests] = React.useState(questList.filter(q => q.selected));
-  const [isAvatarSpaceOpen, setIsAvatarSpaceOpen] = React.useState(false);
+  const [modal, setModal] = React.useState(null); // null, 'points', 'opponent', 'quest', 'goal_edit', 'goal_check'
+  const [selectedItem, setSelectedItem] = React.useState(null);
 
-  const handleSaveQuests = (newQuests) => {
-      setActiveQuests(newQuests);
-      setIsQuestModalOpen(false);
+  const openModal = (type, item = null) => {
+    setModal(type);
+    setSelectedItem(item);
+  };
+
+  const closeModal = () => {
+    setModal(null);
+    setSelectedItem(null);
   };
 
   const getDday = (dateString) => {
@@ -793,20 +970,20 @@ const HomeScreen = ({ user, onNavigate }) => {
         <Card>
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
-                    <UserAvatar user={user} />
+                    <UserAvatar user={user} onClick={() => onNavigate('profile')} />
                     <div>
                         <p className="text-slate-400">환영합니다,</p>
                         <h1 className="text-2xl font-bold">{user.name}님</h1>
                     </div>
                 </div>
-                <div onClick={() => setIsAvatarSpaceOpen(true)} className="text-center cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
+                <div onClick={() => openModal('avatar_space')} className="text-center cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
                     <AvatarIconSVG />
                     <p className="text-xs font-semibold mt-1">나의 공간</p>
                 </div>
             </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-blue-500">
+        <Card onClick={() => openModal('points')} className="bg-gradient-to-br from-blue-600 to-blue-800 border-blue-500">
             <div className="flex justify-between items-start">
                 <div>
                     <p className="text-blue-200">플랫폼 랭크</p>
@@ -817,7 +994,7 @@ const HomeScreen = ({ user, onNavigate }) => {
                     <p className="text-xl font-semibold text-white flex items-center gap-2">{user.officialRank} <ShieldCheck className="w-5 h-5 text-yellow-300"/></p>
                 </div>
             </div>
-             <button onClick={() => setIsGifticonModalOpen(true)} className="mt-3 w-full flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-300 font-bold py-2 rounded-lg text-sm transition-colors">
+             <button onClick={(e) => { e.stopPropagation(); openModal('gift'); }} className="mt-3 w-full flex items-center justify-center gap-2 bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-300 font-bold py-2 rounded-lg text-sm transition-colors">
                 <Gift size={16} /> 기프트콘 교환하기
             </button>
         </Card>
@@ -825,10 +1002,10 @@ const HomeScreen = ({ user, onNavigate }) => {
         {upcomingMatches.length > 0 && <div>
             <h2 className="text-xl font-semibold mb-3">다가오는 대련</h2>
             <div className="space-y-3">
-            {upcomingMatches.slice(0, 2).map(match => {
+            {upcomingMatches.slice(0, 3).map(match => {
                 const dDay = getDday(match.date);
                 return (
-                    <Card key={match.id}>
+                    <Card key={match.id} onClick={() => openModal('opponent', match.opponent)}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <UserAvatar user={match.opponent} size="sm" />
@@ -851,11 +1028,11 @@ const HomeScreen = ({ user, onNavigate }) => {
         <div>
             <div className="flex justify-between items-center mb-3">
                 <h2 className="text-xl font-semibold">이달의 퀘스트</h2>
-                <button onClick={() => setIsQuestModalOpen(true)} className="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition-colors">퀘스트 설정</button>
+                <button onClick={() => openModal('quest_select')} className="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition-colors">퀘스트 설정</button>
             </div>
             <div className="space-y-3">
-                {activeQuests.map(quest => (
-                     <Card key={quest.id} className="bg-gradient-to-r from-green-500 to-teal-600 border-green-500">
+                {questList.filter(q => q.selected).map(quest => (
+                     <Card key={quest.id} onClick={() => openModal('quest_detail', quest)} className="bg-gradient-to-r from-green-500 to-teal-600 border-green-500">
                         <div className="flex justify-between items-center">
                             <p className="font-bold">{quest.text}</p>
                             <p className="text-sm font-semibold opacity-90">{`${quest.current} / ${quest.target}${quest.unit}`}</p>
@@ -871,25 +1048,25 @@ const HomeScreen = ({ user, onNavigate }) => {
         <div>
             <div className="flex justify-between items-center mb-3">
                 <h2 className="text-xl font-semibold">2025년 목표</h2>
-                <button onClick={() => setIsGoalModalOpen(true)} className="p-2 text-slate-400 hover:text-white"><Settings size={18} /></button>
+                <button onClick={() => openModal('goal_edit')} className="p-2 text-slate-400 hover:text-white"><Settings size={18} /></button>
             </div>
-            <Card>
+            <Card onClick={() => openModal('goal_check')}>
                 <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <span className="font-medium">사범자격심사 도전</span>
-                        <span className="flex items-center gap-1.5 text-green-400 font-semibold text-sm"><CheckCircle2 className="w-4 h-4" /> 완료</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="font-medium">4단 강습회 참석</span>
-                        <span className="text-slate-500 font-semibold text-sm">예정</span>
-                    </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="font-medium">100인 베기</span>
-                            <span className="font-semibold text-sm">57 / 100명</span>
+                    {mockGoals.map(goal => (
+                         <div key={goal.id}>
+                            <div className="flex justify-between items-center mb-1">
+                                <span className="font-medium">{goal.text}</span>
+                                {goal.target ? (
+                                    <span className="font-semibold text-sm">{goal.current} / {goal.target}명</span>
+                                ) : (
+                                    <span className={cn("flex items-center gap-1.5 font-semibold text-sm", goal.completed ? "text-green-400" : "text-slate-500")}>
+                                        {goal.completed ? <><CheckCircle2 className="w-4 h-4" /> 완료</> : '예정'}
+                                    </span>
+                                )}
+                            </div>
+                            {goal.target && <div className="w-full bg-slate-700 rounded-full h-2.5"><div className="bg-blue-500 rounded-full h-2.5" style={{ width: `${(goal.current / goal.target) * 100}%` }}></div></div>}
                         </div>
-                        <div className="w-full bg-slate-700 rounded-full h-2.5"><div className="bg-blue-500 rounded-full h-2.5" style={{ width: '57%' }}></div></div>
-                    </div>
+                    ))}
                 </div>
             </Card>
         </div>
@@ -902,10 +1079,14 @@ const HomeScreen = ({ user, onNavigate }) => {
             </div>
         </div>
     </div>
-    {isGoalModalOpen && <GoalSettingModal onClose={() => setIsGoalModalOpen(false)} />}
-    {isGifticonModalOpen && <GifticonModal onClose={() => setIsGifticonModalOpen(false)} />}
-    {isQuestModalOpen && <QuestSelectionModal onClose={() => setIsQuestModalOpen(false)} activeQuests={activeQuests} onSave={handleSaveQuests} />}
-    {isAvatarSpaceOpen && <AvatarSpaceModal user={user} onClose={() => setIsAvatarSpaceOpen(false)} />}
+    {modal === 'goal_edit' && <GoalSettingModal onClose={closeModal} />}
+    {modal === 'gift' && <GifticonModal onClose={closeModal} />}
+    {modal === 'quest_select' && <QuestSelectionModal onClose={closeModal} activeQuests={questList.filter(q => q.selected)} onSave={() => {}} />}
+    {modal === 'avatar_space' && <AvatarSpaceModal user={user} onClose={closeModal} />}
+    {modal === 'points' && <PointHistoryModal history={mockPointHistory} onClose={closeModal} />}
+    {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
+    {modal === 'quest_detail' && <QuestDetailModal quest={selectedItem} onClose={closeModal} />}
+    {modal === 'goal_check' && <GoalChecklistModal goals={mockGoals} onClose={closeModal} />}
   </>
   );
 };
