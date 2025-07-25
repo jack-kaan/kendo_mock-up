@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Swords, Trophy, User as UserIcon, MapPin, Star, Shield, BarChart2, Settings, Users, MessageSquare, ThumbsUp, Share2, Award, BookOpen, Video, ShieldCheck, CheckCircle2, Store, Tag, X, ThumbsDown, Lock, Unlock, CheckSquare, Square, ArrowUp, ArrowDown, Flame, ChevronDown, Megaphone, Send, FileUp, Plane, Info, Gift, PlusCircle, Heart, Edit3, ChevronsLeft, ChevronsRight, FileText, BarChart as BarChartIcon, Calendar, Bell } from 'lucide-react';
+import { Home, Swords, Trophy, User as UserIcon, MapPin, Star, Shield, BarChart2, Settings, Users, MessageSquare, ThumbsUp, Share2, Award, BookOpen, Video, ShieldCheck, CheckCircle2, Store, Tag, X, ThumbsDown, Lock, Unlock, CheckSquare, Square, ArrowUp, ArrowDown, Flame, ChevronDown, Megaphone, Send, FileUp, Plane, Info, Gift, PlusCircle, Heart, Edit3, ChevronsLeft, ChevronsRight, FileText, BarChart as BarChartIcon, Calendar } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -45,10 +45,6 @@ type Match = {
   status: 'upcoming' | 'completed';
   result?: 'win' | 'loss' | 'draw';
   score?: string;
-  scoreDetail?: {
-    myScore: string[];
-    opponentScore: string[];
-  };
   time?: string;
   privacy: 'public' | 'private';
   videoUrl?: string;
@@ -205,54 +201,18 @@ const allRankings = {
   }
 };
 
-const initialMatchHistory = [
-    { id: 1, opponent: mockUsers[0], result: 'win', date: '2024-05-20', score: '2-1', scoreDetail: { myScore: ['머리', '손목'], opponentScore: ['머리'] }, status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '김형섭 선수의 머리치기가 매우 인상적인 경기였습니다. 한승오 선수는 침착하게 받아치며 점수를 획득했습니다.', likes: 128, dislikes: 5, comments: [{id: 1, text: '정말 멋진 경기였어요!'}, {id: 2, text: '두 분 다 대단하시네요.'}] },
-    { id: 2, opponent: mockUsers[1], result: 'loss', date: '2024-05-18', score: '0-1', scoreDetail: { myScore: [], opponentScore: ['손목'] }, status: 'completed', privacy: 'private', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', likes: 0, dislikes: 0, comments: [], privacySettings: { video: true, comments: false, likes: false, commentary: false } },
-    { id: 3, opponent: mockUsers[4], result: 'win', date: '2024-05-15', score: '1-0', scoreDetail: { myScore: ['허리'], opponentScore: [] }, status: 'completed', privacy: 'private', likes: 0, dislikes: 0, comments: [], privacySettings: { video: false, comments: false, likes: false, commentary: false } },
-    { id: 4, opponent: mockUsers[2], result: 'draw', date: '2024-05-11', score: '1-1', scoreDetail: { myScore: ['머리'], opponentScore: ['머리'] }, status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '팽팽한 접전 끝에 무승부로 마무리되었습니다.', likes: 95, dislikes: 2, comments: [{id: 1, text: '아슬아슬했네요!'}] },
-    { id: 7, opponent: mockUsers[0], result: 'win', date: '2024-04-25', score: '1-0', scoreDetail: { myScore: ['손목'], opponentScore: [] }, status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '빠른 손목치기로 승리했습니다.', likes: 88, dislikes: 1, comments: [] },
-    { id: 8, opponent: mockUsers[3], result: 'loss', date: '2024-04-10', score: '1-2', scoreDetail: { myScore: ['머리'], opponentScore: ['손목', '허리'] }, status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '접전 끝에 아쉽게 패배했습니다.', likes: 70, dislikes: 8, comments: [] },
+
+const mockMatchHistory = [
+    { id: 1, opponent: mockUsers[0], result: 'win', date: '2024-05-20', score: '2-1', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '김형섭 선수의 머리치기가 매우 인상적인 경기였습니다. 한승오 선수는 침착하게 받아치며 점수를 획득했습니다.', likes: 128, dislikes: 5, comments: [{id: 1, text: '정말 멋진 경기였어요!'}, {id: 2, text: '두 분 다 대단하시네요.'}] },
+    { id: 2, opponent: mockUsers[1], result: 'loss', date: '2024-05-18', score: '0-1', status: 'completed', privacy: 'private', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', likes: 0, dislikes: 0, comments: [], privacySettings: { video: true, comments: false, likes: false, commentary: false } },
+    { id: 3, opponent: mockUsers[4], result: 'win', date: '2024-05-15', score: '1-0', status: 'completed', privacy: 'private', likes: 0, dislikes: 0, comments: [], privacySettings: { video: false, comments: false, likes: false, commentary: false } },
+    { id: 4, opponent: mockUsers[2], result: 'draw', date: '2024-05-11', score: '1-1', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '팽팽한 접전 끝에 무승부로 마무리되었습니다.', likes: 95, dislikes: 2, comments: [{id: 1, text: '아슬아슬했네요!'}] },
+    { id: 7, opponent: mockUsers[0], result: 'win', date: '2024-04-25', score: '1-0', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '빠른 손목치기로 승리했습니다.', likes: 88, dislikes: 1, comments: [] },
+    { id: 8, opponent: mockUsers[3], result: 'loss', date: '2024-04-10', score: '1-2', status: 'completed', privacy: 'public', videoUrl: 'https://placehold.co/1600x900/1e293b/94a3b8?text=Match+Video', commentary: '접전 끝에 아쉽게 패배했습니다.', likes: 70, dislikes: 8, comments: [] },
     { id: 5, opponent: mockUsers[3], date: '2025-07-28', time: '18:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
     { id: 6, opponent: mockUsers[2], date: '2025-08-04', time: '19:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
     { id: 9, opponent: mockUsers[4], date: '2025-08-10', time: '20:00', status: 'upcoming', privacy: 'public', likes: 0, dislikes: 0, comments: [] },
 ];
-
-const additionalWins = Array.from({ length: 38 }, (_, i) => {
-    const opponent = mockUsers[i % mockUsers.length];
-    return {
-        id: 100 + i,
-        opponent,
-        result: 'win',
-        date: `2024-03-${Math.floor(Math.random() * 28) + 1}`,
-        score: '2-0',
-        scoreDetail: { myScore: ['머리', '손목'], opponentScore: [] },
-        status: 'completed',
-        privacy: 'public',
-        likes: Math.floor(Math.random() * 50),
-        dislikes: Math.floor(Math.random() * 5),
-        comments: []
-    };
-});
-
-const additionalLosses = Array.from({ length: 13 }, (_, i) => {
-    const opponent = mockUsers[i % mockUsers.length];
-    return {
-        id: 200 + i,
-        opponent,
-        result: 'loss',
-        date: `2024-02-${Math.floor(Math.random() * 28) + 1}`,
-        score: '0-2',
-        scoreDetail: { myScore: [], opponentScore: ['머리', '손목'] },
-        status: 'completed',
-        privacy: 'public',
-        likes: Math.floor(Math.random() * 50),
-        dislikes: Math.floor(Math.random() * 5),
-        comments: []
-    };
-});
-
-const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...additionalLosses];
-
 
 const communityPosts = [
   { id: 1, author: mockUsers[0], type: 'video', title: '기본 머리치기 연습 영상', content: '기본기 훈련은 아무리 강조해도 지나치지 않습니다. 함께 보며 의견 나눠요.', likes: 128, comments: 15, timestamp: '2h ago' },
@@ -262,62 +222,277 @@ const communityPosts = [
 const anonymousPosts = [
     { id: 101, author: { name: '익명' }, title: "요즘 슬럼프가 너무 심하게 오네요...", content: "머리치기가 전혀 되질 않습니다. 다들 어떻게 극복하시나요? 조언 부탁드립니다.", likes: 33, comments: 12, timestamp: "1h ago" },
     { id: 102, author: { name: '익명' }, title: "4단 심사 준비하시는 분 계신가요?", content: "본이랑 실기 준비를 어떻게 해야 할지 막막하네요. 같이 정보 공유해요.", likes: 45, comments: 18, timestamp: "3h ago" },
+    { id: 103, author: { name: '익명' }, title: "도장에서 좀 불편한 사람이 있는데...", content: "대련할 때마다 너무 세게 하셔서 힘드네요. 관장님께 말씀드려야 할까요?", likes: 78, comments: 25, timestamp: "5h ago" },
+    { id: 104, author: { name: '익명' }, title: "다들 죽도 어떤 거 쓰시나요?", content: "이번에 새로 하나 장만하려고 하는데, 동장형? 진죽? 추천 좀 해주세요.", likes: 29, comments: 11, timestamp: "1d ago" },
+    { id: 105, author: { name: '익명' }, title: "체력 훈련 팁 공유합니다.", content: "매일 줄넘기 1000개랑 버피 100개씩 하니까 확실히 체력이 붙네요. 다들 화이팅!", likes: 95, comments: 22, timestamp: "2d ago" },
+    { id: 106, author: { name: '익명' }, title: "검도 시작한 지 3개월 된 검린이입니다.", content: "아직은 어렵지만 너무 재밌네요. 선배님들 잘 부탁드립니다!", likes: 152, comments: 41, timestamp: "3d ago" },
+    { id: 107, author: { name: '익명' }, title: "대회 앞두고 긴장이 너무 되네요.", content: "청심환이라도 먹어야 할까요? 다들 긴장 푸는 노하우가 있나요?", likes: 61, comments: 19, timestamp: "4d ago" },
+    { id: 108, author: { name: '익명' }, title: "호구 냄새 어떻게 관리하시나요?", content: "페브리즈를 뿌려도 소용이 없네요. 좋은 방법 있으면 공유해주세요.", likes: 112, comments: 33, timestamp: "5d ago" },
 ];
 
 const tradePosts = [
     { id: 201, author: mockUsers[2], itemName: "미사용 카본 죽도 (39)", price: "70,000원", description: "선물 받았는데 사이즈가 안 맞아 판매합니다. 포장도 안 뜯은 새 제품입니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=죽도', timestamp: "1h ago" },
     { id: 202, author: mockUsers[3], itemName: "A급 중고 호구 세트 (남성용)", price: "150,000원", description: "1년 정도 사용했고 상태 아주 좋습니다. 175cm 전후 남성분께 잘 맞을 거예요.", status: '판매완료', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=호구', timestamp: "8h ago" },
+    { id: 203, author: mockUsers[4], itemName: "거의 새 것 같은 도복 (175cm)", price: "40,000원", description: "사이즈 미스로 몇 번 못 입은 도복입니다. 만번 도복이고 상태 최상입니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=도복', timestamp: "1d ago" },
+    { id: 204, author: mockUsers[0], itemName: "죽도 가방 (상태 좋음)", price: "20,000원", description: "튼튼한 죽도 가방입니다. 2개까지 들어갑니다.", status: '예약중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=가방', timestamp: "2d ago" },
+    { id: 205, author: mockUsers[1], itemName: "코등이, 코등이 받침 여러 개", price: "15,000원", description: "예쁜 디자인 코등이 일괄 판매합니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=코등이', timestamp: "2d ago" },
+    { id: 206, author: mockUsers[4], itemName: "일제 쿠자쿠라 도복 상의", price: "90,000원", description: "고급 일제 도복입니다. 사이즈는 3호입니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=상의', timestamp: "3d ago" },
+    { id: 207, author: mockUsers[0], itemName: "호면 보호대 (새상품)", price: "22,000원", description: "충격 흡수 잘 되는 고급 호면 보호대입니다. 사이즈 미스로 판매합니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=호면보호대', timestamp: "4d ago" },
+    { id: 208, author: mockUsers[3], itemName: "죽도 오일", price: "10,000원", description: "죽도 관리용 오일입니다. 거의 사용 안했습니다.", status: '판매완료', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=오일', timestamp: "5d ago" },
 ];
 
 const mockChats = [
     { id: 101, type: 'club', partner: { id: 1001, name: '대전 카이스트 주이회', avatarUrl: 'https://placehold.co/100x100/0f766e/e0f2f1?text=K', members: 35 }, lastMessage: "김형섭: 이번 주 금요일 정기 수련 공지입니다.", timestamp: "10:45 AM", unread: 2, messages: Array.from({ length: 5 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '김형섭' : '이노연'), text: `안녕하세요, 채팅 메시지 ${i+1}입니다.`, timestamp: `10:${45+i} AM` })) },
+    { id: 102, type: 'group', partner: { id: 1002, name: '주말반 단톡방', avatarUrl: 'https://placehold.co/100x100/4a044e/f3e8ff?text=주말', members: 21 }, lastMessage: "이노연: 다들 고생하셨습니다!", timestamp: "어제", unread: 5, messages: Array.from({ length: 5 }, (_, i) => ({ id: i, sender: i % 2 === 0 ? 'me' : '이노연', text: `주말 수련 정말 좋았어요! ${i+1}`, timestamp: `어제 20:${11+i}`})) },
+    { id: 103, type: 'group', partner: { id: 1003, name: '4단 승단 준비방', avatarUrl: 'https://placehold.co/100x100/7f1d1d/fee2e2?text=4단', members: 5 }, lastMessage: "문준형: 본국검법 영상 공유합니다.", timestamp: "2일 전", unread: 0, messages: [] },
     { id: 1, type: 'private', partner: mockUsers[0], lastMessage: "네, 좋습니다. 그럼 토요일 2시에 뵙겠습니다.", timestamp: "10:45 AM", unread: 0, messages: [
         {id: 1, sender: 'me', text: '김형섭님, 이번주 토요일에 대련 가능하신가요?', timestamp: '10:40 AM'},
         {id: 2, sender: 'other', text: '네, 가능합니다. 시간은 언제가 좋으신가요?', timestamp: '10:42 AM'},
+        {id: 3, sender: 'me', text: '오후 2시 괜찮으신가요?', timestamp: '10:43 AM'},
+        {id: 4, sender: 'other', text: '네, 좋습니다. 그럼 토요일 2시에 뵙겠습니다.', timestamp: '10:45 AM'},
     ]},
+    { id: 2, type: 'private', partner: mockUsers[1], lastMessage: "고생하셨습니다. 덕분에 많이 배웠습니다!", timestamp: "어제", unread: 1, messages: [
+        {id: 1, sender: 'other', text: '한승오님, 어제 대련 즐거웠습니다.', timestamp: '어제'},
+        {id: 2, sender: 'other', text: '고생하셨습니다. 덕분에 많이 배웠습니다!', timestamp: '어제'},
+    ]},
+    { id: 104, type: 'group', partner: { id: 1004, name: '대전지역 교류회', avatarUrl: 'https://placehold.co/100x100/065f46/d1fae5?text=교류', members: 42 }, lastMessage: "주최자: 다음 달 교류전 장소 투표합니다.", timestamp: "3일 전", unread: 0, messages: Array.from({ length: 3 }, (_, i) => ({id: i, sender: '주최자', text: `교류전 공지사항 ${i+1}`, timestamp: `3일 전`})) },
+    { id: 105, type: 'group', partner: { id: 1005, name: '장비 관리 정보방', avatarUrl: 'https://placehold.co/100x100/7c2d12/ffedd5?text=장비', members: 58 }, lastMessage: "남경오: 죽도 기름칠은 한 달에 한 번이 좋습니다.", timestamp: "4일 전", unread: 3, messages: [] },
+    { id: 3, type: 'private', partner: mockUsers[2], lastMessage: "네 알겠습니다. 다음에 뵙겠습니다.", timestamp: "5일 전", unread: 0, messages: [] },
+    { id: 4, type: 'private', partner: mockUsers[3], lastMessage: "영상 잘 봤습니다. 자세가 정말 좋으시네요.", timestamp: "6일 전", unread: 0, messages: [] },
 ];
 
+// --- NEW DATA FOR ANNOUNCEMENTS & SHOP ---
 const danPromotions = [
     { id: 1, title: "1, 2단 승단 심사", date: "2025-08-15", location: "서울 중앙 연수원", details: "오전 9시부터 시작. 응시자는 8시 30분까지 집결 바랍니다. 준비물: 신분증, 응시표, 목검." },
     { id: 2, title: "3, 4단 승단 심사", date: "2025-08-16", location: "서울 중앙 연수원", details: "오전 9시부터 시작. 본, 실기, 학과 시험이 포함됩니다. 상세 공지 확인 필수." }
 ];
+
 const seminars = [
     { id: 1, title: "고단자 강습회", date: "2025-09-20", location: "대전 평송수련원", details: "5단 이상 참가 가능. 참가비 5만원. 강사: 김태형 8단." },
+    { id: 2, title: "심판 강습회", date: "2025-10-11", location: "부산 기장체육관", details: "심판 자격증 소지자 및 4단 이상 참가 가능. 최신 개정 규칙에 대한 교육이 진행됩니다." }
 ];
+
 const promoItems = [
     { id: 1, type: 'openClass', title: "신규 검도장 오픈 클래스", organizer: "새로운 검도관 (서울)", content: "검도에 관심 있는 누구나 환영합니다! 기본 자세부터 체험까지. 친구와 함께 오시면 할인 혜택!", imageUrl: "https://placehold.co/400x200/164e63/9ca3af?text=Open+Class" },
+    { id: 2, type: 'club', title: "직장인 연합 동호회 모집", organizer: "검우회", content: "열정 가득한 직장인 검도인을 모집합니다. 주 2회 저녁 합동 수련. 스트레스 해소와 건강을 동시에!", imageUrl: "https://placehold.co/400x200/155e75/9ca3af?text=Club" },
+    { id: 3, type: 'event', title: "여름맞이 청소년 검도 대회", organizer: "대한검도회", content: "전국 청소년들이 기량을 뽐낼 수 있는 기회! 많은 참여 바랍니다. 참가자 전원 기념품 증정.", imageUrl: "https://placehold.co/400x200/0e7490/9ca3af?text=Event" }
 ];
+
 const japanTravelPackages = [
     { id: 1, destination: "교토 8일 검도 수행", duration: "2025.08.01 ~ 2025.08.08", description: "전통 도장에서 현지 검도인들과 교류하며 심신을 단련하는 특별한 기회입니다.", price: "2,500,000원", currentApplicants: 8, maxApplicants: 15, isConfirmed: false, imageUrl: "https://placehold.co/600x400/1e293b/94a3b8?text=Kyoto+Dojo", details: {
         location: "일본 교토, 유서 깊은 무덕전",
-        curriculum: ["기본기 수련 (오전)", "고단자 사범 지도 대련 (오후)"],
-        schedule: [ { day: "1-8일차", activity: "상세 일정은 참가자에게 별도 공지" }],
-        notes: ["개인 죽도, 도복, 호구 필수 지참"],
+        curriculum: ["기본기 수련 (오전)", "고단자 사범 지도 대련 (오후)", "현지 대학 검도부 교류전", "문화 탐방"],
+        schedule: [
+            { day: "1일차", activity: "인천 출발, 교토 도착 및 숙소 체크인" },
+            { day: "2-4일차", activity: "무덕전 집중 수련" },
+            { day: "5일차", activity: "교류전 및 문화 탐방 (기요미즈데라)" },
+            { day: "6-7일차", activity: "합동 수련 및 개인 연습" },
+            { day: "8일차", activity: "교토 출발, 인천 도착" },
+        ],
+        notes: ["개인 죽도, 도복, 호구 필수 지참", "여행자 보험 포함", "일부 식사 불포함"],
         applicants: ["김*섭", "이*연", "문*형", "박*진", "최*수", "강*민", "한*우", "조*현"]
     }},
+    { id: 2, destination: "오사카 5일 집중 훈련", duration: "2025.09.10 ~ 2025.09.15", description: "경찰 특련단과의 합동 훈련을 통해 실전 감각을 끌어올립니다.", price: "1,800,000원", currentApplicants: 12, maxApplicants: 12, isConfirmed: true, imageUrl: "https://placehold.co/600x400/1e293b/94a3b8?text=Osaka+Police", details: {
+        location: "일본 오사카 경찰수련원",
+        curriculum: ["체력 훈련", "전술 훈련", "경찰 특련단과의 실전 대련"],
+        schedule: [{day: "1-5일차", activity: "상세 일정은 참가자에게 별도 공지"}],
+        notes: ["고강도 훈련이 포함되어 있습니다.", "4단 이상 참가 권장"],
+        applicants: ["남*오", "이*현", "김*태", "윤*상", "정*훈", "외 7명"]
+    }},
+    { id: 3, destination: "후쿠오카 4일 단기 연수", duration: "2025.10.05 ~ 2025.10.09", description: "고단자 사범님의 지도를 받으며 기본기를 다지는 시간을 갖습니다.", price: "1,200,000원", currentApplicants: 5, maxApplicants: 10, isConfirmed: false, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Fukuoka", details: { 
+        location: "후쿠오카시 중앙무도관",
+        curriculum: ["8단 교사(Kyoshi) 사범 초빙", "기본기 집중 교정", "개인별 맞춤 지도", "본(Kata) 심화 수련"],
+        schedule: [
+            {day: "1일차", activity: "후쿠오카 도착 및 오리엔테이션"},
+            {day: "2-3일차", activity: "오전/오후 집중 수련"},
+            {day: "4일차", activity: "마무리 수련 및 귀국"}
+        ],
+        notes: ["초심자부터 유단자까지 모두 환영", "개인별 지도 시간이 많아 기술 향상에 최적입니다."],
+        applicants: ["이*정", "박*서", "김*준", "최*아", "황*민"]}},
+    { id: 4, destination: "홋카이도 6일 동계 훈련", duration: "2026.01.12 ~ 2026.01.18", description: "설경 속에서 진행되는 특별한 동계 강습회에 참여해보세요.", price: "2,200,000원", currentApplicants: 15, maxApplicants: 15, isConfirmed: true, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Hokkaido", details: { 
+        location: "홋카이도 삿포로시 체육관",
+        curriculum: ["설중 아침 수련 (Kangeiko)", "체력 및 정신력 강화 훈련", "현지 고등부 선수들과의 합동 훈련"],
+        schedule: [
+            {day: "1일차", activity: "삿포로 도착"},
+            {day: "2-5일차", activity: "동계 훈련 캠프 참가"},
+            {day: "6일차", activity: "귀국"}
+        ],
+        notes: ["방한 장비 필수", "강인한 정신력과 체력을 기르고 싶은 분께 추천합니다."],
+        applicants: ["참가자 15명"]}},
+    { id: 5, destination: "도쿄 무도관 방문 3일", duration: "상시 모집", description: "검도의 성지, 일본 무도관을 방문하고 기념품을 구매할 수 있는 기회입니다.", price: "800,000원", currentApplicants: 3, maxApplicants: 5, isConfirmed: false, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Tokyo", details: { 
+        location: "도쿄 일본무도관 및 경시청 도장",
+        curriculum: ["일본무도관 견학", "경시청 특련단 훈련 참관", "유명 검도용품점 방문"],
+        schedule: [
+            {day: "1일차", activity: "도착, 일본무도관 방문"},
+            {day: "2일차", activity: "경시청 훈련 참관 및 용품점 방문"},
+            {day: "3일차", activity: "귀국"}
+        ],
+        notes: ["수련보다는 견학과 문화 체험 위주의 프로그램입니다."],
+        applicants: ["김*영", "이*수", "박*철"]}},
+    { id: 6, destination: "가고시마 7일 자연 수련", duration: "2025.11.01 ~ 2025.11.08", description: "아름다운 자연 속에서 심신을 수련하는 힐링 검도 캠프입니다.", price: "1,900,000원", currentApplicants: 2, maxApplicants: 10, isConfirmed: false, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Kagoshima", details: { 
+        location: "가고시마 키리시마시 자연수련원",
+        curriculum: ["폭포 아래 명상 및 수련", "삼림욕을 겸한 야외 기본기 훈련", "현지 동호회와의 친선 교류"],
+        schedule: [
+            {day: "1-2일차", activity: "도착 및 자연 적응 훈련"},
+            {day: "3-5일차", activity: "도장 수련 및 교류전"},
+            {day: "6-7일차", activity: "자유 시간 및 귀국"}
+        ],
+        notes: ["검도와 함께 심신의 휴식을 원하는 분들께 추천합니다."],
+        applicants: ["최*원", "정*호"]}},
+    { id: 7, destination: "나고야 성(城) 검도 교류", duration: "2025.12.10 ~ 2025.12.14", description: "나고야 성 앞에서 펼쳐지는 특별한 야외 검도 교류회에 참여하세요.", price: "1,500,000원", currentApplicants: 9, maxApplicants: 20, isConfirmed: false, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Nagoya", details: { 
+        location: "나고야 아이치현 무도관",
+        curriculum: ["나고야 성 배경 야외 수련", "아이치현 대표 선수단과의 합동稽古(Keiko)", "역사 탐방"],
+        schedule: [
+            {day: "1일차", activity: "도착"},
+            {day: "2일차", activity: "나고야 성 야외 수련"},
+            {day: "3일차", activity: "합동 게이코"},
+            {day: "4일차", activity: "귀국"}
+        ],
+        notes: ["역사와 검도를 함께 즐길 수 있는 특별한 경험."],
+        applicants: ["참가자 9명"]}},
+    { id: 8, destination: "오키나와 5일 해변 수련", duration: "2026.02.20 ~ 2026.02.25", description: "따뜻한 오키나와 해변에서 진행되는 이색적인 검도 수련입니다.", price: "1,700,000원", currentApplicants: 0, maxApplicants: 12, isConfirmed: false, imageUrl: "https://placehold.co/600x400/334155/94a3b8?text=Okinawa", details: { 
+        location: "오키나와 나하시 해변 및 시립체육관",
+        curriculum: ["해변 모래사장 위에서의 발동작 및 체력 훈련", "전통 류큐 검술(琉球剣術) 체험", "현지 검도 연맹과의 교류"],
+        schedule: [
+            {day: "1-2일차", activity: "도착 및 해변 수련"},
+            {day: "3일차", activity: "류큐 검술 체험"},
+            {day: "4일차", activity: "교류전"},
+            {day: "5일차", activity: "귀국"}
+        ],
+        notes: ["따뜻한 기후에서 즐기는 이색적인 검도 수련입니다."],
+        applicants: []}},
 ];
-const gifticonItems = [ { category: "스타벅스", items: ["아메리카노 (4,500P)", "라떼 (5,000P)"] }];
-const shopItems = [ { id: 1, name: "프리미엄 카본 죽도", price: "75,000원", imageUrl: "https://placehold.co/400x400/334155/94a3b8?text=Carbon+Jukdo" }];
+
+const gifticonItems = [
+    { category: "스타벅스", items: ["아메리카노 (4,500P)", "라떼 (5,000P)", "금액상품권 10,000원 (10,000P)"] },
+    { category: "편의점 상품권", items: ["5,000원 (5,000P)", "10,000원 (10,000P)"] },
+    { category: "주이회 상품권", items: ["5,000원 (5,000P)", "10,000원 (10,000P)", "30,000원 (30,000P)"] },
+];
+
+const shopItems = [
+    { id: 1, name: "프리미엄 카본 죽도", price: "75,000원", imageUrl: "https://placehold.co/400x400/334155/94a3b8?text=Carbon+Jukdo" },
+    { id: 2, name: "수제작 코등이 (벚꽃)", price: "30,000원", imageUrl: "https://placehold.co/400x400/581c87/f3e8ff?text=Tsuba" },
+    { id: 3, name: "만번 도복 세트", price: "120,000원", imageUrl: "https://placehold.co/400x400/042f2e/cceceb?text=Dobok" },
+    { id: 4, name: "경량 호구 세트", price: "450,000원", imageUrl: "https://placehold.co/400x400/4a044e/f3e8ff?text=Hogu" },
+    { id: 5, name: "죽도 가방 (2개입)", price: "25,000원", imageUrl: "https://placehold.co/400x400/7f1d1d/fee2e2?text=Bag" },
+    { id: 6, name: "기능성 수련복", price: "40,000원", imageUrl: "https://placehold.co/400x400/0c4a6e/e0f2fe?text=Training+Wear" },
+];
+
 const questList = [
-    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요.' },
+    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요. 공식 경기 및 연습 대련 모두 포함됩니다.' },
+    { id: 2, text: "퇴격으로만 승리하기", current: 0, target: 1, unit: "승", selected: false, description: '오직 퇴격 기술(퇴격머리, 퇴격손목, 퇴격허리)로만 득점하여 한 판을 승리해야 합니다.' },
+    { id: 3, text: "3연승 달성하기", current: 1, target: 3, unit: "연승", selected: false, description: '무승부나 패배 없이 3번 연속으로 대련에서 승리하세요.' },
     { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", selected: true, description: '자신보다 공인 단수가 2단 이상 높은 상대를 이겨야 합니다.' },
+    { id: 5, text: "하루에 5명과 대련하기", current: 2, target: 5, unit: "명", selected: false, description: '하루 동안 5명의 다른 상대와 대련을 완료하세요.' },
+    { id: 6, text: "새로운 기술로 득점하기", current: 0, target: 1, unit: "회", selected: false, description: '평소에 잘 사용하지 않던 기술로 득점에 성공하세요. (예: 받아허리치기, 발목치기)' },
+    { id: 7, text: "다른 도장 방문하여 교류전하기", current: 2, target: 3, unit: "회", selected: true, description: '소속된 도장이 아닌 다른 도장을 방문하여 3회 이상 교류전을 진행하세요.' },
+    { id: 8, text: "한판승 3회 달성하기", current: 1, target: 3, unit: "회", selected: false, description: '상대에게 한 점도 내주지 않고 2점을 먼저 획득하여 승리하는 경기를 3회 만드세요.' },
+    { id: 9, text: "커뮤니티에 후기글 작성하기", current: 0, target: 1, unit: "회", selected: false, description: '대련 후기나 수련 일지를 커뮤니티 수다방에 작성하여 공유하세요.' },
+    { id: 10, text: "대련 영상 3개 업로드하기", current: 1, target: 3, unit: "개", selected: false, description: '자신의 대련 영상을 3개 이상 커뮤니티에 업로드하여 다른 사람들의 조언을 구해보세요.' },
 ];
+
 const mockPointHistory = [
     { date: '2025-07-21', change: '+10', reason: '김형섭님과 대련 승리' },
     { date: '2025-07-19', change: '-8', reason: '이노연님과 대련 패배' },
+    { date: '2025-07-15', change: '+5', reason: '커뮤니티 활동 보상' },
+    { date: '2025-07-12', change: '+12', reason: '문준형님과 대련 승리' },
+    { date: '2025-07-10', change: '-1500', reason: '기프트콘 교환' },
+    { date: '2025-07-01', change: '+20', reason: '이달의 퀘스트 완료' },
 ];
+
 const mockGoals = [
     { id: 1, text: '사범자격심사 도전', completed: true },
+    { id: 2, text: '4단 강습회 참석', completed: false },
     { id: 3, text: 'vs100명 대련', completed: false, current: 57, target: 100 },
 ];
+
+// --- [NEW] DATA FOR THEORY EXAM ---
 const kendoTheoryData = [
-    { id: 1, title: "검도의 四戒에 대하여 설명하라.", questionText: "검도의 [BLANK](四病)이라고도 하며, 검도를 수행함에 있어서 4가지 경계하여야 할 것을 말한다. [BLANK], [BLANK], [BLANK], [BLANK] (驚,懼,疑,惑) 즉, 놀라거나, 두려워하거나, 의심하거나, 미혹되지 말아야 함을 말한다.", answers: ["4병", "경", "구", "의", "혹"] },
-    { id: 4, title: "유효격자에 대하여 기술하라.", questionText: "유효격자란 한판을 인정할 수 있는 격자로서, 검도경기·심판규칙 제12조에 따르면, 「[BLANK]는, 충실한 [BLANK]와 적정한 [BLANK]로써, 죽도의 격자부로 격자부위를 칼날을 바르게 하여 격자하고 [BLANK]이 있어야 한다.」고 되어 있다. 이때 [BLANK]가 일치하여야 한다.", answers: ["유효격자", "기세", "자세", "존심", "기검체"] },
+    {
+        id: 1,
+        title: "검도의 四戒에 대하여 설명하라.",
+        questionText: "검도의 [BLANK](四病)이라고도 하며, 검도를 수행함에 있어서 4가지 경계하여야 할 것을 말한다. [BLANK], [BLANK], [BLANK], [BLANK] (驚,懼,疑,惑) 즉, 놀라거나, 두려워하거나, 의심하거나, 미혹되지 말아야 함을 말한다. 검도의 승부는 기술뿐만 아니라 마음의 움직임에 지배되는 수가 많으므로 항상 사계를 마음에 두고 스스로 정신수양에 힘써 나가야 할 것이다. 항상 평상심을 가지고 마음이 동요됨이 없이 이 네가지를 초월해야만 상대를 이길 수 있다.",
+        answers: ["4병", "경", "구", "의", "혹"]
+    },
+    {
+        id: 2,
+        title: "검도의 本의 필요성에 대하여 기술하라.",
+        questionText: "검도의 본은 검도의 [BLANK]와 기술 중에서 기초가 되는 것들, 즉, 예법, 자세, 격자법, 거리, 기회, [BLANK] 등이 집약되어 있다. 검도의 본은 1) [BLANK]과 칼을 다루는 법을 확실히 익히기 위하여 2) 격법(格法)과 격자법의 기초 원리와 [BLANK]를 익히기 위하여, 3) 거리와 기회를 알고, 존심을 분명히 하기 위하여 필요하다.",
+        answers: ["정수", "존심", "예법", "자세"]
+    },
+    {
+        id: 3,
+        title: "연격의 유의점과 효과에 대하여 기술하라.",
+        questionText: "연격이란 검도의 [BLANK]과 기술을 조합하여 연속으로 행하는 종합적인 연습방법으로서, 검도를 배우는 사람에 있어서는 반드시 익혀야 하는 중요한 연습법이다. 연격연습을 올바르게 하기 위해 유의해야 할 점은 초보의 단계에서는 [BLANK]보다 [BLANK]을 크게, 정확히 하는데 중점을 둔다. 또한 머리치기에서 왼손 주먹은 항상 [BLANK] 상에서 이동하도록 한다. 정면 머리치기는 [BLANK]의 거리에서 정확히 치도록 한다.",
+        answers: ["기본동작", "속도", "동작", "정중선", "일족일도"]
+    },
+    {
+        id: 4,
+        title: "유효격자에 대하여 기술하라.",
+        questionText: "유효격자란 한판을 인정할 수 있는 격자로서, 검도경기·심판규칙 제12조에 따르면, 「[BLANK]는, 충실한 [BLANK]와 적정한 [BLANK]로써, 죽도의 격자부로 격자부위를 칼날을 바르게 하여 격자하고 [BLANK]이 있어야 한다.」고 되어 있다. 이때 [BLANK]가 일치하여야 한다.",
+        answers: ["유효격자", "기세", "자세", "존심", "기검체"]
+    },
+    {
+        id: 5,
+        title: "거리에 대하여 설명하라.",
+        questionText: "[BLANK]라 함은 상대와 대치했을 때 상호간의 [BLANK](시간적, 공간적, 심리적 간격을 포함한다)을 말한다. 일반적으로 거리는 3가지로 분류한다. (1) [BLANK]의 거리: 1보 들어가면 상대를 격자할 수 있는 거리. (2) [BLANK] 거리: 1보 전진하여도 격자하기 어려운 거리. (3) [BLANK] 거리: 반보 정도 들어가도 격자가 가능한 거리.",
+        answers: ["거리", "간격", "일족일도", "먼", "가까운"]
+    },
+    {
+        id: 6,
+        title: "존심(存心)에 대하여 써라.",
+        questionText: "[BLANK]이라는 말은 성리학상의 용어로서, 항상 마음에 새겨 [BLANK]을 잃지 않는 것 또는 늘 그렇게 한다는 한결 같은 마음이라 할 수 있다. 존심의 반대말은 [BLANK]이다. 검도에서는 격자자체가 성공했다 하여도 존심이 보이지 않으면 [BLANK]로 인정하지 않는다. 그리고 검도에서 공격 후에 존심이 특히 강조되고 있지만 [BLANK]하기 전에도, 공격 중에도 존심이 필요하다.",
+        answers: ["존심", "본심", "방심", "유효격자", "공격"]
+    },
+    {
+        id: 7,
+        title: "삼살법(三殺法)에 대하여 써라.",
+        questionText: "상대의 기선을 제압하여 효과적으로 상대를 이길 수 있는 세가지 방법으로서 상대의 [BLANK]을 죽이고, [BLANK]을 죽이고, [BLANK]를 죽이는 것을 [BLANK]이라고 한다. 칼을 죽인다는 것은 상대의 칼을 누르거나 제치거나 감는 등으로 상대 죽도의 자유동작 즉 상대의 [BLANK]을 죽이는 것을 말한다.",
+        answers: ["칼", "기술", "기", "삼살법", "검선"]
+    },
+    {
+        id: 8,
+        title: "수파리(守,破.離)에 대하여 논하라.",
+        questionText: "검도의 수련에는 세가지 단계가 있다. 1) [BLANK]란, 선생의 가르침을 잘 지키고, 그 가르침에 조금이라도 벗어남이 없이 수련을 하는 것이다. 2) [BLANK]란, 선생의 허가를 얻어 타 도장에 가서 다른 기술을 배우면서 지금까지 자기가 배워온 것을 버리지 않고 자유자재의 수련을 하는 것이다. 3) [BLANK]란, 배운 것으로부터 떠나서, 자기의 [BLANK]을 세울 수 있을 단계이며, 그 이상의 높은 수준의 [BLANK]를 개척하여 나아가는 것이다.",
+        answers: ["수", "파", "리", "검도관", "독특한 경지"]
+    },
+    {
+        id: 9,
+        title: "담력정쾌(膽力精快)란 무엇인가?",
+        questionText: "상대와의 대적 시에 가장 중요한 것을 순서대로 열거한 것이다. 첫째로 [BLANK]이니, 두려움이 없는 당당한 마음을 말한다. 둘째가 [BLANK]이니 이는 힘을 말한다. 셋째가 [BLANK]이니 빈틈없이 제자리를 찾아가는 정교한 기술을 말한다. 넷째가 [BLANK]니 이는 빠름을 말한다. 바르고 씩씩한 마음으로 수련을 통하여 힘을 얻고 정밀한 기술로 상대를 바르게 공격하는 것이 올바른 [BLANK]의 길임을 가르치는 말이다.",
+        answers: ["담", "력", "정", "쾌", "무예"]
+    },
+    {
+        id: 10,
+        title: "부동심(不動心)",
+        questionText: "[BLANK]은 무슨 일이 일어나도 마음의 [BLANK]이 일어나지 않는 상태를 말하며 또한 여러 가지 변동에 대하여도 그때그때 대응할 수 있는 [BLANK]을 뜻하기도 한다.",
+        answers: ["부동심", "동요", "유연한 마음"]
+    },
+    {
+        id: 11,
+        title: "심판원의 자세",
+        questionText: "심판원의 자세는 다음과 같다. 1) 경기진행을 [BLANK]하게 하여야 한다. 2) [BLANK]를 놓치는 일이 없도록 해야 한다. 3) [BLANK]에 충실한 심판을 하여야 한다. 4) 실제 심판을 하면서 항상 [BLANK]과 [BLANK]를 통하여 심판능력을 향상시키려는 마음을 가져야 한다.",
+        answers: ["공평무사", "유효격자", "검리", "반성", "검토"]
+    },
+    {
+        id: 12,
+        title: "조선세법",
+        questionText: "[BLANK]이 처음 소개된 책은 중국 명나라의 모원의가 쓴 [BLANK]이다. 이 책은 [BLANK]의 [BLANK]와 더불어 중국의 대표적인 병법서이다. 우리나라 조선조 정조때 발간된 [BLANK]에는 조선세법을 그대로 옮겨 실었으면서도 ‘조선세법’이라 하지 않고 ‘예도’라고 하였다.",
+        answers: ["조선세법", "무비지", "척계광", "기효신서", "무예도보통지"]
+    },
+    {
+        id: 13,
+        title: "검도의 역사",
+        questionText: "오늘날 검도경기의 원형은 [BLANK]이다. 우리나라에서는 신라 [BLANK]들이 격검을 수련하였다는 사실이 있다. <삼국유사>의 김유신조에 보이는 '검술을 연마하여 국선이 되었다.'라는 내용이 있다. 중국의 <무비지(武備志)>에 소개된 유일한 검법인 <[BLANK](朝鮮勢法)>과 현존하는 세계 최고(最古)의 검법인 <[BLANK](本國劍法)>은 세계검도사에 큰 빛이 되고 있는 것이다. 일본이 검도를 [BLANK]로 개발한 것은 그들의 자랑이요. 그 뿌리가 우리에게 있음은 우리의 긍지이다.",
+        answers: ["격검", "화랑", "조선세법", "본국검법", "스포츠"]
+    }
 ];
-const testScoreHistory = [ { date: "2025-05-10", score: 70 }, { date: "2025-07-01", score: 75 }];
-const mockNotifications = [
-    { id: 1, type: 'new_request', opponent: mockUsers[1], read: false },
-    { id: 2, type: 'declined', opponent: mockUsers[2], message: "죄송합니다. 그날은 선약이 있어서 어려울 것 같습니다.", read: false },
+
+const testScoreHistory = [
+    { date: "2025-05-10", score: 70 },
+    { date: "2025-06-02", score: 60 },
+    { date: "2025-06-15", score: 80 },
+    { date: "2025-07-01", score: 75 },
 ];
 
 // --- UI HELPER COMPONENTS ---
@@ -361,7 +536,7 @@ const Badge = ({ type }) => {
 };
 
 const StatDistributionGraph = () => {
-    const userPercentile = React.useMemo(() => Math.random() * 80 + 10, []);
+    const userPercentile = React.useMemo(() => Math.random() * 80 + 10, []); // Random value between 10 and 90
 
     return (
         <div className="mt-2 p-3 bg-slate-900/50 rounded-lg">
@@ -382,124 +557,10 @@ const StatDistributionGraph = () => {
     );
 };
 
-const RadarChart = ({ data, size = 200 }) => {
-    const labels = { head: '머리', wrist: '손목', waist: '허리', thrust: '찌름' };
-    const keys = Object.keys(labels);
-    const center = size / 2;
-    const radius = size * 0.35;
-    const numAxes = keys.length;
-    const angleSlice = (Math.PI * 2) / numAxes;
-
-    const maxVal = Math.max(...Object.values(data));
-
-    const points = keys.map((key, i) => {
-        const angle = angleSlice * i - Math.PI / 2;
-        const r = (data[key] / maxVal) * radius;
-        const x = center + r * Math.cos(angle);
-        const y = center + r * Math.sin(angle);
-        return `${x},${y}`;
-    }).join(' ');
-    
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {[0.25, 0.5, 0.75, 1].map(scale => (
-            <polygon key={scale}
-                points={keys.map((_, i) => {
-                    const angle = angleSlice * i - Math.PI / 2;
-                    const r = radius * scale;
-                    const x = center + r * Math.cos(angle);
-                    const y = center + r * Math.sin(angle);
-                    return `${x},${y}`;
-                }).join(' ')}
-                className="fill-none stroke-slate-600"
-            />
-        ))}
-        {keys.map((_, i) => {
-            const angle = angleSlice * i - Math.PI / 2;
-            const x = center + radius * Math.cos(angle);
-            const y = center + radius * Math.sin(angle);
-            return <line key={i} x1={center} y1={center} x2={x} y2={y} className="stroke-slate-600" />;
-        })}
-        <polygon points={points} className="fill-blue-500/50 stroke-blue-400" strokeWidth="2" />
-        {keys.map((key, i) => {
-            const angle = angleSlice * i - Math.PI / 2;
-            const r = radius * 1.2;
-            const x = center + r * Math.cos(angle);
-            const y = center + r * Math.sin(angle);
-            return (
-                <text key={key} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-slate-300 text-xs font-semibold">
-                    {labels[key]}
-                </text>
-            );
-        })}
-      </svg>
-    );
-};
-
-const PieChart = ({ data, size = 120 }) => {
-    const center = size / 2;
-    const radius = size / 2;
-    const total = data.reduce((sum, item) => sum + item.value, 0);
-    let startAngle = -Math.PI / 2;
-
-    const getCoords = (angle) => `${center + radius * Math.cos(angle)},${center + radius * Math.sin(angle)}`;
-
-    return (
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {data.map(item => {
-          const angle = (item.value / total) * 2 * Math.PI;
-          const endAngle = startAngle + angle;
-          const largeArcFlag = angle > Math.PI ? 1 : 0;
-          const pathData = `M ${center},${center} L ${getCoords(startAngle)} A ${radius},${radius} 0 ${largeArcFlag},1 ${getCoords(endAngle)} Z`;
-          startAngle = endAngle;
-          return <path key={item.label} d={pathData} fill={item.color} />;
-        })}
-      </svg>
-    );
-};
-
-const StackedBarChart = ({ data, height = 20, width = 200 }) => {
-    const total = data.reduce((sum, item) => sum + item.value, 0);
-    let xOffset = 0;
-    
-    return (
-        <div style={{ width, height }}>
-            <svg width="100%" height="100%">
-                {data.map(item => {
-                    const barWidth = (item.value / total) * 100;
-                    const rect = <rect key={item.label} x={`${xOffset}%`} y="0" width={`${barWidth}%`} height={height} fill={item.color} />;
-                    xOffset += barWidth;
-                    return rect;
-                })}
-            </svg>
-        </div>
-    );
-};
-
 const DetailedStatsCard = ({ stats }) => {
     const { scoringBreakdown, homeAway, vsHigherRank, interestingStats } = stats;
+    const totalPoints = Object.values(scoringBreakdown).reduce((sum, value) => sum + value, 0);
     const [expandedStat, setExpandedStat] = React.useState(null);
-
-    const parseRecord = (recordStr) => {
-        const winMatch = recordStr.match(/(\d+)승/);
-        const lossMatch = recordStr.match(/(\d+)패/);
-        return {
-            wins: winMatch ? parseInt(winMatch[1], 10) : 0,
-            losses: lossMatch ? parseInt(lossMatch[1], 10) : 0
-        };
-    };
-
-    const homeRecord = parseRecord(homeAway.home);
-    const awayRecord = parseRecord(homeAway.away);
-    
-    const homePieData = [{ label: '승', value: homeRecord.wins, color: '#4ade80' }, { label: '패', value: homeRecord.losses, color: '#f87171' }];
-    const awayPieData = [{ label: '승', value: awayRecord.wins, color: '#4ade80' }, { label: '패', value: awayRecord.losses, color: '#f87171' }];
-
-    const vsHigherRankData = [
-        { label: '승', value: vsHigherRank.wins, color: '#4ade80' },
-        { label: '패', value: vsHigherRank.losses, color: '#f87171' },
-        { label: '무', value: vsHigherRank.draws, color: '#94a3b8' },
-    ];
 
     return (
         <Card className="border-blue-500/50">
@@ -507,35 +568,33 @@ const DetailedStatsCard = ({ stats }) => {
             <div className="space-y-6">
                 <div>
                     <h4 className="font-semibold text-slate-300 mb-2">득점 부위 분석</h4>
-                    <div className="flex justify-center items-center bg-slate-900/50 p-2 rounded-lg">
-                        <RadarChart data={scoringBreakdown} size={220} />
+                    <div className="space-y-1 text-xs">
+                        {Object.entries(scoringBreakdown).map(([key, value]) => (
+                            <div key={key} className="flex items-center gap-2">
+                                <span className="w-12 capitalize">{key}</span>
+                                <div className="flex-1 bg-slate-700 rounded-full h-4">
+                                    <div className="bg-blue-500 h-4 rounded-full text-right pr-2 text-white font-bold" style={{ width: `${(value/totalPoints)*100}%` }}>{value}%</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                        <h4 className="font-semibold text-slate-300 mb-2">홈 성적</h4>
-                        <div className="flex justify-center mb-2">
-                           <PieChart data={homePieData} />
-                        </div>
-                        <p className="text-sm"><span className="text-green-400">{homeRecord.wins}승</span> / <span className="text-red-400">{homeRecord.losses}패</span></p>
+                        <p className="font-semibold text-slate-300">홈 성적</p>
+                        <p className="text-lg font-bold">{homeAway.home}</p>
                     </div>
                     <div>
-                        <h4 className="font-semibold text-slate-300 mb-2">어웨이 성적</h4>
-                         <div className="flex justify-center mb-2">
-                           <PieChart data={awayPieData} />
-                        </div>
-                        <p className="text-sm"><span className="text-green-400">{awayRecord.wins}승</span> / <span className="text-red-400">{awayRecord.losses}패</span></p>
+                        <p className="font-semibold text-slate-300">어웨이 성적</p>
+                        <p className="text-lg font-bold">{homeAway.away}</p>
                     </div>
                 </div>
                  <div>
                     <h4 className="font-semibold text-slate-300 mb-2">고단자 상대 통계</h4>
-                    <div className="bg-slate-700/50 p-3 rounded-lg">
-                        <StackedBarChart data={vsHigherRankData} />
-                        <div className="flex justify-around text-xs mt-2">
-                            <span className="font-bold text-green-400">{vsHigherRank.wins}승</span>
-                            <span className="font-bold text-red-400">{vsHigherRank.losses}패</span>
-                            <span className="font-bold text-slate-400">{vsHigherRank.draws}무</span>
-                        </div>
+                    <div className="flex justify-around text-center bg-slate-700/50 p-2 rounded-lg">
+                        <div><p className="font-bold text-green-400">{vsHigherRank.wins}승</p></div>
+                        <div><p className="font-bold text-red-400">{vsHigherRank.losses}패</p></div>
+                        <div><p className="font-bold text-slate-400">{vsHigherRank.draws}무</p></div>
                     </div>
                 </div>
                 <div>
@@ -613,237 +672,7 @@ const TradePostCard = ({post}) => {
     );
 };
 
-const AvatarIconSVG = () => (
-    <svg width="80" height="80" viewBox="0 0 28 28" shapeRendering="crispEdges" className="bg-slate-700 p-1 rounded-lg">
-        <rect x="9" y="4" width="2" height="1" fill="#272727"/> <rect x="11" y="4" width="6" height="1" fill="#363636"/> <rect x="17" y="4" width="2" height="1" fill="#272727"/>
-        <rect x="7" y="5" width="2" height="1" fill="#272727"/> <rect x="9" y="5" width="2" height="1" fill="#363636"/> <rect x="11" y="5" width="6" height="1" fill="#4e4e4e"/> <rect x="17" y="5" width="2" height="1" fill="#363636"/> <rect x="19" y="5" width="2" height="1" fill="#272727"/>
-        <rect x="6" y="6" width="1" height="1" fill="#272727"/> <rect x="7" y="6" width="2" height="1" fill="#363636"/> <rect x="9" y="6" width="10" height="1" fill="#4e4e4e"/> <rect x="19" y="6" width="2" height="1" fill="#363636"/> <rect x="21" y="6" width="1" height="1" fill="#272727"/>
-        <rect x="5" y="7" width="1" height="1" fill="#272727"/> <rect x="6" y="7" width="1" height="1" fill="#363636"/> <rect x="7" y="7" width="14" height="1" fill="#4e4e4e"/> <rect x="21" y="7" width="1" height="1" fill="#363636"/> <rect x="22" y="7" width="1" height="1" fill="#272727"/>
-        <rect x="5" y="8" width="1" height="1" fill="#363636"/> <rect x="6" y="8" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="8" width="1" height="1" fill="#363636"/>
-        <rect x="5" y="9" width="1" height="1" fill="#363636"/> <rect x="6" y="9" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="9" width="1" height="1" fill="#363636"/>
-        <rect x="5" y="10" width="1" height="1" fill="#363636"/> <rect x="6" y="10" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="10" width="1" height="1" fill="#363636"/>
-        <rect x="6" y="11" width="16" height="1" fill="#4e4e4e"/>
-        <rect x="6" y="12" width="1" height="1" fill="#4e4e4e"/> <rect x="7" y="12" width="2" height="1" fill="#c1c1c1"/> <rect x="9" y="12" width="10" height="1" fill="#4e4e4e"/> <rect x="19" y="12" width="2" height="1" fill="#c1c1c1"/> <rect x="21" y="12" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="7" y="13" width="2" height="1" fill="#c1c1c1"/> <rect x="9" y="13" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="13" width="3" height="1" fill="#f1d3b4"/> <rect x="13" y="13" width="2" height="1" fill="#4e4e4e"/> <rect x="15" y="13" width="3" height="1" fill="#f1d3b4"/> <rect x="18" y="13" width="1" height="1" fill="#4e4e4e"/> <rect x="19" y="13" width="2" height="1" fill="#c1c1c1"/>
-        <rect x="7" y="14" width="1" height="1" fill="#c1c1c1"/> <rect x="8" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="14" width="1" height="1" fill="#f1d3b4"/> <rect x="10" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="11" y="14" width="6" height="1" fill="#f1d3b4"/> <rect x="17" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="18" y="14" width="1" height="1" fill="#f1d3b4"/> <rect x="19" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="20" y="14" width="1" height="1" fill="#c1c1c1"/>
-        <rect x="7" y="15" width="1" height="1" fill="#c1c1c1"/> <rect x="8" y="15" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="15" width="10" height="1" fill="#f1d3b4"/> <rect x="19" y="15" width="1" height="1" fill="#4e4e4e"/> <rect x="20" y="15" width="1" height="1" fill="#c1c1c1"/>
-        <rect x="8" y="16" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="16" width="10" height="1" fill="#e2c1a0"/> <rect x="19" y="16" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="8" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="17" width="2" height="1" fill="#e2c1a0"/> <rect x="11" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="12" y="17" width="4" height="1" fill="#e2c1a0"/> <rect x="16" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="17" y="17" width="2" height="1" fill="#e2c1a0"/> <rect x="19" y="17" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="9" y="18" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="18" width="8" height="1" fill="#e2c1a0"/> <rect x="18" y="18" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="9" y="19" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="19" width="2" height="1" fill="#e2c1a0"/> <rect x="12" y="19" width="4" height="1" fill="#c1c1c1"/> <rect x="16" y="19" width="2" height="1" fill="#e2c1a0"/> <rect x="18" y="19" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="10" y="20" width="1" height="1" fill="#4e4e4e"/> <rect x="11" y="20" width="6" height="1" fill="#c1c1c1"/> <rect x="17" y="20" width="1" height="1" fill="#4e4e4e"/>
-        <rect x="11" y="21" width="6" height="1" fill="#4e4e4e"/>
-    </svg>
-);
-
-const AvatarDojoSVG = () => (
-    <svg width="100%" height="100%" viewBox="0 0 160 120" className="absolute inset-0">
-        <defs>
-            <pattern id="tatami" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
-                <path d="M 0,0 l 10,0 m -5, -5 l 0,10" stroke="#b45309" strokeWidth="1"/>
-            </pattern>
-        </defs>
-        <rect width="160" height="120" fill="#475569" />
-        <rect y="60" width="160" height="60" fill="url(#tatami)" />
-        <g transform="translate(120, 50)">
-            <rect x="0" y="0" width="20" height="5" fill="#5c2d08"/>
-            <rect x="8" y="5" width="4" height="25" fill="#5c2d08"/>
-            <rect x="2" y="30" width="16" height="3" fill="#5c2d08"/>
-             <path d="M 2 33 L 0 40 L 20 40 L 18 33 Z" fill="#5c2d08"/>
-            <rect x="3" y="10" width="14" height="16" fill="#1e293b" rx="2"/>
-            <rect x="5" y="26" width="10" height="8" fill="#1e293b" />
-        </g>
-         <g transform="translate(20, 40)">
-            <path d="M 0 10 L 20 10 L 20 5 L 18 5 L 18 8 L 2 8 L 2 0 L 0 0 Z" fill="#5c2d08" />
-            <path d="M 4 10 L 4 25 L 16 25 L 16 10 L 12 10 L 10 15 L 8 10 Z" fill="#f1f5f9"/>
-        </g>
-        <g className="animate-thrust" style={{transformOrigin: '50px 100px'}}>
-            <rect x="40" y="40" width="20" height="40" fill="#1e293b" rx="4"/>
-            <rect x="34" y="28" width="32" height="32" fill="#d1d5db" rx="16"/>
-            <rect x="38" y="38" width="24" height="6" fill="#1e293b" />
-            <rect x="60" y="50" width="60" height="4" fill="#a16207" rx="2" style={{transform: 'rotate(-15deg)'}}/>
-        </g>
-    </svg>
-);
-
-const DetailViewModal = ({ type, onClose }) => {
-    const title = type === 'comments' ? '댓글' : '좋아요';
-    const mockData = type === 'comments' 
-        ? ["완전 싸이월드구만!", "도토리로 도북, 죽도사는건가요 ㅋㅋ", "도장바닥 얼마에 까셨나요?ㅋㅋ", "도복 디자인 넘 좋은데요", "도복이 멋지네요!"]
-        : mockUsers.slice(0, 4).map(u => u.name);
-
-    return (
-        <div className="absolute inset-0 bg-slate-800/90 backdrop-blur-sm z-30 flex flex-col">
-            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
-                <h2 className="text-lg font-bold">{title}</h2>
-                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-            </div>
-            <div className="p-4 overflow-y-auto">
-                {type === 'comments' ? (
-                    <div className="space-y-2">
-                        {mockData.map((comment, i) => <p key={i} className="text-sm bg-slate-700 p-2 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> {comment}</p>)}
-                    </div>
-                ) : (
-                    <div className="space-y-2">
-                        {mockData.map((name, i) => (
-                             <div key={i} className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg">
-                                <UserAvatar user={mockUsers.find(u => u.name === name)} size="sm" />
-                                <p className="font-semibold">{name}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
-const AvatarSpaceModal = ({ user, onClose }) => {
-    const [isPublic, setIsPublic] = React.useState(true);
-    const [detailView, setDetailView] = React.useState(null);
-
-    return (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white relative p-4 flex flex-col max-h-[90vh] overflow-hidden">
-                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white z-40 bg-slate-800/50 rounded-full">
-                    <X size={20} />
-                </button>
-                <div className="w-full aspect-video bg-slate-700 rounded-lg relative overflow-hidden">
-                   <AvatarDojoSVG />
-                   <div className="absolute bottom-2 left-2 flex items-center gap-3 bg-black/30 p-1.5 rounded-lg">
-                       <button onClick={() => setDetailView('comments')} className="flex items-center gap-1 text-xs text-white hover:text-blue-300">
-                           <MessageSquare size={14} /> 1.2k
-                       </button>
-                        <button onClick={() => setDetailView('likes')} className="flex items-center gap-1 text-xs text-white hover:text-red-300">
-                           <Heart size={14} /> 2.5k
-                       </button>
-                   </div>
-                </div>
-                <div className="flex-grow overflow-y-auto pt-4">
-                    <div className="flex justify-between items-center mb-3">
-                        <h3 className="font-bold text-lg">{user.name}의 공간</h3>
-                        <button onClick={() => setIsPublic(!isPublic)} className="flex items-center gap-2 text-sm px-3 py-1 rounded-full bg-slate-700">
-                            {isPublic ? <><CheckSquare size={16} className="text-green-400"/> 공개</> : <><Square size={16} className="text-slate-400"/> 비공개</>}
-                        </button>
-                    </div>
-                    <div className="space-y-2">
-                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 완전싸이월드네요!</p>
-                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도토리로 사는건가요??ㅋㅋ.</p>
-                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도복이 멋지네요! 얼마에구입하셨나요?</p>
-                    </div>
-                </div>
-                {detailView && <DetailViewModal type={detailView} onClose={() => setDetailView(null)} />}
-            </div>
-        </div>
-    );
-};
-
-const NotificationBell = ({ count, onClick }) => (
-    <button onClick={onClick} className="relative p-2 rounded-full hover:bg-slate-800 transition-colors">
-        <Bell className="w-5 h-5 text-slate-400" />
-        {count > 0 && (
-            <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-slate-950">
-                {count}
-            </span>
-        )}
-    </button>
-);
-
-const NotificationModal = ({ notifications, onSelect, onClose }) => (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
-            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
-                <h2 className="text-lg font-bold">새로운 소식</h2>
-                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-            </div>
-            <div className="p-2 overflow-y-auto">
-                {notifications.map(notif => (
-                    <div key={notif.id} onClick={() => onSelect(notif)} className={cn(
-                        "p-3 mb-2 hover:bg-slate-700/50 rounded-lg cursor-pointer flex items-center gap-3 border",
-                        !notif.read ? 'bg-red-900/40 border-red-500/50' : 'bg-transparent border-red-500/30'
-                    )}>
-                        <UserAvatar user={notif.opponent} size="sm" />
-                        <div className="flex-1">
-                            <p className="text-sm">
-                                <span className="font-bold">{notif.opponent.name}</span>
-                                님으로부터{' '}
-                                {notif.type === 'new_request' && '새로운 대련 신청이 도착했습니다.'}
-                                {notif.type === 'declined' && '대련 거절 메시지가 도착했습니다.'}
-                                {notif.type === 'changed' && '대련 변경 신청이 도착했습니다.'}
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-);
-
-const NotificationDetailModal = ({ notification, onClose }) => {
-    const [message, setMessage] = React.useState('');
-    const [action, setAction] = React.useState(null);
-
-    const handleAction = (type) => { setAction(type); };
-    const handleSend = () => { alert('메시지를 발송했습니다.'); onClose(); };
-
-    const renderContent = () => {
-        switch (notification.type) {
-            case 'new_request':
-                if (action) {
-                    return (
-                        <div>
-                            <h3 className="font-semibold text-lg mb-2 text-center">
-                                {action === 'accept' && '수락 메시지'} {action === 'decline' && '거절 메시지'} {action === 'change' && '변경 제안'}
-                            </h3>
-                            {action === 'change' && (
-                                <div className="space-y-2 mb-4">
-                                    <input type="text" placeholder="장소" className="w-full bg-slate-700 p-2 rounded-lg text-sm" />
-                                    <input type="time" className="w-full bg-slate-700 p-2 rounded-lg text-sm" />
-                                    <input type="date" className="w-full bg-slate-700 p-2 rounded-lg text-sm" />
-                                </div>
-                            )}
-                            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="3" placeholder="메시지를 입력하세요..." className="w-full bg-slate-700 p-2 rounded-lg text-sm mb-4"></textarea>
-                            <button onClick={handleSend} className="w-full bg-blue-600 py-2 rounded-lg font-semibold">발송</button>
-                        </div>
-                    );
-                }
-                return (
-                    <>
-                        <p className="text-center mb-4">{notification.opponent.name}님이 대련을 신청했습니다.</p>
-                        <div className="flex gap-2">
-                            <button onClick={() => handleAction('accept')} className="w-full bg-green-600 py-2 rounded-lg font-semibold">수락</button>
-                            <button onClick={() => handleAction('decline')} className="w-full bg-red-600 py-2 rounded-lg font-semibold">거절</button>
-                            <button onClick={() => handleAction('change')} className="w-full bg-yellow-600 py-2 rounded-lg font-semibold">변경</button>
-                        </div>
-                    </>
-                );
-            case 'declined':
-                return (
-                    <div>
-                        <p className="bg-slate-700/50 p-3 rounded-lg text-sm mb-4 italic">"{notification.message}"</p>
-                        <textarea rows="3" placeholder="답장 메시지..." className="w-full bg-slate-700 p-2 rounded-lg text-sm mb-4"></textarea>
-                        <button onClick={handleSend} className="w-full bg-blue-600 py-2 rounded-lg font-semibold">확인</button>
-                    </div>
-                );
-            case 'changed': return null;
-            default: return null;
-        }
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white relative">
-                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-                <div className="flex flex-col items-center mb-4">
-                    <UserAvatar user={notification.opponent} size="md" />
-                    <p className="font-bold mt-2">{notification.opponent.name}</p>
-                </div>
-                {renderContent()}
-            </div>
-        </div>
-    );
-};
-
+// --- SCREEN COMPONENTS ---
 const GifticonModal = ({ onClose }) => (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
         <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
@@ -876,8 +705,12 @@ const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
     const handleToggle = (quest) => {
         setSelectedQuests(prev => {
             const isSelected = prev.some(q => q.id === quest.id);
-            if (isSelected) { return prev.filter(q => q.id !== quest.id); }
-            if (prev.length < 10) { return [...prev, quest]; }
+            if (isSelected) {
+                return prev.filter(q => q.id !== quest.id);
+            }
+            if (prev.length < 10) {
+                return [...prev, quest];
+            }
             return prev;
         });
     };
@@ -895,8 +728,16 @@ const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
                         const isSelected = selectedQuests.some(q => q.id === quest.id);
                         const canSelectMore = selectedQuests.length < 10;
                         return (
-                            <button key={quest.id} onClick={() => handleToggle(quest)} disabled={!isSelected && !canSelectMore}
-                                className={cn("w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors", "bg-slate-700/50 text-slate-200 hover:bg-slate-700", !canSelectMore && !isSelected && "opacity-60 cursor-not-allowed")}>
+                            <button 
+                                key={quest.id}
+                                onClick={() => handleToggle(quest)}
+                                disabled={!isSelected && !canSelectMore}
+                                className={cn(
+                                    "w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors",
+                                    "bg-slate-700/50 text-slate-200 hover:bg-slate-700",
+                                    !canSelectMore && !isSelected && "opacity-60 cursor-not-allowed"
+                                )}
+                            >
                                 {isSelected ? <CheckSquare className="w-5 h-5 text-blue-400" /> : <Square className="w-5 h-5 text-slate-500" />}
                                 <span>{quest.text}</span>
                             </button>
@@ -916,7 +757,12 @@ const GoalSettingModal = ({ onClose }) => {
     const [year, setYear] = React.useState(2025);
     const [isSaved, setIsSaved] = React.useState(false);
 
-    const handleSave = () => { setIsSaved(true); setTimeout(() => { onClose(); }, 1500); };
+    const handleSave = () => {
+        setIsSaved(true);
+        setTimeout(() => {
+            onClose();
+        }, 1500);
+    };
 
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -945,6 +791,7 @@ const GoalSettingModal = ({ onClose }) => {
     );
 };
 
+// --- [NEW] Home Screen Modals ---
 const PointHistoryModal = ({ history, onClose }) => (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
         <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
@@ -1093,30 +940,28 @@ const GoalChecklistModal = ({ goals, onClose }) => {
     );
 };
 
-const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
+
+const HomeScreen = ({ user, onNavigate }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
-  const [modal, setModal] = React.useState(null); 
+  const [modal, setModal] = React.useState(null); // null, 'points', 'opponent', 'quest', 'goal_edit', 'goal_check'
   const [selectedItem, setSelectedItem] = React.useState(null);
 
-  const openModal = (type, item = null) => { setModal(type); setSelectedItem(item); };
-  const closeModal = () => { setModal(null); setSelectedItem(null); };
-  
-  const getNotificationMessage = (notification) => {
-    if (!notification) return '';
-    const opponentName = notification.opponent.name;
-    switch (notification.type) {
-        case 'new_request': return `${opponentName}님으로부터 새로운 대련 신청이 도착했습니다.`;
-        case 'declined': return `${opponentName}님이 대련을 거절했습니다.`;
-        case 'changed': return `${opponentName}님이 대련 변경을 신청했습니다.`;
-        default: return `${opponentName}님으로부터 새로운 알림이 도착했습니다.`;
-    }
+  const openModal = (type, item = null) => {
+    setModal(type);
+    setSelectedItem(item);
+  };
+
+  const closeModal = () => {
+    setModal(null);
+    setSelectedItem(null);
   };
 
   const getDday = (dateString) => {
-      const today = new Date('2025-07-21');
+      const today = new Date('2025-07-21'); // Assuming today is July 21, 2025
       const matchDate = new Date(dateString);
       const diffTime = matchDate - today;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
   };
 
   return (
@@ -1137,20 +982,6 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 </div>
             </div>
         </Card>
-
-        <div className="space-y-2">
-            {notifications.map(notification => (
-                <Card key={notification.id} onClick={() => onSelectNotification(notification)} className="bg-red-900/40 border-red-500/50 animate-pulse hover:bg-red-900/60 cursor-pointer">
-                    <div className="flex items-center gap-3">
-                        <Bell className="w-5 h-5 text-red-400" />
-                        <div>
-                            <p className="font-bold text-red-300">새로운 소식</p>
-                            <p className="text-sm">{getNotificationMessage(notification)}</p>
-                        </div>
-                    </div>
-                </Card>
-            ))}
-        </div>
 
         <Card onClick={() => openModal('points')} className="bg-gradient-to-br from-blue-600 to-blue-800 border-blue-500">
             <div className="flex justify-between items-start">
@@ -1265,14 +1096,25 @@ const MatchRequestModal = ({ user, onClose }) => {
     const [privacySettings, setPrivacySettings] = React.useState({ video: true, comments: true, likes: true, commentary: true });
     const [isSent, setIsSent] = React.useState(false);
 
-    const handleCheckboxChange = (key) => { setPrivacySettings(prev => ({ ...prev, [key]: !prev[key] })); };
-    const handleSendRequest = () => { setIsSent(true); setTimeout(() => { onClose(); }, 1500); };
+    const handleCheckboxChange = (key) => {
+        setPrivacySettings(prev => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    const handleSendRequest = () => {
+        setIsSent(true);
+        setTimeout(() => {
+            onClose();
+        }, 1500);
+    };
 
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white relative">
-                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white">
+                    <X size={20} />
+                </button>
                 <h2 className="text-xl font-bold text-center mb-4">대련 신청</h2>
+                
                 <Card className="mb-4">
                     <div className="flex items-center gap-4">
                         <UserAvatar user={user} size="md" />
@@ -1283,6 +1125,7 @@ const MatchRequestModal = ({ user, onClose }) => {
                         </div>
                     </div>
                 </Card>
+
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-slate-300 mb-1">날짜 선택</label>
@@ -1313,6 +1156,7 @@ const MatchRequestModal = ({ user, onClose }) => {
                         <textarea rows={2} placeholder="하고 싶은 말을 남겨주세요." className="w-full bg-slate-700 border border-slate-600 rounded-lg p-2 text-white placeholder:text-slate-500"></textarea>
                     </div>
                 </div>
+
                 <div className="flex gap-3 mt-6">
                     <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
                     <button onClick={handleSendRequest} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">신청</button>
@@ -1328,8 +1172,12 @@ const MatchScreen = () => {
     const [modalUser, setModalUser] = React.useState(null);
 
     const filterTabs = [
-        { id: 'distance', label: '거리순' }, { id: 'experience', label: '경력순' }, { id: 'rank', label: '단수' },
-        { id: 'score', label: '최고점수' }, { id: 'wins', label: '최다승' }, { id: 'matches', label: '최다도전' },
+        { id: 'distance', label: '거리순' },
+        { id: 'experience', label: '경력순' },
+        { id: 'rank', label: '단수' },
+        { id: 'score', label: '최고점수' },
+        { id: 'wins', label: '최다승' },
+        { id: 'matches', label: '최다도전' },
     ];
 
     const sortedUsers = [...mockUsers].sort((a, b) => {
@@ -1339,7 +1187,9 @@ const MatchScreen = () => {
             case 'score': return b.platformRank - a.platformRank;
             case 'wins': return b.wins - a.wins;
             case 'matches': return (b.wins + b.losses) - (a.wins + a.losses);
-            case 'distance': default: return Math.abs(a.platformRank - currentUser.platformRank) - Math.abs(b.platformRank - currentUser.platformRank);
+            case 'distance':
+            default:
+                return Math.abs(a.platformRank - currentUser.platformRank) - Math.abs(b.platformRank - currentUser.platformRank);
         }
     });
 
@@ -1413,7 +1263,12 @@ const RankingScreen = () => {
     const [selectedUser, setSelectedUser] = React.useState(null);
 
     const playersOnMap = allUsers;
-    const mapPositions = [ { left: '40%', top: '55%' }, { left: '20%', top: '25%' }, { left: '70%', top: '65%' }, { left: '50%', top: '15%' }, { left: '15%', top: '60%' }, { left: '80%', top: '30%' } ];
+    const mapPositions = [
+        { left: '40%', top: '55%' }, { left: '20%', top: '25%' }, { left: '70%', top: '65%' },
+        { left: '50%', top: '15%' }, { left: '15%', top: '60%' }, { left: '80%', top: '30%' },
+        { left: '30%', top: '80%' },
+    ];
+    
     const currentRankings = allRankings[period][criteria];
 
     return (
@@ -1423,6 +1278,7 @@ const RankingScreen = () => {
             <Card>
                 <h3 className="font-semibold mb-3">지역별 TOP</h3>
                 <div className="bg-slate-700 h-64 rounded-lg relative">
+                    {/* Mock Map */}
                     <svg width="100%" height="100%" viewBox="0 0 200 150">
                         <path d="M 10 140 C 30 100, 50 80, 70 60 S 100 20, 130 10 L 190 10" stroke="#475569" strokeWidth="2" fill="none"/>
                         <path d="M 40 130 C 60 100, 80 90, 100 80 S 130 60, 160 50 L 190 40" stroke="#475569" strokeWidth="2" fill="none"/>
@@ -1526,7 +1382,7 @@ const CommunityScreen = () => {
     const ChatWindow = ({ chat, onBack }) => (
         <div className="h-full flex flex-col">
             <div className="flex items-center p-3 border-b border-slate-700">
-                <button onClick={onBack} className="mr-3 p-1 text-slate-300 hover:text-white"><ChevronsLeft size={20}/></button>
+                <button onClick={onBack} className="mr-3 p-1 text-white text-2xl font-bold">&lt;</button>
                 <UserAvatar user={chat.partner} size="sm"/>
                 <div className="ml-3">
                     <p className="font-bold">{chat.partner.name}</p>
@@ -1639,7 +1495,7 @@ const MatchDetailModal = ({ match, onClose }) => {
                                 <p className="font-bold">{currentUser.name}</p>
                             </div>
                             <div className="text-center">
-                                <p className={cn("font-bold text-xl", match.result === 'win' ? 'text-green-400' : match.result === 'loss' ? 'text-red-400' : 'text-slate-400')}>{match.result?.toUpperCase()}</p>
+                                <p className={cn("font-bold text-xl", match.result === 'win' ? 'text-green-400' : 'text-red-400')}>{match.result?.toUpperCase()}</p>
                                 <p className="font-semibold">{match.score}</p>
                             </div>
                             <div className="flex items-center gap-3">
@@ -1690,10 +1546,297 @@ const MatchDetailModal = ({ match, onClose }) => {
     );
 };
 
+const AvatarIconSVG = () => (
+    <svg width="80" height="80" viewBox="0 0 28 28" shapeRendering="crispEdges" className="bg-slate-700 p-1 rounded-lg">
+        <rect x="9" y="4" width="2" height="1" fill="#272727"/> <rect x="11" y="4" width="6" height="1" fill="#363636"/> <rect x="17" y="4" width="2" height="1" fill="#272727"/>
+        <rect x="7" y="5" width="2" height="1" fill="#272727"/> <rect x="9" y="5" width="2" height="1" fill="#363636"/> <rect x="11" y="5" width="6" height="1" fill="#4e4e4e"/> <rect x="17" y="5" width="2" height="1" fill="#363636"/> <rect x="19" y="5" width="2" height="1" fill="#272727"/>
+        <rect x="6" y="6" width="1" height="1" fill="#272727"/> <rect x="7" y="6" width="2" height="1" fill="#363636"/> <rect x="9" y="6" width="10" height="1" fill="#4e4e4e"/> <rect x="19" y="6" width="2" height="1" fill="#363636"/> <rect x="21" y="6" width="1" height="1" fill="#272727"/>
+        <rect x="5" y="7" width="1" height="1" fill="#272727"/> <rect x="6" y="7" width="1" height="1" fill="#363636"/> <rect x="7" y="7" width="14" height="1" fill="#4e4e4e"/> <rect x="21" y="7" width="1" height="1" fill="#363636"/> <rect x="22" y="7" width="1" height="1" fill="#272727"/>
+        <rect x="5" y="8" width="1" height="1" fill="#363636"/> <rect x="6" y="8" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="8" width="1" height="1" fill="#363636"/>
+        <rect x="5" y="9" width="1" height="1" fill="#363636"/> <rect x="6" y="9" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="9" width="1" height="1" fill="#363636"/>
+        <rect x="5" y="10" width="1" height="1" fill="#363636"/> <rect x="6" y="10" width="16" height="1" fill="#4e4e4e"/> <rect x="22" y="10" width="1" height="1" fill="#363636"/>
+        <rect x="6" y="11" width="16" height="1" fill="#4e4e4e"/>
+        <rect x="6" y="12" width="1" height="1" fill="#4e4e4e"/> <rect x="7" y="12" width="2" height="1" fill="#c1c1c1"/> <rect x="9" y="12" width="10" height="1" fill="#4e4e4e"/> <rect x="19" y="12" width="2" height="1" fill="#c1c1c1"/> <rect x="21" y="12" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="7" y="13" width="2" height="1" fill="#c1c1c1"/> <rect x="9" y="13" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="13" width="3" height="1" fill="#f1d3b4"/> <rect x="13" y="13" width="2" height="1" fill="#4e4e4e"/> <rect x="15" y="13" width="3" height="1" fill="#f1d3b4"/> <rect x="18" y="13" width="1" height="1" fill="#4e4e4e"/> <rect x="19" y="13" width="2" height="1" fill="#c1c1c1"/>
+        <rect x="7" y="14" width="1" height="1" fill="#c1c1c1"/> <rect x="8" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="14" width="1" height="1" fill="#f1d3b4"/> <rect x="10" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="11" y="14" width="6" height="1" fill="#f1d3b4"/> <rect x="17" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="18" y="14" width="1" height="1" fill="#f1d3b4"/> <rect x="19" y="14" width="1" height="1" fill="#4e4e4e"/> <rect x="20" y="14" width="1" height="1" fill="#c1c1c1"/>
+        <rect x="7" y="15" width="1" height="1" fill="#c1c1c1"/> <rect x="8" y="15" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="15" width="10" height="1" fill="#f1d3b4"/> <rect x="19" y="15" width="1" height="1" fill="#4e4e4e"/> <rect x="20" y="15" width="1" height="1" fill="#c1c1c1"/>
+        <rect x="8" y="16" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="16" width="10" height="1" fill="#e2c1a0"/> <rect x="19" y="16" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="8" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="9" y="17" width="2" height="1" fill="#e2c1a0"/> <rect x="11" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="12" y="17" width="4" height="1" fill="#e2c1a0"/> <rect x="16" y="17" width="1" height="1" fill="#4e4e4e"/> <rect x="17" y="17" width="2" height="1" fill="#e2c1a0"/> <rect x="19" y="17" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="9" y="18" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="18" width="8" height="1" fill="#e2c1a0"/> <rect x="18" y="18" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="9" y="19" width="1" height="1" fill="#4e4e4e"/> <rect x="10" y="19" width="2" height="1" fill="#e2c1a0"/> <rect x="12" y="19" width="4" height="1" fill="#c1c1c1"/> <rect x="16" y="19" width="2" height="1" fill="#e2c1a0"/> <rect x="18" y="19" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="10" y="20" width="1" height="1" fill="#4e4e4e"/> <rect x="11" y="20" width="6" height="1" fill="#c1c1c1"/> <rect x="17" y="20" width="1" height="1" fill="#4e4e4e"/>
+        <rect x="11" y="21" width="6" height="1" fill="#4e4e4e"/>
+    </svg>
+);
+
+const AvatarDojoSVG = () => (
+    <svg width="100%" height="100%" viewBox="0 0 160 120" className="absolute inset-0">
+        <defs>
+            <pattern id="tatami" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+                <path d="M 0,0 l 10,0 m -5, -5 l 0,10" stroke="#b45309" strokeWidth="1"/>
+            </pattern>
+        </defs>
+        <rect width="160" height="120" fill="#475569" />
+        <rect y="60" width="160" height="60" fill="url(#tatami)" />
+        {/* Hogu Stand */}
+        <g transform="translate(120, 50)">
+            <rect x="0" y="0" width="20" height="5" fill="#5c2d08"/>
+            <rect x="8" y="5" width="4" height="25" fill="#5c2d08"/>
+            <rect x="2" y="30" width="16" height="3" fill="#5c2d08"/>
+             <path d="M 2 33 L 0 40 L 20 40 L 18 33 Z" fill="#5c2d08"/>
+            {/* Hogu */}
+            <rect x="3" y="10" width="14" height="16" fill="#1e293b" rx="2"/>
+            <rect x="5" y="26" width="10" height="8" fill="#1e293b" />
+        </g>
+        {/* Clothes Hanger */}
+         <g transform="translate(20, 40)">
+            <path d="M 0 10 L 20 10 L 20 5 L 18 5 L 18 8 L 2 8 L 2 0 L 0 0 Z" fill="#5c2d08" />
+            {/* Dobok */}
+            <path d="M 4 10 L 4 25 L 16 25 L 16 10 L 12 10 L 10 15 L 8 10 Z" fill="#f1f5f9"/>
+        </g>
+        <g className="animate-thrust" style={{transformOrigin: '50px 100px'}}>
+            <rect x="40" y="40" width="20" height="40" fill="#1e293b" rx="4"/>
+            <rect x="34" y="28" width="32" height="32" fill="#d1d5db" rx="16"/>
+            <rect x="38" y="38" width="24" height="6" fill="#1e293b" />
+            <rect x="60" y="50" width="60" height="4" fill="#a16207" rx="2" style={{transform: 'rotate(-15deg)'}}/>
+        </g>
+    </svg>
+);
+
+const DetailViewModal = ({ type, onClose }) => {
+    const title = type === 'comments' ? '댓글' : '좋아요';
+    const mockData = type === 'comments' 
+        ? ["완전 싸이월드구만!", "도토리로 도북, 죽도사는건가요 ㅋㅋ", "도장바닥 얼마에 까셨나요?ㅋㅋ", "도복 디자인 넘 좋은데요", "도복이 멋지네요!"]
+        : mockUsers.slice(0, 4).map(u => u.name);
+
+    return (
+        <div className="absolute inset-0 bg-slate-800/90 backdrop-blur-sm z-30 flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                <h2 className="text-lg font-bold">{title}</h2>
+                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+            </div>
+            <div className="p-4 overflow-y-auto">
+                {type === 'comments' ? (
+                    <div className="space-y-2">
+                        {mockData.map((comment, i) => <p key={i} className="text-sm bg-slate-700 p-2 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> {comment}</p>)}
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        {mockData.map((name, i) => (
+                             <div key={i} className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg">
+                                <UserAvatar user={mockUsers.find(u => u.name === name)} size="sm" />
+                                <p className="font-semibold">{name}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const AvatarSpaceModal = ({ user, onClose }) => {
+    const [isPublic, setIsPublic] = React.useState(true);
+    const [detailView, setDetailView] = React.useState(null);
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white relative p-4 flex flex-col max-h-[90vh] overflow-hidden">
+                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white z-40 bg-slate-800/50 rounded-full">
+                    <X size={20} />
+                </button>
+                <div className="w-full aspect-video bg-slate-700 rounded-lg relative overflow-hidden">
+                   <AvatarDojoSVG />
+                   <div className="absolute bottom-2 left-2 flex items-center gap-3 bg-black/30 p-1.5 rounded-lg">
+                       <button onClick={() => setDetailView('comments')} className="flex items-center gap-1 text-xs text-white hover:text-blue-300">
+                           <MessageSquare size={14} /> 1.2k
+                       </button>
+                        <button onClick={() => setDetailView('likes')} className="flex items-center gap-1 text-xs text-white hover:text-red-300">
+                           <Heart size={14} /> 2.5k
+                       </button>
+                   </div>
+                </div>
+                <div className="flex-grow overflow-y-auto pt-4">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="font-bold text-lg">{user.name}의 공간</h3>
+                        <button onClick={() => setIsPublic(!isPublic)} className="flex items-center gap-2 text-sm px-3 py-1 rounded-full bg-slate-700">
+                            {isPublic ? <><CheckSquare size={16} className="text-green-400"/> 공개</> : <><Square size={16} className="text-slate-400"/> 비공개</>}
+                        </button>
+                    </div>
+                    <div className="space-y-2">
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 완전싸이월드네요!</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도토리로 사는건가요??ㅋㅋ.</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도복이 멋지네요! 얼마에구입하셨나요?</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도장바닥은 이벤트로 받으신건가요?.</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 이쁘게 꾸미고 싶네요 저도 ㅋㅋ</p>
+                    </div>
+                </div>
+                {detailView && <DetailViewModal type={detailView} onClose={() => setDetailView(null)} />}
+            </div>
+        </div>
+    );
+};
+
+
+const ProfileScreen = ({ user }) => {
+    const [selectedMatch, setSelectedMatch] = React.useState(null);
+    const [showAllMatches, setShowAllMatches] = React.useState(false);
+    
+    const totalBadges = 15;
+    const earnedBadges = user.badges;
+    const badgeSlots = Array.from({ length: totalBadges }, (_, i) => {
+        return i < earnedBadges.length ? earnedBadges[i] : null;
+    });
+
+    const completedMatches = mockMatchHistory.filter(m => m.status === 'completed');
+    const matchesToShow = showAllMatches ? completedMatches : completedMatches.slice(0, 4);
+
+    return (
+        <>
+            <div className="p-4 space-y-6 text-white">
+                <Card>
+                    <div className="flex items-center space-x-4">
+                        <UserAvatar user={user} size="lg" />
+                        <div>
+                            <h1 className="text-3xl font-bold">{user.name}</h1>
+                            <p className="text-yellow-400 font-semibold text-lg">{user.officialRank}</p>
+                            <p className="text-slate-400">{user.dojang} / {user.location}</p>
+                        </div>
+                    </div>
+                </Card>
+                
+                <DetailedStatsCard stats={user.detailedStats} />
+
+                <div>
+                    <h3 className="font-semibold mb-3 text-lg">획득한 배지</h3>
+                    <div className="grid grid-cols-5 gap-2">
+                        {badgeSlots.map((badge, index) => 
+                            badge ? (
+                                <Badge key={badge} type={badge} />
+                            ) : (
+                                <div key={index} className="w-16 h-16 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center">
+                                    <Lock className="w-6 h-6 text-slate-600" />
+                                </div>
+                            )
+                        )}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold mb-3 text-lg">최근 대련 기록</h3>
+                    <div className="space-y-3">
+                        {matchesToShow.map(match => (
+                            <Card key={match.id} onClick={() => setSelectedMatch(match)} className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                    <UserAvatar user={match.opponent} size="sm" />
+                                    <div>
+                                        <p className="font-semibold">vs {match.opponent.name}</p>
+                                        <p className="text-sm text-slate-400">{match.date}</p>
+                                    </div>
+                                </div>
+                                <div className={cn('px-3 py-1 rounded-full text-sm font-bold',
+                                    match.result === 'win' && 'bg-green-500/20 text-green-400',
+                                    match.result === 'loss' && 'bg-red-500/20 text-red-400',
+                                    match.result === 'draw' && 'bg-slate-500/20 text-slate-300'
+                                )}>
+                                    {match.result?.toUpperCase()} ({match.score})
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                    {!showAllMatches && completedMatches.length > 4 && (
+                        <button onClick={() => setShowAllMatches(true)} className="w-full text-center py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-semibold text-slate-300 mt-3">
+                            + 더보기
+                        </button>
+                    )}
+                </div>
+            </div>
+            {selectedMatch && <MatchDetailModal match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
+        </>
+    );
+};
+
+// --- NEW/UPDATED ANNOUNCEMENTS COMPONENTS ---
+
+const InfoModal = ({ title, date, location, details, onClose, showApplyButton }) => (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white relative">
+            <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+            <h2 className="text-xl font-bold mb-2">{title}</h2>
+            <p className="text-sm text-slate-400 mb-4">{date} / {location}</p>
+            <p className="text-sm text-slate-300 mb-6">{details}</p>
+            <div className="flex gap-3">
+                <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">닫기</button>
+                {showApplyButton && <button onClick={() => { alert(`${title} 참가가 신청되었습니다.`); onClose(); }} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">참가하기</button>}
+            </div>
+        </div>
+    </div>
+);
+
+const PromotionCard = ({ item }) => (
+    <Card>
+        <img src={item.imageUrl} alt={item.title} className="w-full h-32 object-cover rounded-lg mb-3" />
+        <h3 className="font-bold text-lg text-slate-200">{item.title}</h3>
+        <p className="text-sm text-blue-400 font-semibold mb-2">{item.organizer}</p>
+        <p className="text-sm text-slate-400">{item.content}</p>
+    </Card>
+);
+
+const TravelPackageDetailModal = ({ pkg, onClose }) => (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                <h2 className="text-lg font-bold">{pkg.destination}</h2>
+                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+            </div>
+            <div className="p-4 overflow-y-auto space-y-4">
+                <img src={pkg.imageUrl} alt={pkg.destination} className="rounded-lg mb-2" />
+                <div className="space-y-4">
+                    <p className="text-sm text-slate-300">{pkg.description}</p>
+                    <div>
+                        <h3 className="font-semibold text-blue-400 mb-2">커리큘럼</h3>
+                        <ul className="list-disc list-inside text-sm space-y-1">
+                            {pkg.details.curriculum.map((c, i) => <li key={i}>{c}</li>)}
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 className="font-semibold text-blue-400 mb-2">일정</h3>
+                        <div className="space-y-1 text-sm">
+                           {pkg.details.schedule.map((s, i) => <p key={i}><span className="font-bold">{s.day}:</span> {s.activity}</p>)}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-blue-400 mb-2">주의사항</h3>
+                        <ul className="list-disc list-inside text-sm space-y-1">
+                            {pkg.details.notes.map((n, i) => <li key={i}>{n}</li>)}
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 className="font-semibold text-blue-400 mb-2">현재 신청 인원 ({pkg.details.applicants.length}/{pkg.maxApplicants})</h3>
+                        <p className="text-sm text-slate-400">{pkg.details.applicants.join(', ')}</p>
+                    </div>
+                </div>
+            </div>
+             <div className="p-4 flex-shrink-0 border-t border-slate-700">
+                 <button disabled={pkg.isConfirmed} onClick={() => alert(`${pkg.destination} 참가 신청!`)} className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-lg transition-colors disabled:bg-slate-500 disabled:cursor-not-allowed">
+                    {pkg.isConfirmed ? "모집 마감" : "참가 신청"}
+                 </button>
+            </div>
+        </div>
+    </div>
+);
+
+// --- [NEW] Theory Exam Components ---
 const ExamResultHistoryModal = ({ history, onClose }) => {
-    const chartHeight = 150; const chartWidth = 300; const yPadding = 20; const xPadding = 30;
+    const scores = history.map(h => h.score);
+    const chartHeight = 150;
+    const chartWidth = 300;
+    const yPadding = 20;
+    const xPadding = 30;
+
     const getX = (index) => xPadding + (index / (history.length - 1)) * (chartWidth - xPadding);
     const getY = (score) => chartHeight - yPadding - (score / 100) * (chartHeight - yPadding * 2);
+
     const linePath = history.length > 1 ? history.map((h, i) => `${getX(i)},${getY(h.score)}`).join(' ') : '';
 
     return (
@@ -1707,14 +1850,18 @@ const ExamResultHistoryModal = ({ history, onClose }) => {
                     <h3 className="font-semibold text-blue-400 mb-2">점수 추이</h3>
                     <div className="bg-slate-900/50 p-2 rounded-lg">
                         <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto">
+                            {/* Y Axis Labels */}
                             {[0, 25, 50, 75, 100].map(score => (
                                 <g key={score}>
                                     <line x1={xPadding} y1={getY(score)} x2={chartWidth} y2={getY(score)} stroke="#475569" strokeDasharray="2" />
                                     <text x={xPadding - 8} y={getY(score) + 4} fill="#94a3b8" fontSize="10" textAnchor="end">{score}</text>
                                 </g>
                             ))}
+                            {/* Line and Points */}
                             {history.length > 1 && <polyline fill="none" stroke="#3b82f6" strokeWidth="2" points={linePath} />}
-                            {history.map((h, i) => (<circle key={i} cx={getX(i)} cy={getY(h.score)} r="3" fill="#3b82f6" /> ))}
+                            {history.map((h, i) => (
+                                <circle key={i} cx={getX(i)} cy={getY(h.score)} r="3" fill="#3b82f6" />
+                            ))}
                         </svg>
                     </div>
                     <h3 className="font-semibold text-blue-400 mt-4 mb-2">점수 목록</h3>
@@ -1734,7 +1881,9 @@ const ExamResultHistoryModal = ({ history, onClose }) => {
 
 const ExamQuestionScreen = ({ questions, onFinish }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
-    const [userAnswers, setUserAnswers] = React.useState(() => questions.map(q => Array(q.answers.length).fill('')) );
+    const [userAnswers, setUserAnswers] = React.useState(() =>
+        questions.map(q => Array(q.answers.length).fill(''))
+    );
 
     const handleAnswerChange = (blankIndex, value) => {
         const newAnswers = [...userAnswers];
@@ -1748,7 +1897,10 @@ const ExamQuestionScreen = ({ questions, onFinish }) => {
     const handleSubmit = () => {
         let correctCount = 0;
         questions.forEach((q, qIndex) => {
-            if (q.answers.every((ans, ansIndex) => userAnswers[qIndex][ansIndex].trim() === ans.trim())) {
+            const isCorrect = q.answers.every((correctAnswer, ansIndex) => {
+                return userAnswers[qIndex][ansIndex].trim() === correctAnswer.trim();
+            });
+            if (isCorrect) {
                 correctCount++;
             }
         });
@@ -1766,23 +1918,36 @@ const ExamQuestionScreen = ({ questions, onFinish }) => {
                         <React.Fragment key={index}>
                             {part.split('\n').map((line, lineIndex) => <React.Fragment key={lineIndex}>{line}<br/></React.Fragment>)}
                             {index < textParts.length - 1 && (
-                                <input type="text" value={userAnswers[currentQuestionIndex][index]} onChange={(e) => handleAnswerChange(index, e.target.value)}
-                                    className="inline-block w-24 mx-1 bg-slate-700 border-b-2 border-slate-500 focus:border-blue-400 text-center text-white outline-none" />
+                                <input
+                                    type="text"
+                                    value={userAnswers[currentQuestionIndex][index]}
+                                    onChange={(e) => handleAnswerChange(index, e.target.value)}
+                                    className="inline-block w-24 mx-1 bg-slate-700 border-b-2 border-slate-500 focus:border-blue-400 text-center text-white outline-none"
+                                />
                             )}
                         </React.Fragment>
                     ))}
                 </div>
             </div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-700 flex-shrink-0">
-                <button onClick={() => setCurrentQuestionIndex(i => i - 1)} disabled={currentQuestionIndex === 0} className="flex items-center gap-2 px-4 py-2 bg-slate-600 rounded-lg disabled:opacity-50">
+                <button
+                    onClick={() => setCurrentQuestionIndex(i => i - 1)}
+                    disabled={currentQuestionIndex === 0}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-600 rounded-lg disabled:opacity-50"
+                >
                     <ChevronsLeft size={16} /> 이전
                 </button>
                 {currentQuestionIndex < questions.length - 1 ? (
-                    <button onClick={() => setCurrentQuestionIndex(i => i + 1)} className="flex items-center gap-2 px-4 py-2 bg-slate-600 rounded-lg">
+                    <button
+                        onClick={() => setCurrentQuestionIndex(i => i + 1)}
+                        className="flex items-center gap-2 px-4 py-2 bg-slate-600 rounded-lg"
+                    >
                         다음 <ChevronsRight size={16} />
                     </button>
                 ) : (
-                    <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white font-bold rounded-lg">제출하기</button>
+                    <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white font-bold rounded-lg">
+                        제출하기
+                    </button>
                 )}
             </div>
         </div>
@@ -1794,8 +1959,12 @@ const ExamResultScreen = ({ score, onRetry, onViewResults }) => (
         <h2 className="text-xl font-bold mb-2">시험 결과</h2>
         <p className="text-6xl font-bold text-blue-400 mb-6">{score}<span className="text-2xl text-slate-400">점</span></p>
         <div className="w-full space-y-3">
-             <button onClick={onViewResults} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">결과 보기</button>
-            <button onClick={onRetry} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">다시 풀기</button>
+             <button onClick={onViewResults} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">
+                결과 보기
+            </button>
+            <button onClick={onRetry} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
+                다시 풀기
+            </button>
         </div>
     </div>
 );
@@ -1809,107 +1978,58 @@ const TheoryExamScreen = () => {
 
     const startTest = () => {
         const shuffled = [...kendoTheoryData].sort(() => 0.5 - Math.random());
-        setQuestions(shuffled.slice(0, 5)); // 5 problems
-        setTestState('ongoing'); setScore(null);
+        setQuestions(shuffled.slice(0, 10));
+        setTestState('ongoing');
+        setScore(null);
     };
 
     const finishTest = (finalScore) => {
         setScore(finalScore);
-        const newHistoryEntry = { date: new Date().toISOString().split('T')[0], score: finalScore };
+        const newHistoryEntry = {
+            date: new Date().toISOString().split('T')[0],
+            score: finalScore
+        };
         setScoreHistory(prev => [...prev, newHistoryEntry]);
         setTestState('finished');
     };
 
-    const resetTest = () => { setTestState('idle'); setQuestions([]); setScore(null); };
+    const resetTest = () => {
+        setTestState('idle');
+        setQuestions([]);
+        setScore(null);
+    };
 
-    if (showHistory) { return <ExamResultHistoryModal history={scoreHistory} onClose={() => setShowHistory(false)} />; }
+    if (showHistory) {
+        return <ExamResultHistoryModal history={scoreHistory} onClose={() => setShowHistory(false)} />;
+    }
+
     switch (testState) {
-        case 'ongoing': return <ExamQuestionScreen questions={questions} onFinish={finishTest} />;
-        case 'finished': return <ExamResultScreen score={score} onRetry={resetTest} onViewResults={() => setShowHistory(true)} />;
-        case 'idle': default: return (
-            <div className="p-4 space-y-4">
-                <Card className="text-center">
-                    <h2 className="text-xl font-bold mb-2">학과 심사 모의 시험</h2>
-                    <p className="text-sm text-slate-400 mb-4">랜덤으로 5문제가 출제됩니다.</p>
-                    <button onClick={startTest} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">시험 시작</button>
-                </Card>
-                <Card className="text-center">
-                     <h2 className="text-xl font-bold mb-2">지난 결과 보기</h2>
-                    <p className="text-sm text-slate-400 mb-4">이전 시험 결과 및 점수 추이를 확인합니다.</p>
-                    <button onClick={() => setShowHistory(true)} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">결과 보기</button>
-                </Card>
-            </div> );
+        case 'ongoing':
+            return <ExamQuestionScreen questions={questions} onFinish={finishTest} />;
+        case 'finished':
+            return <ExamResultScreen score={score} onRetry={resetTest} onViewResults={() => setShowHistory(true)} />;
+        case 'idle':
+        default:
+            return (
+                <div className="p-4 space-y-4">
+                    <Card className="text-center">
+                        <h2 className="text-xl font-bold mb-2">학과 심사 모의 시험</h2>
+                        <p className="text-sm text-slate-400 mb-4">랜덤으로 10문제가 출제됩니다. 빈칸에 알맞은 단어를 입력하세요.</p>
+                        <button onClick={startTest} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
+                            시험 시작
+                        </button>
+                    </Card>
+                    <Card className="text-center">
+                         <h2 className="text-xl font-bold mb-2">지난 결과 보기</h2>
+                        <p className="text-sm text-slate-400 mb-4">이전 시험 결과 및 점수 추이를 확인합니다.</p>
+                        <button onClick={() => setShowHistory(true)} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">
+                            결과 보기
+                        </button>
+                    </Card>
+                </div>
+            );
     }
 };
-
-const InfoModal = ({ title, date, location, details, onClose, showApplyButton }) => (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
-            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
-                <h2 className="text-lg font-bold">{title}</h2>
-                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-            </div>
-            <div className="p-4 overflow-y-auto space-y-3">
-                <div className="flex items-center gap-2 text-sm text-slate-300"><Calendar size={14} /> <span>{date}</span></div>
-                <div className="flex items-center gap-2 text-sm text-slate-300"><MapPin size={14} /> <span>{location}</span></div>
-                <p className="text-sm bg-slate-700/50 p-3 rounded-lg">{details}</p>
-            </div>
-            {showApplyButton && (
-                <div className="p-4 flex-shrink-0">
-                    <button onClick={() => alert('신청 완료!')} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">신청하기</button>
-                </div>
-            )}
-        </div>
-    </div>
-);
-
-const PromotionCard = ({ item }) => (
-    <Card>
-        <img src={item.imageUrl} alt={item.title} className="w-full h-32 object-cover rounded-lg mb-3" />
-        <p className="text-xs text-blue-400 font-semibold">{item.organizer}</p>
-        <h3 className="font-bold text-lg">{item.title}</h3>
-        <p className="text-sm text-slate-400 mt-1">{item.content}</p>
-    </Card>
-);
-
-const TravelPackageDetailModal = ({ pkg, onClose }) => (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
-            <div className="relative">
-                <img src={pkg.imageUrl} alt={pkg.destination} className="w-full h-40 object-cover rounded-t-2xl" />
-                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-white bg-black/50 rounded-full hover:bg-black/80"><X size={20} /></button>
-            </div>
-            <div className="p-4 overflow-y-auto space-y-4">
-                <h2 className="text-xl font-bold">{pkg.destination}</h2>
-                <p className="text-sm text-slate-400">{pkg.description}</p>
-                <div className="flex justify-between items-center bg-slate-700/50 p-3 rounded-lg">
-                    <p className="font-bold text-lg text-blue-400">{pkg.price}</p>
-                    <div className="text-right">
-                        <p className="font-semibold">{pkg.currentApplicants} / {pkg.maxApplicants}명</p>
-                        <p className="text-xs text-slate-400">신청 현황</p>
-                    </div>
-                </div>
-                <div>
-                    <h3 className="font-semibold text-blue-400 mb-2">커리큘럼</h3>
-                    <div className="space-y-1">
-                        {pkg.details.curriculum.map((c, i) => <p key={i} className="text-sm bg-slate-700/20 p-2 rounded-md">{c}</p>)}
-                    </div>
-                </div>
-                <div>
-                    <h3 className="font-semibold text-blue-400 mb-2">참고 사항</h3>
-                    <ul className="list-disc list-inside text-sm space-y-1">
-                        {pkg.details.notes.map((n, i) => <li key={i}>{n}</li>)}
-                    </ul>
-                </div>
-            </div>
-            <div className="p-4 flex-shrink-0">
-                <button disabled={pkg.isConfirmed} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed">
-                    {pkg.isConfirmed ? '모집 마감' : '참가 신청'}
-                </button>
-            </div>
-        </div>
-    </div>
-);
 
 const AnnouncementsScreen = () => {
     const [activeTab, setActiveTab] = React.useState('theory_exam');
@@ -1917,68 +2037,80 @@ const AnnouncementsScreen = () => {
     const [selectedTravelPackage, setSelectedTravelPackage] = React.useState(null);
 
     const announceTabs = [
-        { id: 'theory_exam', label: '학과심사' }, { id: 'kka', label: '대한검도회' },
-        { id: 'promo', label: '홍보' }, { id: 'training', label: '무도수행' },
+        { id: 'theory_exam', label: '학과심사' },
+        { id: 'kka', label: '대한검도회' },
+        { id: 'promo', label: '홍보' },
+        { id: 'training', label: '무도수행' },
     ];
 
     const renderContent = () => {
         switch (activeTab) {
-            case 'theory_exam': return <TheoryExamScreen />;
-            case 'kka': return (
-                <div className="space-y-4">
-                    <h2 className="font-semibold text-lg px-1 text-slate-300">대한검도회 공지</h2>
-                    <Card>
-                        <h3 className="text-lg font-semibold mb-2 text-blue-400">공식 시합</h3>
-                        <p className="text-sm text-slate-300 mb-4">엑셀파일을 업로드하면, 자동으로 대련자와 매칭되어 시스템 업로드됩니다.</p>
-                        <button className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition-colors">
-                            <FileUp size={18} /> 엑셀 파일 업로드
-                        </button>
-                    </Card>
-                    <Card>
-                         <h3 className="text-lg font-semibold mb-2 text-blue-400">심사 일정</h3>
-                         <div className="space-y-2">
-                            {danPromotions.map(p => (
-                                <div key={p.id} className="flex justify-between items-center bg-slate-700/50 p-2 rounded-lg">
-                                    <p className="font-medium text-sm">{p.title}</p>
-                                    <button onClick={() => setModalContent({ ...p, type: 'apply' })} className="text-xs bg-slate-600 px-2 py-1 rounded">보기</button>
-                                </div>
-                            ))}
-                         </div>
-                    </Card>
-                     <Card>
-                         <h3 className="text-lg font-semibold mb-2 text-blue-400">강습회 일정</h3>
-                         <div className="space-y-2">
-                            {seminars.map(s => (
-                                <div key={s.id} className="flex justify-between items-center bg-slate-700/50 p-2 rounded-lg">
-                                    <p className="font-medium text-sm">{s.title}</p>
-                                    <button onClick={() => setModalContent({ ...s, type: 'apply' })} className="text-xs bg-slate-600 px-2 py-1 rounded">보기</button>
-                                </div>
-                            ))}
-                         </div>
-                    </Card>
-                </div> );
-            case 'promo': return ( <div className="space-y-4"> {promoItems.map(item => <PromotionCard key={item.id} item={item} />)} </div> );
-            case 'training': return (
-                <div className="space-y-4">
-                    <Card className="border-red-500/50 bg-red-500/10">
-                         <h2 className="text-lg font-semibold mb-2 text-red-400 flex items-center gap-2"><Info/> 사전 강습 안내</h2>
-                         <p className="text-sm text-slate-300">일본으로의 방문은 사전 2회에 걸친 강습이 필수입니다. 기본 일본어, 일본식 예법에 대한 강습이 진행되오니 반드시 참여해주시기 바랍니다.</p>
-                    </Card>
-                    {japanTravelPackages.map(pkg => (
-                        <Card key={pkg.id} onClick={() => setSelectedTravelPackage(pkg)} className={cn(pkg.isConfirmed && "opacity-60")}>
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <p className="font-semibold text-slate-200">{pkg.destination}</p>
-                                    <p className="text-xs text-slate-400">{pkg.duration}</p>
-                                </div>
-                                <div className="text-right">
-                                     <p className="font-bold text-blue-400">{pkg.price}</p>
-                                     {pkg.isConfirmed && <CheckCircle2 className="w-5 h-5 text-green-400 inline-block ml-2" />}
-                                </div>
-                            </div>
+            case 'theory_exam':
+                return <TheoryExamScreen />;
+            case 'kka':
+                return (
+                    <div className="space-y-4">
+                        <h2 className="font-semibold text-lg px-1 text-slate-300">대한검도회 공지</h2>
+                        <Card>
+                            <h3 className="text-lg font-semibold mb-2 text-blue-400">공식 시합</h3>
+                            <p className="text-sm text-slate-300 mb-4">엑셀파일을 업로드하면, 자동으로 대련자와 매칭되어 시스템 업로드됩니다.</p>
+                            <button className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition-colors">
+                                <FileUp size={18} /> 엑셀 파일 업로드
+                            </button>
                         </Card>
-                    ))}
-                </div> );
+                        <Card>
+                             <h3 className="text-lg font-semibold mb-2 text-blue-400">심사 일정</h3>
+                             <div className="space-y-2">
+                                {danPromotions.map(p => (
+                                    <div key={p.id} className="flex justify-between items-center bg-slate-700/50 p-2 rounded-lg">
+                                        <p className="font-medium text-sm">{p.title}</p>
+                                        <button onClick={() => setModalContent({ ...p, type: 'apply' })} className="text-xs bg-slate-600 px-2 py-1 rounded">보기</button>
+                                    </div>
+                                ))}
+                             </div>
+                        </Card>
+                         <Card>
+                             <h3 className="text-lg font-semibold mb-2 text-blue-400">강습회 일정</h3>
+                             <div className="space-y-2">
+                                {seminars.map(s => (
+                                    <div key={s.id} className="flex justify-between items-center bg-slate-700/50 p-2 rounded-lg">
+                                        <p className="font-medium text-sm">{s.title}</p>
+                                        <button onClick={() => setModalContent({ ...s, type: 'apply' })} className="text-xs bg-slate-600 px-2 py-1 rounded">보기</button>
+                                    </div>
+                                ))}
+                             </div>
+                        </Card>
+                    </div>
+                );
+            case 'promo':
+                return (
+                     <div className="space-y-4">
+                        {promoItems.map(item => <PromotionCard key={item.id} item={item} />)}
+                    </div>
+                );
+            case 'training':
+                return (
+                    <div className="space-y-4">
+                        <Card className="border-red-500/50 bg-red-500/10">
+                             <h2 className="text-lg font-semibold mb-2 text-red-400 flex items-center gap-2"><Info/> 사전 강습 안내</h2>
+                             <p className="text-sm text-slate-300">일본으로의 방문은 사전 2회에 걸친 강습이 필수입니다. 기본 일본어, 일본식 예법에 대한 강습이 진행되오니 반드시 참여해주시기 바랍니다.</p>
+                        </Card>
+                        {japanTravelPackages.map(pkg => (
+                            <Card key={pkg.id} onClick={() => setSelectedTravelPackage(pkg)} className={cn(pkg.isConfirmed && "opacity-60")}>
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <p className="font-semibold text-slate-200">{pkg.destination}</p>
+                                        <p className="text-xs text-slate-400">{pkg.duration}</p>
+                                    </div>
+                                    <div className="text-right">
+                                         <p className="font-bold text-blue-400">{pkg.price}</p>
+                                         {pkg.isConfirmed && <CheckCircle2 className="w-5 h-5 text-green-400 inline-block ml-2" />}
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                );
         }
     };
 
@@ -1995,175 +2127,30 @@ const AnnouncementsScreen = () => {
                 </div>
                 {renderContent()}
             </div>
-            {modalContent && ( <InfoModal {...modalContent} onClose={() => setModalContent(null)} showApplyButton={modalContent.type === 'apply'} /> )}
+            {modalContent && (
+                <InfoModal 
+                    title={modalContent.title}
+                    date={modalContent.date}
+                    location={modalContent.location}
+                    details={modalContent.details}
+                    onClose={() => setModalContent(null)}
+                    showApplyButton={modalContent.type === 'apply'}
+                />
+            )}
             {selectedTravelPackage && <TravelPackageDetailModal pkg={selectedTravelPackage} onClose={() => setSelectedTravelPackage(null)} />}
         </>
     );
 };
 
-const ProfileScreen = ({ user, onNavigate }) => {
-    const [expandedRecord, setExpandedRecord] = React.useState(null); // null, 'win', or 'loss'
-
-    const toggleRecord = (type) => {
-        setExpandedRecord(prev => (prev === type ? null : type));
-    };
-
-    const matchesToShow = mockMatchHistory.filter(m => m.status === 'completed' && m.result === expandedRecord);
-
-    return (
-        <div className="p-4 space-y-6 text-white">
-            <Card>
-                <div className="flex items-center gap-4">
-                    <UserAvatar user={user} size="lg" />
-                    <div className="flex-1">
-                         <h1 className="text-2xl font-bold">{user.name}</h1>
-                        <p className="text-slate-400">{user.dojang} · {user.location}</p>
-                        <div className="mt-2 flex items-center gap-4">
-                            <span className="font-semibold text-yellow-400 flex items-center gap-1.5"><Star className="w-4 h-4" />{user.officialRank}</span>
-                            <span className="font-semibold text-blue-400">{user.platformRank}P</span>
-                        </div>
-                    </div>
-                </div>
-            </Card>
-
-            <div>
-                <div className="grid grid-cols-2 gap-4 text-center">
-                    <Card onClick={() => toggleRecord('win')}>
-                        <div className="flex justify-center items-center gap-2">
-                            <p className="text-2xl font-bold text-green-400">{user.wins}</p>
-                            <p className="text-sm text-slate-400">승리</p>
-                            <ChevronDown className={cn("transition-transform text-slate-400", expandedRecord === 'win' && "rotate-180")} size={20}/>
-                        </div>
-                    </Card>
-                    <Card onClick={() => toggleRecord('loss')}>
-                        <div className="flex justify-center items-center gap-2">
-                            <p className="text-2xl font-bold text-red-400">{user.losses}</p>
-                            <p className="text-sm text-slate-400">패배</p>
-                             <ChevronDown className={cn("transition-transform text-slate-400", expandedRecord === 'loss' && "rotate-180")} size={20}/>
-                        </div>
-                    </Card>
-                </div>
-                {expandedRecord && (
-                    <div className="mt-2 bg-slate-800/50 border border-slate-700 rounded-xl p-2 max-h-60 overflow-y-auto">
-                        <div className="space-y-1">
-                        {matchesToShow.map(match => (
-                            <div key={match.id} className="bg-slate-700/50 p-2 rounded-md text-sm flex justify-between items-center">
-                                <span className="truncate">vs {match.opponent.name} ({match.date})</span>
-                                <span className="font-semibold flex-shrink-0 ml-2">{match.score}</span>
-                            </div>
-                        ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            <Card>
-                <h3 className="font-semibold text-lg mb-3">뱃지</h3>
-                <div className="flex justify-around">
-                    {user.badges.map(badge => <Badge key={badge} type={badge} />)}
-                </div>
-            </Card>
-            
-            <Card onClick={() => onNavigate('matchHistory')} className="bg-blue-600/30 border-blue-500/50">
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <FileText className="w-6 h-6 text-blue-300" />
-                        <p className="font-bold text-lg">전체 전적 보기</p>
-                    </div>
-                    <ChevronsRight className="w-6 h-6 text-blue-400" />
-                </div>
-            </Card>
-
-            <Card>
-                <h3 className="font-semibold text-lg mb-3">나의 스타일</h3>
-                <div className="space-y-2">
-                    <p className="text-sm"><strong className="text-slate-400 w-16 inline-block">특기:</strong> {user.specialty}</p>
-                    <div className="flex items-start">
-                        <strong className="text-slate-400 w-16 inline-block pt-1">특징:</strong>
-                        <div className="flex flex-wrap gap-2 flex-1">
-                            {user.characteristics.map(c => <span key={c} className="bg-slate-700 text-xs font-medium px-2 py-1 rounded-full">{c}</span>)}
-                        </div>
-                    </div>
-                </div>
-            </Card>
-
-            <DetailedStatsCard stats={user.detailedStats} />
-        </div>
-    );
-};
-
-const MatchHistoryScreen = ({ onNavigate }) => {
-    const [activeTab, setActiveTab] = React.useState('completed');
-    const [selectedMatch, setSelectedMatch] = React.useState(null);
-
-    const filteredMatches = mockMatchHistory.filter(m => m.status === activeTab);
-
-    const MatchHistoryItem = ({ match }) => {
-        const isWin = match.result === 'win';
-        const isLoss = match.result === 'loss';
-        const isDraw = match.result === 'draw';
-
-        return (
-            <Card onClick={() => setSelectedMatch(match)}>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <UserAvatar user={match.opponent} size="sm" />
-                        <div>
-                            <p className="font-semibold">{match.opponent.name}</p>
-                            <p className="text-sm text-slate-400">{match.date} {match.time || ''}</p>
-                        </div>
-                    </div>
-                    {match.status === 'completed' && (
-                        <div className="text-right">
-                            <p className={cn( "font-bold text-lg", isWin && "text-green-400", isLoss && "text-red-400", isDraw && "text-slate-400" )}>{match.result?.toUpperCase()}</p>
-                            <p className="text-sm font-semibold">{match.score}</p>
-                        </div>
-                    )}
-                    {match.status === 'upcoming' && ( <div className="text-right"><p className="font-bold text-blue-400">예정</p></div> )}
-                </div>
-            </Card>
-        );
-    };
-
-    return (
-        <>
-            <div className="p-4 space-y-4 text-white">
-                <div className="flex items-center gap-2">
-                    <button onClick={() => onNavigate('profile')} className="p-2 text-slate-300 hover:text-white"><ChevronsLeft size={24} /></button>
-                    <h1 className="text-2xl font-bold">전적</h1>
-                </div>
-                <div className="flex bg-slate-800 p-1 rounded-lg">
-                    <button onClick={() => setActiveTab('completed')} className={cn('w-1/2 py-2 rounded-md text-sm font-semibold', activeTab === 'completed' ? 'bg-blue-600' : 'hover:bg-slate-700')}>완료된 경기</button>
-                    <button onClick={() => setActiveTab('upcoming')} className={cn('w-1/2 py-2 rounded-md text-sm font-semibold', activeTab === 'upcoming' ? 'bg-blue-600' : 'hover:bg-slate-700')}>예정된 경기</button>
-                </div>
-                <div className="space-y-3">
-                    {filteredMatches.map(match => <MatchHistoryItem key={match.id} match={match} />)}
-                </div>
-            </div>
-            {selectedMatch && <MatchDetailModal match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
-        </>
-    );
-};
 
 // --- MAIN APP COMPONENT ---
 const KendoAppPage = () => {
   const [activeTab, setActiveTab] = React.useState('home');
-  const [notifications, setNotifications] = React.useState(mockNotifications);
-  const [showNotifications, setShowNotifications] = React.useState(false);
-  const [selectedNotification, setSelectedNotification] = React.useState(null);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
-
-  const handleSelectNotification = (notification) => {
-      setSelectedNotification(notification);
-      setNotifications(notifications.map(n => n.id === notification.id ? { ...n, read: true } : n));
-      setShowNotifications(false);
-  };
-  
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <HomeScreen user={currentUser} onNavigate={setActiveTab} notifications={notifications.filter(n => !n.read)} onSelectNotification={handleSelectNotification} />;
+        return <HomeScreen user={currentUser} onNavigate={setActiveTab} />;
       case 'match':
         return <MatchScreen />;
       case 'ranking':
@@ -2173,11 +2160,9 @@ const KendoAppPage = () => {
       case 'announcements':
         return <AnnouncementsScreen />;
       case 'profile':
-        return <ProfileScreen user={currentUser} onNavigate={setActiveTab} />;
-      case 'matchHistory':
-        return <MatchHistoryScreen onNavigate={setActiveTab} />;
+        return <ProfileScreen user={currentUser} />;
       default:
-        return <HomeScreen user={currentUser} onNavigate={setActiveTab} notifications={notifications.filter(n => !n.read)} onSelectNotification={handleSelectNotification} />;
+        return <HomeScreen user={currentUser} onNavigate={setActiveTab} />;
     }
   };
 
@@ -2207,12 +2192,9 @@ const KendoAppPage = () => {
                 <Shield className="w-6 h-6 text-blue-400" />
                 <h1 className="font-bold text-xl text-white">일주일에 2회, 주이회</h1>
             </div>
-            <div className="flex items-center gap-2">
-                <NotificationBell count={unreadCount} onClick={() => setShowNotifications(true)} />
-                <button className="p-2 rounded-full hover:bg-slate-800 transition-colors">
-                    <Settings className="w-5 h-5 text-slate-400" />
-                </button>
-            </div>
+            <button className="p-2 rounded-full hover:bg-slate-800 transition-colors">
+                <Settings className="w-5 h-5 text-slate-400" />
+            </button>
         </header>
 
         <div className="flex-grow overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#334155 #1e293b' }}>
@@ -2224,15 +2206,18 @@ const KendoAppPage = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={cn( 'flex flex-col items-center justify-center w-1/5 p-1 rounded-lg transition-all duration-200', 'text-slate-400 hover:bg-slate-800', activeTab === item.id || (activeTab === 'matchHistory' && item.id === 'profile') ? 'text-blue-400' : '' )} >
+              className={cn(
+                'flex flex-col items-center justify-center w-1/5 p-1 rounded-lg transition-all duration-200',
+                'text-slate-400 hover:bg-slate-800',
+                activeTab === item.id ? 'text-blue-400' : ''
+              )}
+            >
               <div className={cn('mb-1 transition-transform', activeTab === item.id ? 'scale-110' : 'scale-100')}>{item.icon}</div>
               <span className="text-xs font-semibold">{item.label}</span>
             </button>
           ))}
         </nav>
       </div>
-      {showNotifications && <NotificationModal notifications={notifications} onSelect={handleSelectNotification} onClose={() => setShowNotifications(false)} />}
-      {selectedNotification && <NotificationDetailModal notification={selectedNotification} onClose={() => setSelectedNotification(null)} />}
     </main>
   );
 };
