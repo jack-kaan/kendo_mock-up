@@ -1553,13 +1553,14 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
 
         <div className="space-y-2">
             {newsBanners.map((msg, idx) => (
-                <Card key={idx} className="bg-yellow-400/40 border-yellow-500/50 animate-pulse text-black">
-                    <div className="flex items-center gap-3">
+                <Card
+                    key={idx}
+                    className="bg-yellow-400/40 border-yellow-500/50 text-black overflow-hidden"
+                >
+                    <div className="flex items-center gap-3 whitespace-nowrap animate-marquee">
                         <Bell className="w-5 h-5 text-yellow-600" />
-                        <div>
-                            <p className="font-bold text-yellow-800">새로운 소식</p>
-                            <p className="text-sm">{msg}</p>
-                        </div>
+                        <p className="font-bold text-yellow-800">새로운 소식</p>
+                        <p className="text-sm">{msg}</p>
                     </div>
                 </Card>
             ))}
