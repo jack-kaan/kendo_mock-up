@@ -2,6 +2,7 @@ import React from 'react';
 import { Home, Swords, Trophy, User as UserIcon, MapPin, Star, Shield, BarChart2, Settings, Users, MessageSquare, ThumbsUp, Share2, Award, BookOpen, Video, ShieldCheck, CheckCircle2, Store, Tag, X, ThumbsDown, Lock, Unlock, CheckSquare, Square, ArrowUp, ArrowDown, Flame, ChevronDown, Megaphone, Send, FileUp, Plane, Info, Gift, PlusCircle, Heart, Edit3, ChevronsLeft, ChevronsRight, FileText, BarChart as BarChartIcon, Calendar, Bell, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import dojoImage from './assets/dojo_1.png';
 
 // Helper function for combining Tailwind classes
 function cn(...inputs) {
@@ -337,7 +338,12 @@ const japanTravelPackages = [
         applicants: ["김*섭", "이*연", "문*형", "박*진", "최*수", "강*민", "한*우", "조*현"]
     }},
 ];
-const gifticonItems = [ { category: "스타벅스", items: ["아메리카노 (4,500P)", "라떼 (5,000P)"] }];
+const gifticonItems = [
+    { category: "커피전문점", items: ["스타벅스 아메리카노 (4,500P)", "스타벅스 카페라떼 (5,000P)", "이디야 아이스커피 (3,000P)", "투썸플레이스 케이크세트 (8,000P)"] },
+    { category: "편의점", items: ["CU 3,000원권 (3,000P)", "GS25 5,000원권 (5,000P)", "세븐일레븐 도시락 (4,000P)"] },
+    { category: "외식", items: ["맥도날드 빅맥세트 (6,500P)", "KFC 치킨버거세트 (7,000P)", "서브웨이 샌드위치 (5,500P)"] },
+    { category: "도장 관련", items: ["도장비 1일권 (10,000P)", "검도복 세탁서비스 (3,000P)", "개인레슨 30분 (15,000P)", "호구 점검 서비스 (5,000P)"] }
+];
 const shopItems = [
     { id: 1, name: "프리미엄 카본 죽도", price: "75,000원", imageUrl: "https://placehold.co/400x400/334155/94a3b8?text=Carbon+Jukdo" },
     { id: 2, name: "고급 호구 세트 (A급)", price: "320,000원", imageUrl: "https://placehold.co/400x400/1e40af/e0e7ff?text=Premium+Hogu" },
@@ -351,8 +357,47 @@ const shopItems = [
     { id: 10, name: "검도 이론 도서 세트", price: "89,000원", imageUrl: "https://placehold.co/400x400/8b5cf6/f3e8ff?text=Kendo+Books" }
 ];
 const questList = [
-    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요.' },
-    { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", selected: true, description: '자신보다 공인 단수가 2단 이상 높은 상대를 이겨야 합니다.' },
+    { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", reward: 500, selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요.' },
+    { id: 2, text: "연속 5승 달성하기", current: 2, target: 5, unit: "승", reward: 800, selected: false, description: '대련에서 5연승을 달성하세요. 패배 시 카운트가 초기화됩니다.' },
+    { id: 3, text: "머리치기 마스터", current: 15, target: 20, unit: "점", reward: 600, selected: false, description: '대련에서 머리치기로 20점을 획득하세요.' },
+    { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", reward: 1200, selected: true, description: '자신보다 공인 단수가 2단 이상 높은 상대를 이겨야 합니다.' },
+    { id: 5, text: "완벽한 한 주 (7일 연속 대련)", current: 3, target: 7, unit: "일", reward: 1000, selected: false, description: '7일 연속으로 최소 1회 이상 대련을 진행하세요.' },
+    { id: 6, text: "찌름 기술 숙련하기", current: 2, target: 15, unit: "점", reward: 700, selected: false, description: '대련에서 찌름 기술로 15점을 획득하세요.' },
+    { id: 7, text: "신규 대련상대 5명 만나기", current: 1, target: 5, unit: "명", reward: 900, selected: false, description: '이번 달에 처음 대련하는 상대 5명과 경기를 진행하세요.' },
+    { id: 8, text: "응지기술 달인 되기", current: 8, target: 12, unit: "점", reward: 650, selected: false, description: '상대의 공격을 받아 응지기술로 12점을 획득하세요.' },
+    { id: 9, text: "도장 출석왕 (20일)", current: 12, target: 20, unit: "일", reward: 1100, selected: false, description: '한 달 동안 20일 이상 도장에 출석하세요.' },
+    { id: 10, text: "커뮤니티 활동가", current: 3, target: 10, unit: "회", reward: 400, selected: false, description: '게시판에 유익한 글을 10개 이상 작성하세요.' },
+    { id: 11, text: "멘토 역할 하기", current: 0, target: 3, unit: "명", reward: 1500, selected: false, description: '초보 검도인 3명에게 조언을 제공하고 평가를 받으세요.' },
+    { id: 12, text: "기본기 마스터", current: 25, target: 50, unit: "회", reward: 800, selected: false, description: '소메우치(기본베기) 연습을 50회 완료하세요.' }
+];
+
+const questCompletionBonus = { totalQuests: questList.length, completionBonus: 5000, currentCompleted: 2 };
+
+const miniDojoComments = [
+    { id: 1, author: '익명', text: '완전 싸이월드네요!', timestamp: '5분 전', replies: [
+        { id: 11, author: '익명', text: '와 정말 그래요! 도토리 느낌이에요 ㅋㅋ', timestamp: '3분 전' }
+    ] },
+    { id: 2, author: '익명', text: '도토리로 사는건가요??ㅋㅋ', timestamp: '10분 전', replies: [] },
+    { id: 3, author: '익명', text: '도복이 멋지네요! 얼마에구입하셨나요?', timestamp: '15분 전', replies: [] },
+    { id: 4, author: '익명', text: '미니도장 너무 귀여워요! 어디서 꾸미는 거예요?', timestamp: '20분 전', replies: [
+        { id: 41, author: '익명', text: '저도 문의합니다!', timestamp: '18분 전' },
+        { id: 42, author: '익명', text: '미니도장 쇼핑몰에서 살 수 있어요~', timestamp: '17분 전' }
+    ] },
+    { id: 5, author: '익명', text: '저도 미니도장 만들고 싶어요~', timestamp: '25뵔 전', replies: [] },
+    { id: 6, author: '익명', text: '호구 대신 전시한 것도 재밌네요!', timestamp: '30뵔 전', replies: [] }
+];
+
+const miniDojoItems = [
+    { id: 1, name: "죽도 선반 (10개 세트)", description: "미니도장에 전시할 다양한 사이즈의 죽도 집합", points: 8500, imageUrl: "https://placehold.co/200x150/334155/94a3b8?text=죽도선반" },
+    { id: 2, name: "검도복 진열장", description: "다양한 사이즈와 색상의 도복을 전시할 수 있는 진열장", points: 12000, imageUrl: "https://placehold.co/200x150/1e40af/e0e7ff?text=도복진열" },
+    { id: 3, name: "호구 전시대", description: "면, 손목보호대, 가슴보호대를 전시할 수 있는 전용 진열대", points: 15000, imageUrl: "https://placehold.co/200x150/dc2626/fef2f2?text=호구전시" },
+    { id: 4, name: "매트 바닥 공사", description: "미니도장 전용 고급 바닥 매트 설치 (다다미 패턴)", points: 25000, imageUrl: "https://placehold.co/200x150/059669/d1fae5?text=바닥공사" },
+    { id: 5, name: "벽체 인테리어 공사", description: "전통 도장 스타일의 벽체 공사와 창문 설치", points: 35000, imageUrl: "https://placehold.co/200x150/7c3aed/f3e8ff?text=벽공사" },
+    { id: 6, name: "조명 시스템", description: "미니도장 전용 LED 조명과 조명 컨트롤러", points: 18000, imageUrl: "https://placehold.co/200x150/f59e0b/fef3c7?text=조명" },
+    { id: 7, name: "목검 보관함", description: "연습용 목검을 안전하게 보관할 수 있는 전용 보관함", points: 6500, imageUrl: "https://placehold.co/200x150/374151/9ca3af?text=목검보관" },
+    { id: 8, name: "미니 신발장", description: "검도 신발과 양말을 정리할 수 있는 소형 신발장", points: 4200, imageUrl: "https://placehold.co/200x150/0f766e/e0f2f1?text=신발장" },
+    { id: 9, name: "전통 서예 데코", description: "미니도장 분위기를 내는 전통 한글 서예 데코레이션", points: 8800, imageUrl: "https://placehold.co/200x150/1e293b/94a3b8?text=서예데코" },
+    { id: 10, name: "미니 시상대", description: "대회 수상 경력과 메달을 전시할 수 있는 전용 시상대", points: 9200, imageUrl: "https://placehold.co/200x150/eab308/fef3c7?text=시상대" }
 ];
 const mockPointHistory = [
     { date: '2025-07-21', change: '+10', reason: '김형섭님과 대련 승리' },
@@ -360,7 +405,9 @@ const mockPointHistory = [
 ];
 const mockGoals = [
     { id: 1, text: '사범자격심사 도전', completed: true },
+    { id: 2, text: '2025년 상반기 대회출전', completed: true },
     { id: 3, text: 'vs100명 대련', completed: false, current: 57, target: 100 },
+    { id: 4, text: '일본 삿폿로 방문', completed: true },
 ];
 const kendoTheoryData = [
     { id: 1, title: "검도의 四戒에 대하여 설명하라.", questionText: "검도의 [BLANK](四病)이라고도 하며, 검도를 수행함에 있어서 4가지 경계하여야 할 것을 말한다. [BLANK], [BLANK], [BLANK], [BLANK] (驚,懼,疑,惑) 즉, 놀라거나, 두려워하거나, 의심하거나, 미혹되지 말아야 함을 말한다.", answers: ["4병", "경", "구", "의", "혹"] },
@@ -691,30 +738,59 @@ const AvatarIconSVG = () => (
 const AvatarDojoSVG = () => (
     <svg width="100%" height="100%" viewBox="0 0 160 120" className="absolute inset-0">
         <defs>
-            <pattern id="tatami" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
-                <path d="M 0,0 l 10,0 m -5, -5 l 0,10" stroke="#b45309" strokeWidth="1"/>
+            <pattern id="tatami" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+                <rect width="8" height="8" fill="#92400e"/>
+                <rect x="0" y="0" width="8" height="1" fill="#451a03"/>
+                <rect x="0" y="7" width="8" height="1" fill="#451a03"/>
+                <rect x="0" y="0" width="1" height="8" fill="#451a03"/>
+                <rect x="7" y="0" width="1" height="8" fill="#451a03"/>
             </pattern>
+            <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#f8fafc"/>
+                <stop offset="100%" stopColor="#e2e8f0"/>
+            </linearGradient>
         </defs>
-        <rect width="160" height="120" fill="#475569" />
+        <rect width="160" height="60" fill="url(#wallGrad)" />
         <rect y="60" width="160" height="60" fill="url(#tatami)" />
-        <g transform="translate(120, 50)">
-            <rect x="0" y="0" width="20" height="5" fill="#5c2d08"/>
-            <rect x="8" y="5" width="4" height="25" fill="#5c2d08"/>
-            <rect x="2" y="30" width="16" height="3" fill="#5c2d08"/>
-             <path d="M 2 33 L 0 40 L 20 40 L 18 33 Z" fill="#5c2d08"/>
-            <rect x="3" y="10" width="14" height="16" fill="#1e293b" rx="2"/>
-            <rect x="5" y="26" width="10" height="8" fill="#1e293b" />
+        
+        <g transform="translate(10, 45)">
+            <rect x="0" y="0" width="25" height="8" fill="#7c2d12" rx="1"/>
+            <rect x="2" y="-3" width="2" height="11" fill="#a16207" />
+            <rect x="6" y="-3" width="2" height="11" fill="#a16207" />
+            <rect x="10" y="-3" width="2" height="11" fill="#a16207" />
+            <rect x="14" y="-3" width="2" height="11" fill="#a16207" />
+            <rect x="18" y="-3" width="2" height="11" fill="#a16207" />
+            <rect x="21" y="-3" width="2" height="11" fill="#a16207" />
         </g>
-         <g transform="translate(20, 40)">
-            <path d="M 0 10 L 20 10 L 20 5 L 18 5 L 18 8 L 2 8 L 2 0 L 0 0 Z" fill="#5c2d08" />
-            <path d="M 4 10 L 4 25 L 16 25 L 16 10 L 12 10 L 10 15 L 8 10 Z" fill="#f1f5f9"/>
+        
+        <g transform="translate(125, 40)">
+            <rect x="0" y="0" width="30" height="25" fill="#1e293b" rx="2"/>
+            <circle cx="8" cy="8" r="6" fill="#f1f5f9" stroke="#374151" strokeWidth="1"/>
+            <rect x="5" y="5" width="6" height="3" fill="#374151"/>
+            <rect x="18" y="6" r="4" width="8" height="12" fill="#f59e0b" rx="2"/>
         </g>
-        <g className="animate-thrust" style={{transformOrigin: '50px 100px'}}>
-            <rect x="40" y="40" width="20" height="40" fill="#1e293b" rx="4"/>
-            <rect x="34" y="28" width="32" height="32" fill="#d1d5db" rx="16"/>
-            <rect x="38" y="38" width="24" height="6" fill="#1e293b" />
-            <rect x="60" y="50" width="60" height="4" fill="#a16207" rx="2" style={{transform: 'rotate(-15deg)'}}/>
+        
+        <g transform="translate(60, 15)">
+            <rect x="0" y="0" width="40" height="25" fill="#fef3c7" stroke="#92400e" strokeWidth="2" rx="2"/>
+            <text x="20" y="15" textAnchor="middle" fontSize="8" fill="#92400e" fontFamily="serif">검도의 도</text>
         </g>
+        
+        <g transform="translate(40, 50)">
+            <rect x="0" y="0" width="20" height="15" fill="#eab308" rx="2"/>
+            <circle cx="10" cy="5" r="3" fill="#f59e0b"/>
+            <rect x="8" y="8" width="4" height="7" fill="#a16207"/>
+        </g>
+        
+        <g transform="translate(75, 75)">
+            <rect x="0" y="0" width="12" height="25" fill="#1e293b" rx="6"/>
+            <circle cx="6" cy="-5" r="6" fill="#f3e8ff"/>
+            <rect x="12" y="8" width="20" height="2" fill="#a16207" rx="1"/>
+            <g className="animate-pulse">
+                <circle cx="32" cy="9" r="2" fill="#fbbf24" opacity="0.7"/>
+                <circle cx="35" cy="7" r="1" fill="#f59e0b" opacity="0.5"/>
+            </g>
+        </g>
+        <ellipse cx="80" cy="105" rx="15" ry="3" fill="#78350f" opacity="0.3"/>
     </svg>
 );
 
@@ -750,9 +826,218 @@ const DetailViewModal = ({ type, onClose }) => {
     );
 };
 
+const ShopModal = ({ onClose }) => {
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">상점</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto space-y-3">
+                    {shopItems.map(item => (
+                        <div key={item.id} className="bg-slate-700/50 p-3 rounded-lg flex gap-3">
+                            <img src={item.imageUrl} alt={item.name} className="w-16 h-12 rounded object-cover bg-slate-600" />
+                            <div className="flex-1">
+                                <h3 className="text-sm font-semibold text-white">{item.name}</h3>
+                                <div className="flex justify-between items-center mt-2">
+                                    <span className="text-sm font-bold text-green-400">{item.price}</span>
+                                    <button 
+                                        onClick={() => alert(`${item.name} 구매 완료!`)}
+                                        className="text-xs bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md transition-colors"
+                                    >
+                                        구매
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const MiniDojoModal = ({ onClose }) => {
+    const [comments, setComments] = React.useState(miniDojoComments);
+    const [newComment, setNewComment] = React.useState('');
+    const [replyTo, setReplyTo] = React.useState(null);
+    const [newReply, setNewReply] = React.useState('');
+    const [showShop, setShowShop] = React.useState(false);
+
+    const addComment = () => {
+        if (!newComment.trim()) return;
+        const comment = {
+            id: Date.now(),
+            author: '익명',
+            text: newComment,
+            timestamp: '방금 전',
+            replies: []
+        };
+        setComments([comment, ...comments]);
+        setNewComment('');
+    };
+
+    const addReply = (commentId) => {
+        if (!newReply.trim()) return;
+        const reply = {
+            id: Date.now(),
+            author: '익명',
+            text: newReply,
+            timestamp: '방금 전'
+        };
+        setComments(comments.map(comment => 
+            comment.id === commentId 
+                ? { ...comment, replies: [...comment.replies, reply] }
+                : comment
+        ));
+        setNewReply('');
+        setReplyTo(null);
+    };
+
+    return (
+        <>
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                    <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                        <h2 className="text-lg font-bold">미니도장</h2>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setShowShop(true)} className="p-2 text-slate-400 hover:text-white">
+                                <Store size={20} />
+                            </button>
+                            <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                        </div>
+                    </div>
+                    
+                    <div className="p-4 border-b border-slate-700">
+                        <img src={dojoImage} alt="미니도장" className="w-full h-48 object-contain rounded-lg bg-slate-700/30" />
+                        <div className="flex items-center gap-4 mt-3 text-sm text-slate-400">
+                            <div className="flex items-center gap-1">
+                                <Heart size={16} className="text-red-400" />
+                                <span>2.5k</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <MessageSquare size={16} className="text-blue-400" />
+                                <span>{comments.reduce((total, c) => total + 1 + c.replies.length, 0)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                        {comments.map(comment => (
+                            <div key={comment.id} className="space-y-2">
+                                <div className="bg-slate-700/50 p-3 rounded-lg">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <span className="font-semibold text-blue-400">{comment.author}</span>
+                                        <span className="text-xs text-slate-400">{comment.timestamp}</span>
+                                    </div>
+                                    <p className="text-sm text-slate-200">{comment.text}</p>
+                                    <button 
+                                        onClick={() => setReplyTo(comment.id)} 
+                                        className="text-xs text-slate-400 hover:text-blue-400 mt-2"
+                                    >
+                                        답글
+                                    </button>
+                                </div>
+                                
+                                {comment.replies.map(reply => (
+                                    <div key={reply.id} className="ml-6 bg-slate-600/50 p-3 rounded-lg">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <span className="font-semibold text-blue-400">{reply.author}</span>
+                                            <span className="text-xs text-slate-400">{reply.timestamp}</span>
+                                        </div>
+                                        <p className="text-sm text-slate-200">{reply.text}</p>
+                                    </div>
+                                ))}
+                                
+                                {replyTo === comment.id && (
+                                    <div className="ml-6 flex gap-2">
+                                        <input 
+                                            value={newReply}
+                                            onChange={(e) => setNewReply(e.target.value)}
+                                            placeholder="답글을 입력하세요..."
+                                            className="flex-1 bg-slate-600 text-white px-3 py-2 rounded-lg text-sm"
+                                            onKeyPress={(e) => e.key === 'Enter' && addReply(comment.id)}
+                                        />
+                                        <button onClick={() => addReply(comment.id)} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg text-sm">
+                                            전송
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="p-4 border-t border-slate-700 flex gap-2">
+                        <input 
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="댓글을 입력하세요..."
+                            className="flex-1 bg-slate-700 text-white px-3 py-2 rounded-lg text-sm"
+                            onKeyPress={(e) => e.key === 'Enter' && addComment()}
+                        />
+                        <button onClick={addComment} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm">
+                            전송
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {showShop && <ShopModal onClose={() => setShowShop(false)} />}
+        </>
+    );
+};
+
+const MiniDojoShopModal = ({ onClose }) => {
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">미니도장 쇼핑</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto space-y-3">
+                    <div className="mb-4 p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Store className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm font-semibold text-blue-300">미니도장 꼬미기</span>
+                        </div>
+                        <div className="text-xs text-slate-300">
+                            나만의 소중한 미니도장을 꿔며보세요! 다양한 아이템으로 꾸미기가 가능합니다.
+                        </div>
+                    </div>
+                    {miniDojoItems.map(item => (
+                        <div key={item.id} className="bg-slate-700/50 p-3 rounded-lg flex gap-3">
+                            <img src={item.imageUrl} alt={item.name} className="w-16 h-12 rounded object-cover bg-slate-600" />
+                            <div className="flex-1">
+                                <h3 className="text-sm font-semibold text-white">{item.name}</h3>
+                                <p className="text-xs text-slate-300 mt-1">{item.description}</p>
+                                <div className="flex justify-between items-center mt-2">
+                                    <span className="text-sm font-bold text-yellow-400">{item.points.toLocaleString()}P</span>
+                                    <button 
+                                        onClick={() => alert(`${item.name} 구매 완료!`)}
+                                        className="text-xs bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md transition-colors"
+                                    >
+                                        구매
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="p-4 flex-shrink-0 border-t border-slate-700 text-center">
+                    <div className="text-xs text-slate-400">
+                        현재 보유 포인트: <span className="text-yellow-400 font-bold">15,430P</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AvatarSpaceModal = ({ user, onClose }) => {
     const [isPublic, setIsPublic] = React.useState(true);
     const [detailView, setDetailView] = React.useState(null);
+    const [showShop, setShowShop] = React.useState(false);
 
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -761,7 +1046,7 @@ const AvatarSpaceModal = ({ user, onClose }) => {
                     <X size={20} />
                 </button>
                 <div className="w-full aspect-video bg-slate-700 rounded-lg relative overflow-hidden">
-                   <AvatarDojoSVG />
+                   <img src={dojoImage} alt="미니도장" className="w-full h-full object-cover" />
                    <div className="absolute bottom-2 left-2 flex items-center gap-3 bg-black/30 p-1.5 rounded-lg">
                        <button onClick={() => setDetailView('comments')} className="flex items-center gap-1 text-xs text-white hover:text-blue-300">
                            <MessageSquare size={14} /> 1.2k
@@ -778,13 +1063,31 @@ const AvatarSpaceModal = ({ user, onClose }) => {
                             {isPublic ? <><CheckSquare size={16} className="text-green-400"/> 공개</> : <><Square size={16} className="text-slate-400"/> 비공개</>}
                         </button>
                     </div>
+                    {/* 쇼핑 배너 */}
+                    <div className="mb-4 p-3 bg-gradient-to-r from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-lg cursor-pointer hover:from-orange-600/30 hover:to-red-600/30 transition-colors" onClick={() => setShowShop(true)}>
+                        <div className="flex items-center gap-2 mb-2">
+                            <Store className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm font-semibold text-orange-300">미니도장 쇼핑몰</span>
+                            <div className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">NEW</div>
+                        </div>
+                        <div className="text-xs text-slate-300">
+                            나만의 미니도장을 꿔라보세요! 죽도, 도복, 호구부터 인테리어까지!
+                        </div>
+                        <div className="text-xs text-orange-400 font-semibold mt-1">
+                            클릭해서 둥러보기 ▶
+                        </div>
+                    </div>
+                    
                     <div className="space-y-2">
                         <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 완전싸이월드네요!</p>
                         <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도토리로 사는건가요??ㅋㅋ.</p>
                         <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 도복이 멋지네요! 얼마에구입하셨나요?</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 미니도장 너무 귀여워요! 어디서 꾸미는 거예요?</p>
+                        <p className="text-sm bg-slate-700 p-3 rounded-lg"><span className="font-semibold text-blue-400">익명:</span> 저도 미니도장 만들고 싶어요~</p>
                     </div>
                 </div>
                 {detailView && <DetailViewModal type={detailView} onClose={() => setDetailView(null)} />}
+                {showShop && <MiniDojoShopModal onClose={() => setShowShop(false)} />}
             </div>
         </div>
     );
@@ -942,22 +1245,49 @@ const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
                     <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
                 </div>
                 <div className="p-4 overflow-y-auto space-y-2">
+                    <div className="mb-4 p-3 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Trophy className="w-4 h-4 text-yellow-400" />
+                            <span className="text-sm font-semibold text-yellow-300">모든 퀘스트 완수 보너스</span>
+                        </div>
+                        <div className="text-xs text-slate-300">
+                            전체 {questCompletionBonus.totalQuests}개 퀘스트 완성 시 <span className="text-yellow-400 font-bold">+{questCompletionBonus.completionBonus.toLocaleString()}P</span> 추가 지급!
+                        </div>
+                        <div className="text-xs text-slate-400 mt-1">
+                            현재 진행률: {questCompletionBonus.currentCompleted}/{questCompletionBonus.totalQuests} ({Math.round(questCompletionBonus.currentCompleted / questCompletionBonus.totalQuests * 100)}%)
+                        </div>
+                    </div>
                     <p className="text-xs text-slate-400 mb-2">최대 10개의 퀘스트를 선택할 수 있습니다.</p>
                     {questList.map(quest => {
                         const isSelected = selectedQuests.some(q => q.id === quest.id);
                         const canSelectMore = selectedQuests.length < 10;
                         return (
                             <button key={quest.id} onClick={() => handleToggle(quest)} disabled={!isSelected && !canSelectMore}
-                                className={cn("w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors", "bg-slate-700/50 text-slate-200 hover:bg-slate-700", !canSelectMore && !isSelected && "opacity-60 cursor-not-allowed")}>
-                                {isSelected ? <CheckSquare className="w-5 h-5 text-blue-400" /> : <Square className="w-5 h-5 text-slate-500" />}
-                                <span>{quest.text}</span>
+                                className={cn("w-full text-left p-3 rounded-lg flex items-start gap-3 transition-colors", "bg-slate-700/50 text-slate-200 hover:bg-slate-700", !canSelectMore && !isSelected && "opacity-60 cursor-not-allowed")}>
+                                {isSelected ? <CheckSquare className="w-5 h-5 text-blue-400 mt-0.5" /> : <Square className="w-5 h-5 text-slate-500 mt-0.5" />}
+                                <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                        <span className="text-sm font-medium">{quest.text}</span>
+                                        <span className="text-xs text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded-full ml-2">{quest.reward}P</span>
+                                    </div>
+                                    <div className="text-xs text-slate-400 mt-1">
+                                        진행률: {quest.current}/{quest.target}{quest.unit} ({Math.round(quest.current / quest.target * 100)}%)
+                                    </div>
+                                </div>
                             </button>
                         )
                     })}
                 </div>
-                <div className="p-4 flex-shrink-0 border-t border-slate-700 flex gap-3">
-                    <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
-                    <button onClick={() => onSave(selectedQuests)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">저장</button>
+                <div className="p-4 flex-shrink-0 border-t border-slate-700">
+                    <div className="mb-3 text-center text-sm text-slate-300">
+                        선택된 퀘스트: <span className="font-bold text-blue-400">{selectedQuests.length}/10</span>
+                        <br />
+                        예상 리워드: <span className="font-bold text-yellow-400">{selectedQuests.reduce((sum, quest) => sum + quest.reward, 0).toLocaleString()}P</span>
+                    </div>
+                    <div className="flex gap-3">
+                        <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
+                        <button onClick={() => onSave(selectedQuests)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">저장</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1149,6 +1479,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
   const [modal, setModal] = React.useState(null); 
   const [selectedItem, setSelectedItem] = React.useState(null);
+  const [showMiniDojo, setShowMiniDojo] = React.useState(false);
 
   const openModal = (type, item = null) => { setModal(type); setSelectedItem(item); };
   const closeModal = () => { setModal(null); setSelectedItem(null); };
@@ -1174,21 +1505,45 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   return (
   <>
     <div className="p-4 space-y-6 text-white">
-        <Card>
-            <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                    <UserAvatar user={user} onClick={() => onNavigate('profile')} />
-                    <div>
-                        <p className="text-slate-400">환영합니다,</p>
-                        <h1 className="text-2xl font-bold">{user.name}님</h1>
+        <div className="space-y-2">
+            <div className="text-center">
+                <p className="text-xs text-slate-400">환영합니다, <span className="text-white font-medium">한승오님</span></p>
+            </div>
+            <Card className="py-2">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                        <UserAvatar user={user} size="sm" onClick={() => onNavigate('profile')} />
+                        <div className="flex-1 text-sm">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-white font-bold text-lg">한승오, 4단, 대전, 주이회</span>
+                            </div>
+                        </div>
+                    </div>
+                <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                            <p className="text-sm font-semibold text-white">미니도장</p>
+                        </div>
+                        <div className="relative">
+                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover rounded-lg" />
+                            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-end justify-center pb-1">
+                                <div className="flex items-center gap-2 text-xs text-white">
+                                    <div className="flex items-center gap-1">
+                                        <Heart size={10} className="text-red-400" />
+                                        <span>2.5k</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <MessageSquare size={10} className="text-blue-400" />
+                                        <span>124</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div onClick={() => openModal('avatar_space')} className="text-center cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
-                    <AvatarIconSVG />
-                    <p className="text-xs font-semibold mt-1">나의 공간</p>
                 </div>
-            </div>
-        </Card>
+            </Card>
+        </div>
 
         <div className="space-y-2">
             {notifications.map(notification => (
@@ -1308,6 +1663,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
     {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
     {modal === 'quest_detail' && <QuestDetailModal quest={selectedItem} onClose={closeModal} />}
     {modal === 'goal_check' && <GoalChecklistModal goals={mockGoals} onClose={closeModal} />}
+    {showMiniDojo && <MiniDojoModal onClose={() => setShowMiniDojo(false)} />}
   </>
   );
 };
