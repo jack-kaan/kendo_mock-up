@@ -1477,9 +1477,13 @@ const GoalChecklistModal = ({ goals, onClose }) => {
 
 const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
-  const [modal, setModal] = React.useState(null); 
+  const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showMiniDojo, setShowMiniDojo] = React.useState(false);
+  const bannerMessages = [
+    '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
+    '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
+  ];
 
   const openModal = (type, item = null) => { setModal(type); setSelectedItem(item); };
   const closeModal = () => { setModal(null); setSelectedItem(null); };
@@ -1491,6 +1495,8 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         case 'new_request': return `${opponentName}님으로부터 새로운 대련 신청이 도착했습니다.`;
         case 'declined': return `${opponentName}님이 대련을 거절했습니다.`;
         case 'changed': return `${opponentName}님이 대련 변경을 신청했습니다.`;
+        case 'comment': return `${opponentName}님으로부터 새로운 댓글이 달렸습니다.`;
+        case 'like': return `${opponentName}님으로부터 좋아요를 받았습니다.`;
         default: return `${opponentName}님으로부터 새로운 알림이 도착했습니다.`;
     }
   };
@@ -1546,6 +1552,13 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         </div>
 
         <div className="space-y-2">
+            {bannerMessages.map((msg, idx) => (
+                <div key={idx} className="overflow-hidden">
+                    <div className="bg-yellow-400 text-black px-4 py-2 rounded animate-marquee whitespace-nowrap">
+                        {msg}
+                    </div>
+                </div>
+            ))}
             {notifications.map(notification => (
                 <Card key={notification.id} onClick={() => onSelectNotification(notification)} className="bg-red-900/40 border-red-500/50 animate-pulse hover:bg-red-900/60 cursor-pointer">
                     <div className="flex items-center gap-3">
