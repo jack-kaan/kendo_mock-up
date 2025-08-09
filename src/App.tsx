@@ -186,6 +186,9 @@ const mockUsers = [
   { id: 4, name: '문준형', dojang: '평송센터', location: '대전', platformRank: 1450, officialRank: '4단', wins: 78, losses: 20, badges: ['Weekly Activity King'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH', avatarItems: { jukdoCount: 4 }, rankHistory: [{date: '2024-01-01', rank: 1400}, {date: '2024-03-01', rank: 1420}, {date: '2024-05-01', rank: 1460}, {date: '2024-07-01', rank: 1450}], detailedStats: currentUser.detailedStats, specialty: '퇴격머리치기', characteristics: ['노련함', '변칙적', '체력이 좋음'] },
   { id: 5, name: '이정현', dojang: '원검도관', location: '서울', platformRank: 1420, officialRank: '2단', wins: 25, losses: 12, badges: [], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=JH2', avatarItems: { jukdoCount: 1 }, rankHistory: [{date: '2024-01-01', rank: 1410}, {date: '2024-03-01', rank: 1400}, {date: '2024-05-01', rank: 1415}, {date: '2024-07-01', rank: 1420}], detailedStats: currentUser.detailedStats, specialty: '찌름', characteristics: ['과감함', '한방이 있음', '예측이 어려움'] },
   { id: 6, name: '남경오', dojang: '경호관', location: '구미', platformRank: 1490, officialRank: '5단', wins: 18, losses: 5, badges: ['Mentor'], avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=KH', avatarItems: { jukdoCount: 6 }, rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1485}, {date: '2024-05-01', rank: 1495}, {date: '2024-07-01', rank: 1490}], detailedStats: currentUser.detailedStats, specialty: '상단', characteristics: ['기세가 강함', '압도적', '경험이 많음'] },
+  { id: 7, name: '박민수', dojang: '서울대검도부', location: '서울', platformRank: 1380, officialRank: '3단', wins: 35, losses: 15, badges: ['Community Contributor'], avatarUrl: 'https://placehold.co/100x100/059669/d1fae5?text=MS', avatarItems: { jukdoCount: 3 }, rankHistory: [{date: '2024-01-01', rank: 1350}, {date: '2024-03-01', rank: 1365}, {date: '2024-05-01', rank: 1375}, {date: '2024-07-01', rank: 1380}], detailedStats: currentUser.detailedStats, specialty: '응지기술', characteristics: ['반사신경이 빠름', '안정적', '기본기가 탄탄함'] },
+  { id: 8, name: '최영훈', dojang: '부산검도연맹', location: '부산', platformRank: 1460, officialRank: '4단', wins: 42, losses: 18, badges: ['Weekly Activity King'], avatarUrl: 'https://placehold.co/100x100/dc2626/fef2f2?text=YH', avatarItems: { jukdoCount: 4 }, rankHistory: [{date: '2024-01-01', rank: 1440}, {date: '2024-03-01', rank: 1450}, {date: '2024-05-01', rank: 1455}, {date: '2024-07-01', rank: 1460}], detailedStats: currentUser.detailedStats, specialty: '카운터 어택', characteristics: ['냉정함', '타이밍이 좋음', '분석력이 뛰어남'] },
+  { id: 9, name: '정수현', dojang: '인천무도회', location: '인천', platformRank: 1520, officialRank: '3단', wins: 28, losses: 11, badges: ['First Match'], avatarUrl: 'https://placehold.co/100x100/7c3aed/f3e8ff?text=SH', avatarItems: { jukdoCount: 3 }, rankHistory: [{date: '2024-01-01', rank: 1500}, {date: '2024-03-01', rank: 1510}, {date: '2024-05-01', rank: 1515}, {date: '2024-07-01', rank: 1520}], detailedStats: currentUser.detailedStats, specialty: '머리-손목 연결기', characteristics: ['창의적', '조합력이 좋음', '자신감이 넘침'] }
 ];
 
 const allUsers = [currentUser, ...mockUsers];
@@ -255,25 +258,63 @@ const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...addition
 
 
 const communityPosts = [
-  { id: 1, author: mockUsers[0], type: 'video', title: '기본 머리치기 연습 영상', content: '기본기 훈련은 아무리 강조해도 지나치지 않습니다. 함께 보며 의견 나눠요.', likes: 128, comments: 15, timestamp: '2h ago' },
+  { id: 1, author: mockUsers[0], type: 'video', title: '기본 머리치기 연습 영상', content: '기본기 훈련은 아무리 강조해도 지나치지 않습니다. 함께 보며 의견 나뉀요.', likes: 128, comments: 15, timestamp: '2h ago' },
   { id: 2, author: currentUser, type: 'review', title: '이노연님과의 경기 후기', content: '세메(攻め)가 정말 날카로웠던 경기였습니다. 덕분에 많이 배울 수 있었습니다. 다음에는 오지와자(応じ技)를 더 연습해야겠습니다.', likes: 45, comments: 8, timestamp: '1d ago' },
+  { id: 3, author: mockUsers[1], type: 'review', title: '승단심사 후기 및 팁', content: '4단 심사를 다녀왔습니다. 실기에서 중요한 것은 역시 대련자세와 정확한 기술 구사입니다.', likes: 89, comments: 23, timestamp: '3h ago' },
+  { id: 4, author: mockUsers[2], type: 'video', title: '응지기술 단계별 연습법', content: '응지기술을 체계적으로 연습하는 방법을 소개합니다. 초보자부터 고단자까지 모두 활용할 수 있어요.', likes: 156, comments: 42, timestamp: '5h ago' },
+  { id: 5, author: mockUsers[3], type: 'review', title: '전국체전 참가 후기', content: '올해 전국체전에 처음 출전했습니다. 대회 경험이 개인 실력 향상에 큰 도움이 되었습니다.', likes: 73, comments: 19, timestamp: '8h ago' },
+  { id: 6, author: mockUsers[4], type: 'video', title: '하단 공격 방어법', content: '대련에서 자주 당하는 하단 공격에 대한 효과적인 방어법을 실전 예시와 함께 설명합니다.', likes: 94, comments: 31, timestamp: '12h ago' },
+  { id: 7, author: mockUsers[5], type: 'review', title: '첫 대련 제신 성공 경험담', content: '오늘 처음으로 누군가에게 대련을 제신했는데 수락해 주셨어요! 너무 떨려서 누가 도움이 될까 싶어 경험을 공유합니다.', likes: 187, comments: 54, timestamp: '1d ago' },
+  { id: 8, author: mockUsers[6], type: 'video', title: '단계별 기본 자세 체크리스트', content: '예니는 기본자세부터 고단자 자세까지 단계별로 체크할 수 있는 리스트를 준비했습니다.', likes: 112, comments: 27, timestamp: '1d ago' },
+  { id: 9, author: mockUsers[7], type: 'review', title: '일본 도장 연수 후기', content: '작년 일본에서 3개월간 연수한 경험을 공유합니다. 다른 문화에서의 검도 수련은 정말 새로운 경험이었어요.', likes: 203, comments: 78, timestamp: '2d ago' },
+  { id: 10, author: mockUsers[0], type: 'video', title: '대련 심리전 극복법', content: '대련 전 놀라움과 긴장을 이겨내는 심리적 준비 방법들을 실제 경험담과 함께 소개합니다.', likes: 165, comments: 43, timestamp: '2d ago' }
 ];
 
 const anonymousPosts = [
     { id: 101, author: { name: '익명' }, title: "요즘 슬럼프가 너무 심하게 오네요...", content: "머리치기가 전혀 되질 않습니다. 다들 어떻게 극복하시나요? 조언 부탁드립니다.", likes: 33, comments: 12, timestamp: "1h ago" },
     { id: 102, author: { name: '익명' }, title: "4단 심사 준비하시는 분 계신가요?", content: "본이랑 실기 준비를 어떻게 해야 할지 막막하네요. 같이 정보 공유해요.", likes: 45, comments: 18, timestamp: "3h ago" },
+    { id: 103, author: { name: '익명' }, title: "성인 시작하기에 너무 늦었나요?", content: "35세에 검도를 시작하려고 하는데, 나이 때문에 주저하게 됩니다. 늦지 않았다고 말해주세요.", likes: 78, comments: 24, timestamp: "4h ago" },
+    { id: 104, author: { name: '익명' }, title: "도장 선후배와 마찰이 있어서 힘들어요", content: "같은 도장 다니는 선후배가 자꾸 저를 비하는 것 같아요. 어떻게 하면 좋을까요?", likes: 52, comments: 31, timestamp: "6h ago" },
+    { id: 105, author: { name: '익명' }, title: "처음 대회 출전 너무 떨려요", content: "다음 달 시대체전에 처음 나가는데 너무 떨려서 잘 늤이 없어요. 대회 경험 있으신 분들 조언 좋아요.", likes: 89, comments: 47, timestamp: "8h ago" },
+    { id: 106, author: { name: '익명' }, title: "검도복과 호구 관리법 갈르쳐주세요", content: "운동 후 냄새 빠지지 않고 호구에 딴냄새도 배어 있어요. 효과적인 관리 방법이 있나요?", likes: 41, comments: 15, timestamp: "10h ago" },
+    { id: 107, author: { name: '익명' }, title: "승단심사 불합격 후 우울감이 심해요", content: "준비 열심히 했는데 떨어져서 너무 상심이 커요. 어떻게 마음을 달래야 할지 모르겠어요.", likes: 67, comments: 29, timestamp: "12h ago" },
+    { id: 108, author: { name: '익명' }, title: "좌수 상대로 대련할 때 무엇을 주의해야 하나요?", content: "우수 대련자로서 좌수 상대와 대련할 때 항상 당황스럽어요. 어떤 전략이 효과적인지 알고 싶어요.", likes: 73, comments: 38, timestamp: "14h ago" },
+    { id: 109, author: { name: '익명' }, title: "검도 용어 너무 어려워요", content: "일본어로 된 용어들이 너무 많아서 외우기가 힘들어요. 효율적으로 용어를 익힐 수 있는 방법 있나요?", likes: 94, comments: 22, timestamp: "16h ago" },
+    { id: 110, author: { name: '익명' }, title: "내년에 일본 연수 가고 싶은데 준비는 어떻게 하나요?", content: "일본 도장에서 3-6개월 연수하고 싶어요. 비자, 언어, 경비 등 준비할 것들이 많은 것 같아서 명료한 조언 구합니다.", likes: 126, comments: 56, timestamp: "18h ago" }
 ];
 
 const tradePosts = [
     { id: 201, author: mockUsers[2], itemName: "미사용 카본 죽도 (39)", price: "70,000원", description: "선물 받았는데 사이즈가 안 맞아 판매합니다. 포장도 안 뜯은 새 제품입니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=죽도', timestamp: "1h ago" },
     { id: 202, author: mockUsers[3], itemName: "A급 중고 호구 세트 (남성용)", price: "150,000원", description: "1년 정도 사용했고 상태 아주 좋습니다. 175cm 전후 남성분께 잘 맞을 거예요.", status: '판매완료', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=호구', timestamp: "8h ago" },
+    { id: 203, author: mockUsers[4], itemName: "검도복 하의 (대학생용)", price: "25,000원", description: "대학교 수업에서 사용했던 검도복 하의입니다. 세탁 황등으로 깨끗하게 관리했어요.", status: '판매중', imageUrl: 'https://placehold.co/400x300/1e293b/94a3b8?text=검도복', timestamp: "2h ago" },
+    { id: 204, author: mockUsers[5], itemName: "전죽 죽도 세트 (37, 38, 39)", price: "120,000원", description: "사이즈별로 3개 세트로 판매합니다. 전부 좋은 품질의 전죽 죽도이고 개별 판매도 가능합니다.", status: '판매중', imageUrl: 'https://placehold.co/400x300/334155/94a3b8?text=죽도세트', timestamp: "3h ago" },
+    { id: 205, author: mockUsers[6], itemName: "여성용 호구 세트 (S사이즈)", price: "180,000원", description: "6개월 사용한 여성용 호구입니다. 160cm 전후 여성분께 잘 맞습니다. 그동안 꿀탈 없이 사용했어요.", status: '판매중', imageUrl: 'https://placehold.co/400x300/8b5cf6/f3e8ff?text=여성호구', timestamp: "4h ago" },
+    { id: 206, author: mockUsers[7], itemName: "목검 (연습용)", price: "15,000원", description: "기본기 연습에 사용하던 목검입니다. 스크래치는 있지만 연습용으로는 문제없어요.", status: '판매중', imageUrl: 'https://placehold.co/400x300/374151/9ca3af?text=목검', timestamp: "5h ago" },
+    { id: 207, author: mockUsers[0], itemName: "카본 죽도 가방", price: "35,000원", description: "죽도 2개까지 넣을 수 있는 카본 죽도 전용 가방입니다. 가볍고 튼튼해서 이동시 편리해요.", status: '판매중', imageUrl: 'https://placehold.co/400x300/059669/d1fae5?text=가방', timestamp: "6h ago" },
+    { id: 208, author: mockUsers[1], itemName: "대학교 공식 검도복 세트", price: "85,000원", description: "대학교 검도부 공식 유니폼입니다. 상의, 하의, 하카마 세트로 판매합니다. 졸업 후 사용하지 않아서 깨끗해요.", status: '판매완료', imageUrl: 'https://placehold.co/400x300/1e40af/e0e7ff?text=대학교복', timestamp: "12h ago" },
+    { id: 209, author: mockUsers[2], itemName: "검도 도서 세트 (3권)", price: "45,000원", description: "검도의 원리, 기본동작, 심사규정 도서 3권 세트입니다. 승단심사 준비에 필수 도서들이에요.", status: '판매중', imageUrl: 'https://placehold.co/400x300/dc2626/fef2f2?text=도서세트', timestamp: "1d ago" },
+    { id: 210, author: mockUsers[3], itemName: "대련용 전자 호구 (중고)", price: "220,000원", description: "AI 스코어링 기능이 있는 전자 호구입니다. 배터리 교체 필요하지만 대련 데이터 기록에 좋아요.", status: '예약중', imageUrl: 'https://placehold.co/400x300/7c3aed/f3e8ff?text=전자호구', timestamp: "1d ago" }
 ];
 
 const mockChats = [
-    { id: 101, type: 'club', partner: { id: 1001, name: '대전 카이스트 주이회', avatarUrl: 'https://placehold.co/100x100/0f766e/e0f2f1?text=K', members: 35 }, lastMessage: "김형섭: 이번 주 금요일 정기 수련 공지입니다.", timestamp: "10:45 AM", unread: 2, messages: Array.from({ length: 5 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '김형섭' : '이노연'), text: `안녕하세요, 채팅 메시지 ${i+1}입니다.`, timestamp: `10:${45+i} AM` })) },
+    { id: 101, type: 'club', partner: { id: 1001, name: '대전 카이스트 주이회', avatarUrl: 'https://placehold.co/100x100/0f766e/e0f2f1?text=K', members: 35 }, lastMessage: "김형섭: 이번 주 금요일 정기 수련 공지입니다.", timestamp: "10:45 AM", unread: 2, messages: Array.from({ length: 15 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '김형섭' : '이노연'), text: `안녕하세요, 채팅 메시지 ${i+1}입니다.`, timestamp: `10:${45+i} AM` })) },
+    { id: 102, type: 'club', partner: { id: 1002, name: '서울 대학검도부', avatarUrl: 'https://placehold.co/100x100/1e40af/e0e7ff?text=S', members: 42 }, lastMessage: "박민수: 이번 주말 연습경기 참가자 모집합니다.", timestamp: "9:30 AM", unread: 5, messages: Array.from({ length: 12 }, (_, i) => ({ id: i, sender: i % 4 === 0 ? 'me' : (i % 4 === 1 ? '박민수' : i % 4 === 2 ? '김지영' : '이태현'), text: `연습경기 관련 메시지 ${i+1}입니다.`, timestamp: `9:${30+i} AM` })) },
+    { id: 103, type: 'club', partner: { id: 1003, name: '부산 검도연맹', avatarUrl: 'https://placehold.co/100x100/dc2626/fef2f2?text=B', members: 28 }, lastMessage: "최영훈: 승단심사 일정이 변경되었습니다.", timestamp: "8:15 AM", unread: 1, messages: Array.from({ length: 8 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '최영훈' : '강민지'), text: `승단심사 관련 메시지 ${i+1}입니다.`, timestamp: `8:${15+i} AM` })) },
+    { id: 104, type: 'club', partner: { id: 1004, name: '인천 무도회', avatarUrl: 'https://placehold.co/100x100/059669/d1fae5?text=I', members: 31 }, lastMessage: "정수현: 새로운 도장 견학 일정을 공유합니다.", timestamp: "7:22 AM", unread: 3, messages: Array.from({ length: 10 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '정수현' : '김현우'), text: `도장 견학 관련 메시지 ${i+1}입니다.`, timestamp: `7:${22+i} AM` })) },
+    { id: 105, type: 'club', partner: { id: 1005, name: '대구 검도클럽', avatarUrl: 'https://placehold.co/100x100/7c3aed/f3e8ff?text=D', members: 25 }, lastMessage: "한지민: 월말 정기모임 장소가 변경되었습니다.", timestamp: "Yesterday", unread: 0, messages: Array.from({ length: 7 }, (_, i) => ({ id: i, sender: i % 3 === 0 ? 'me' : (i % 3 === 1 ? '한지민' : '오성민'), text: `정기모임 관련 메시지 ${i+1}입니다.`, timestamp: `Yesterday ${14+i}:00` })) },
     { id: 1, type: 'private', partner: mockUsers[0], lastMessage: "네, 좋습니다. 그럼 토요일 2시에 뵙겠습니다.", timestamp: "10:45 AM", unread: 0, messages: [
         {id: 1, sender: 'me', text: '김형섭님, 이번주 토요일에 대련 가능하신가요?', timestamp: '10:40 AM'},
         {id: 2, sender: 'other', text: '네, 가능합니다. 시간은 언제가 좋으신가요?', timestamp: '10:42 AM'},
+        {id: 3, sender: 'me', text: '오후 2시 어떠신가요?', timestamp: '10:43 AM'},
+        {id: 4, sender: 'other', text: '네, 좋습니다. 그럼 토요일 2시에 뵙겠습니다.', timestamp: '10:45 AM'},
+    ]},
+    { id: 2, type: 'private', partner: mockUsers[1], lastMessage: "고맙습니다. 많이 배웠습니다.", timestamp: "Yesterday", unread: 2, messages: [
+        {id: 1, sender: 'other', text: '안녕하세요. 오늘 대련 감사했습니다.', timestamp: 'Yesterday 16:20'},
+        {id: 2, sender: 'me', text: '저야말로 감사합니다. 이노연님 실력이 정말 늘으셨네요.', timestamp: 'Yesterday 16:22'},
+        {id: 3, sender: 'other', text: '고맙습니다. 많이 배웠습니다.', timestamp: 'Yesterday 16:25'},
+    ]},
+    { id: 3, type: 'private', partner: mockUsers[2], lastMessage: "내일 연습 참석하시나요?", timestamp: "2h ago", unread: 1, messages: [
+        {id: 1, sender: 'other', text: '안녕하세요. 내일 연습 참석하시나요?', timestamp: '2h ago'},
     ]},
 ];
 
@@ -297,7 +338,18 @@ const japanTravelPackages = [
     }},
 ];
 const gifticonItems = [ { category: "스타벅스", items: ["아메리카노 (4,500P)", "라떼 (5,000P)"] }];
-const shopItems = [ { id: 1, name: "프리미엄 카본 죽도", price: "75,000원", imageUrl: "https://placehold.co/400x400/334155/94a3b8?text=Carbon+Jukdo" }];
+const shopItems = [
+    { id: 1, name: "프리미엄 카본 죽도", price: "75,000원", imageUrl: "https://placehold.co/400x400/334155/94a3b8?text=Carbon+Jukdo" },
+    { id: 2, name: "고급 호구 세트 (A급)", price: "320,000원", imageUrl: "https://placehold.co/400x400/1e40af/e0e7ff?text=Premium+Hogu" },
+    { id: 3, name: "전죽 죽도 (39사이즈)", price: "85,000원", imageUrl: "https://placehold.co/400x400/dc2626/fef2f2?text=Jeonjuk+Jukdo" },
+    { id: 4, name: "검도복 세트 (상하의)", price: "120,000원", imageUrl: "https://placehold.co/400x400/059669/d1fae5?text=Kendo+Uniform" },
+    { id: 5, name: "전자 호구 (AI 스코어링)", price: "450,000원", imageUrl: "https://placehold.co/400x400/7c3aed/f3e8ff?text=Electronic+Hogu" },
+    { id: 6, name: "목검 (연습용)", price: "28,000원", imageUrl: "https://placehold.co/400x400/374151/9ca3af?text=Wooden+Sword" },
+    { id: 7, name: "죽도 가방 (고급형)", price: "65,000원", imageUrl: "https://placehold.co/400x400/0f766e/e0f2f1?text=Jukdo+Bag" },
+    { id: 8, name: "검도 신발 (비슬립)", price: "45,000원", imageUrl: "https://placehold.co/400x400/1e293b/94a3b8?text=Kendo+Shoes" },
+    { id: 9, name: "전죽 죽도 세트 (37,38,39)", price: "240,000원", imageUrl: "https://placehold.co/400x400/dc2626/fef2f2?text=Jukdo+Set" },
+    { id: 10, name: "검도 이론 도서 세트", price: "89,000원", imageUrl: "https://placehold.co/400x400/8b5cf6/f3e8ff?text=Kendo+Books" }
+];
 const questList = [
     { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요.' },
     { id: 4, text: "고단자 상대로 승리하기 (+2단 이상)", current: 0, target: 1, unit: "승", selected: true, description: '자신보다 공인 단수가 2단 이상 높은 상대를 이겨야 합니다.' },
@@ -1455,30 +1507,112 @@ const RankingScreen = () => {
     const [selectedUser, setSelectedUser] = React.useState(null);
 
     const playersOnMap = allUsers;
-    const mapPositions = [ { left: '40%', top: '55%' }, { left: '20%', top: '25%' }, { left: '70%', top: '65%' }, { left: '50%', top: '15%' }, { left: '15%', top: '60%' }, { left: '80%', top: '30%' } ];
+    const userLocations = [
+        { user: allUsers[0], lat: 37.5665, lng: 126.9780, city: '서울', mapX: '45%', mapY: '35%' },
+        { user: allUsers[1], lat: 36.3504, lng: 127.3845, city: '대전', mapX: '48%', mapY: '55%' },
+        { user: allUsers[2], lat: 36.3504, lng: 127.3845, city: '대전', mapX: '52%', mapY: '58%' },
+        { user: allUsers[3], lat: 36.3504, lng: 127.3845, city: '대전', mapX: '46%', mapY: '52%' },
+        { user: allUsers[4], lat: 37.5665, lng: 126.9780, city: '서울', mapX: '42%', mapY: '32%' },
+        { user: allUsers[5], lat: 36.1000, lng: 128.4000, city: '구미', mapX: '65%', mapY: '60%' },
+        { user: allUsers[6], lat: 37.5665, lng: 126.9780, city: '서울', mapX: '40%', mapY: '38%' },
+        { user: allUsers[7], lat: 35.1796, lng: 129.0756, city: '부산', mapX: '75%', mapY: '75%' },
+        { user: allUsers[8], lat: 37.4563, lng: 126.7052, city: '인천', mapX: '38%', mapY: '40%' }
+    ];
     const currentRankings = allRankings[period][criteria];
+    const [selectedMapUser, setSelectedMapUser] = React.useState(null);
+
+    const KoreaMapComponent = () => {
+        return (
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 h-64 rounded-lg relative overflow-hidden">
+                {/* 한국 지도 베이스 */}
+                <svg width="100%" height="100%" viewBox="0 0 100 100" className="absolute inset-0">
+                    {/* 한반도 외곽선 */}
+                    <path 
+                        d="M20,85 Q25,80 30,75 L35,70 Q40,65 45,60 L50,55 Q55,50 60,45 L65,40 Q70,35 75,30 L80,25 Q85,20 90,15 L85,10 Q80,15 75,20 L70,25 Q65,30 60,35 L55,40 Q50,45 45,50 L40,55 Q35,60 30,65 L25,70 Q20,75 15,80 L20,85 Z" 
+                        fill="#374151" 
+                        stroke="#6b7280" 
+                        strokeWidth="0.5"
+                    />
+                    {/* 내륙 지역 */}
+                    <path 
+                        d="M25,80 Q30,75 35,70 L40,65 Q45,60 50,55 L55,50 Q60,45 65,40 L70,35 Q75,30 80,25 L75,20 Q70,25 65,30 L60,35 Q55,40 50,45 L45,50 Q40,55 35,60 L30,65 Q25,70 25,80 Z" 
+                        fill="#4b5563"
+                    />
+                    {/* 주요 도시 표시 */}
+                    <circle cx="42" cy="35" r="1" fill="#fbbf24" />
+                    <text x="42" y="30" fontSize="3" fill="#e5e7eb" textAnchor="middle">서울</text>
+                    <circle cx="48" cy="55" r="1" fill="#fbbf24" />
+                    <text x="48" y="50" fontSize="3" fill="#e5e7eb" textAnchor="middle">대전</text>
+                    <circle cx="75" cy="75" r="1" fill="#fbbf24" />
+                    <text x="75" y="70" fontSize="3" fill="#e5e7eb" textAnchor="middle">부산</text>
+                    <circle cx="65" cy="60" r="1" fill="#fbbf24" />
+                    <text x="65" y="55" fontSize="3" fill="#e5e7eb" textAnchor="middle">구미</text>
+                    <circle cx="38" cy="40" r="1" fill="#fbbf24" />
+                    <text x="38" y="35" fontSize="3" fill="#e5e7eb" textAnchor="middle">인천</text>
+                </svg>
+                
+                {/* 사용자 아이콘 마커 */}
+                {userLocations.map((location, index) => (
+                    <div 
+                        key={location.user.id} 
+                        className="absolute group cursor-pointer transform -translate-x-1/2 -translate-y-1/2" 
+                        style={{ left: location.mapX, top: location.mapY }}
+                        onClick={() => setSelectedMapUser(selectedMapUser?.id === location.user.id ? null : location.user)}
+                    >
+                        <div className="relative">
+                            <UserAvatar user={location.user} size="sm" />
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                                <Trophy className="w-2 h-2 text-slate-900" />
+                            </div>
+                        </div>
+                        
+                        {/* 호버 정보 */}
+                        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                            <div className="bg-slate-900/90 px-2 py-1 rounded text-xs font-bold whitespace-nowrap">
+                                <div className="flex items-center gap-1">
+                                    <Trophy className="w-3 h-3 text-yellow-400"/>
+                                    <span>{location.user.name}</span>
+                                </div>
+                                <div className="text-slate-300 text-[10px]">{location.city} · {location.user.officialRank}</div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                
+                {/* 선택된 사용자 상세 정보 */}
+                {selectedMapUser && (
+                    <div className="absolute bottom-4 left-4 right-4 bg-slate-900/95 rounded-lg p-3 border border-slate-600">
+                        <div className="flex items-center gap-3">
+                            <UserAvatar user={selectedMapUser} size="md" />
+                            <div className="flex-1">
+                                <div className="font-bold text-white">{selectedMapUser.name}</div>
+                                <div className="text-sm text-slate-300">{selectedMapUser.dojang} · {selectedMapUser.location}</div>
+                                <div className="text-xs text-slate-400 flex gap-4">
+                                    <span>랭크: {selectedMapUser.platformRank}</span>
+                                    <span>공식단수: {selectedMapUser.officialRank}</span>
+                                    <span>{selectedMapUser.wins}승 {selectedMapUser.losses}패</span>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedMapUser(null)}
+                                className="text-slate-400 hover:text-white"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <>
         <div className="p-4 space-y-4 text-white">
             <h1 className="text-2xl font-bold">랭킹</h1>
             <Card>
-                <h3 className="font-semibold mb-3">지역별 TOP</h3>
-                <div className="bg-slate-700 h-64 rounded-lg relative">
-                    <svg width="100%" height="100%" viewBox="0 0 200 150">
-                        <path d="M 10 140 C 30 100, 50 80, 70 60 S 100 20, 130 10 L 190 10" stroke="#475569" strokeWidth="2" fill="none"/>
-                        <path d="M 40 130 C 60 100, 80 90, 100 80 S 130 60, 160 50 L 190 40" stroke="#475569" strokeWidth="2" fill="none"/>
-                    </svg>
-                    {playersOnMap.map((player, index) => (
-                        <div key={player.id} className="absolute group" style={mapPositions[index]}>
-                            <UserAvatar user={player} size="sm" />
-                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1 text-xs font-bold bg-slate-900/50 px-1.5 py-0.5 rounded whitespace-nowrap">
-                                <Trophy className="w-3 h-3 text-yellow-400"/>
-                                <span>{player.name}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <h3 className="font-semibold mb-3">지역별 TOP 검도인</h3>
+                <KoreaMapComponent />
             </Card>
             <div>
                 <div className="flex justify-center bg-slate-800 p-1 rounded-lg mb-2">
