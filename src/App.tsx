@@ -1525,7 +1525,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                     <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer rounded-lg overflow-hidden">
                         <div className="relative">
                             <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover" />
-                            <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-1">
+                            <div className="absolute inset-0 bg-black/50 flex flex-col justify-between items-start p-1">
                                 <span className="text-[8px] text-white">- 한승오의 미니도장</span>
                                 <div className="flex gap-3 text-xs text-white">
                                     <div className="relative flex items-center gap-1">
