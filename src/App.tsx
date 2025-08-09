@@ -146,7 +146,7 @@ const currentUser = {
   wins: 42,
   losses: 15,
   badges: ['First Match', 'Community Contributor', '5-Win Streak'],
-  avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=SO',
+  avatarUrl: 'https://placehold.co/100x100/1e293b/1e293b?text=',
   avatarItems: { jukdoCount: 3 },
   rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1500}, {date: '2024-05-01', rank: 1490}, {date: '2024-07-01', rank: 1510}],
   detailedStats: {
@@ -1510,37 +1510,38 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 <p className="text-xs text-slate-400">환영합니다, <span className="text-white font-medium">한승오님</span></p>
             </div>
             <Card className="py-2">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
                     <div className="flex items-center space-x-3">
                         <UserAvatar user={user} size="sm" onClick={() => onNavigate('profile')} />
-                        <div className="flex-1 text-sm">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-white font-bold text-lg">한승오, 4단, 대전, 주이회</span>
+                        <div className="text-sm">
+                            <div className="flex flex-wrap items-center gap-x-1 text-white font-bold text-lg">
+                                <span>한승오</span>
+                                <span>4단</span>
+                                <span>대전</span>
+                                <span>주이회</span>
                             </div>
                         </div>
                     </div>
-                <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3">
-                            <p className="text-sm font-semibold text-white">미니도장</p>
-                        </div>
+                    <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer rounded-lg overflow-hidden">
                         <div className="relative">
-                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover rounded-lg" />
-                            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-end justify-center pb-1">
-                                <div className="flex items-center gap-2 text-xs text-white">
-                                    <div className="flex items-center gap-1">
+                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover" />
+                            <div className="absolute inset-0 bg-black/50">
+                                <span className="absolute top-1 left-1 text-[8px] text-white">- 한승오의 미니도장</span>
+                                <div className="absolute bottom-1 left-1 flex gap-3 text-xs text-white">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <Heart size={10} className="text-red-400" />
-                                        <span>2.5k</span>
+                                        <span>좋아요 2.5k</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <MessageSquare size={10} className="text-blue-400" />
-                                        <span>124</span>
+                                        <span>댓글 124</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </Card>
         </div>
