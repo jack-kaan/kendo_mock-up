@@ -1513,6 +1513,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showMiniDojo, setShowMiniDojo] = React.useState(false);
+
   const bannerMessages = [
     '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
     '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
@@ -1590,6 +1591,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                         {msg}
                     </div>
                 </div>
+
             ))}
             {notifications.map(notification => (
                 <Card key={notification.id} onClick={() => onSelectNotification(notification)} className="bg-red-900/40 border-red-500/50 animate-pulse hover:bg-red-900/60 cursor-pointer">
