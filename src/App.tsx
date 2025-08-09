@@ -401,7 +401,25 @@ const miniDojoItems = [
 ];
 const mockPointHistory = [
     { date: '2025-07-21', change: '+10', reason: '김형섭님과 대련 승리' },
+    { date: '2025-07-20', change: '+5', reason: '일일 출석 보너스' },
     { date: '2025-07-19', change: '-8', reason: '이노연님과 대련 패배' },
+    { date: '2025-07-18', change: '+12', reason: '커뮤니티 글 작성' },
+    { date: '2025-07-17', change: '+7', reason: '댓글 호응' },
+    { date: '2025-07-16', change: '+20', reason: '주간 랭킹 보상' },
+    { date: '2025-07-15', change: '-5', reason: '기프트콘 교환' },
+    { date: '2025-07-14', change: '+3', reason: '일일 미션 완료' },
+    { date: '2025-07-13', change: '+9', reason: '대회 참여' },
+    { date: '2025-07-12', change: '+4', reason: '친구 초대 보너스' },
+    { date: '2025-07-11', change: '+8', reason: '훈련 참여' },
+    { date: '2025-07-10', change: '-3', reason: '패널티' },
+    { date: '2025-07-09', change: '+6', reason: '커뮤니티 댓글 작성' },
+    { date: '2025-07-08', change: '+5', reason: '연속 출석 보너스' },
+    { date: '2025-07-07', change: '+11', reason: '도전 과제 완료' },
+    { date: '2025-07-06', change: '+2', reason: '동영상 업로드' },
+    { date: '2025-07-05', change: '-4', reason: '신고 처리' },
+    { date: '2025-07-04', change: '+7', reason: '대련 승리' },
+    { date: '2025-07-03', change: '+3', reason: '일일 출석 보너스' },
+    { date: '2025-07-02', change: '+5', reason: '커뮤니티 글 작성' },
 ];
 const mockGoals = [
     { id: 1, text: '사범자격심사 도전', completed: true },
@@ -1327,29 +1345,44 @@ const GoalSettingModal = ({ onClose }) => {
     );
 };
 
-const PointHistoryModal = ({ history, onClose }) => (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
-            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
-                <h2 className="text-lg font-bold">포인트 누적 히스토리</h2>
-                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-            </div>
-            <div className="p-4 overflow-y-auto">
-                <div className="space-y-2">
-                    {history.map((item, index) => (
-                        <div key={index} className="bg-slate-700/50 p-3 rounded-lg flex justify-between items-center">
-                            <div>
-                                <p className="text-sm font-semibold">{item.reason}</p>
-                                <p className="text-xs text-slate-400">{item.date}</p>
+const PointHistoryModal = ({ history, onClose }) => {
+    const maxHistory = 20;
+    const [visibleCount, setVisibleCount] = React.useState(10);
+    const displayedHistory = history.slice(0, Math.min(visibleCount, maxHistory));
+    const canLoadMore = visibleCount < Math.min(maxHistory, history.length);
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">포인트 누적 히스토리</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto">
+                    <div className="space-y-2">
+                        {displayedHistory.map((item, index) => (
+                            <div key={index} className="bg-slate-700/50 p-3 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <p className="text-sm font-semibold">{item.reason}</p>
+                                    <p className="text-xs text-slate-400">{item.date}</p>
+                                </div>
+                                <span className={cn("font-bold", item.change.startsWith('+') ? 'text-green-400' : 'text-red-400')}>{item.change}P</span>
                             </div>
-                            <span className={cn("font-bold", item.change.startsWith('+') ? 'text-green-400' : 'text-red-400')}>{item.change}P</span>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                    {canLoadMore && (
+                        <button
+                            onClick={() => setVisibleCount(v => Math.min(v + 10, maxHistory))}
+                            className="mt-4 w-full bg-slate-700/50 hover:bg-slate-600/50 text-white font-semibold py-2 rounded-lg"
+                        >
+                            더보기
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const MatchActionModal = ({ opponent, type, onClose }) => {
     const title = type === 'cancel' ? '대련 취소' : '대련 연장';
@@ -1477,9 +1510,14 @@ const GoalChecklistModal = ({ goals, onClose }) => {
 
 const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
-  const [modal, setModal] = React.useState(null); 
+  const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showMiniDojo, setShowMiniDojo] = React.useState(false);
+
+  const bannerMessages = [
+    '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
+    '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
+  ];
 
   const openModal = (type, item = null) => { setModal(type); setSelectedItem(item); };
   const closeModal = () => { setModal(null); setSelectedItem(null); };
@@ -1491,6 +1529,8 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         case 'new_request': return `${opponentName}님으로부터 새로운 대련 신청이 도착했습니다.`;
         case 'declined': return `${opponentName}님이 대련을 거절했습니다.`;
         case 'changed': return `${opponentName}님이 대련 변경을 신청했습니다.`;
+        case 'comment': return `${opponentName}님으로부터 새로운 댓글이 달렸습니다.`;
+        case 'like': return `${opponentName}님으로부터 좋아요를 받았습니다.`;
         default: return `${opponentName}님으로부터 새로운 알림이 도착했습니다.`;
     }
   };
@@ -1545,8 +1585,15 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 </div>
             </Card>
         </div>
-
         <div className="space-y-2">
+            {bannerMessages.map((msg, idx) => (
+                <div key={idx} className="overflow-hidden">
+                    <div className="bg-yellow-400 text-black px-4 py-2 rounded animate-marquee whitespace-nowrap">
+                        {msg}
+                    </div>
+                </div>
+
+            ))}
             {notifications.map(notification => (
                 <Card key={notification.id} onClick={() => onSelectNotification(notification)} className="bg-red-900/40 border-red-500/50 animate-pulse hover:bg-red-900/60 cursor-pointer">
                     <div className="flex items-center gap-3">
