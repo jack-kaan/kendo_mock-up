@@ -258,24 +258,7 @@ const additionalLosses = Array.from({ length: 13 }, (_, i) => {
 const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...additionalLosses];
 
 
-const sparringCandidates = Array.from({ length: 20 }, (_, i) => {
-  const base = mockUsers[i % mockUsers.length];
-  const winRate = Math.round((base.wins / (base.wins + base.losses)) * 100);
-  return {
-    id: i + 1,
-    name: i < mockUsers.length ? base.name : `${base.name} ${Math.floor(i / mockUsers.length) + 1}`,
-    location: base.location,
-    officialRank: base.officialRank,
-    dojang: base.dojang,
-    experience: 3 + (i % 5),
-    winRate,
-    features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
-    strategy: ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
-  };
-}).sort((a, b) => b.winRate - a.winRate);
-
-
-const sparringCandidates = Array.from({ length: 20 }, (_, i) => {
+const sparringCandidatesList = Array.from({ length: 20 }, (_, i) => {
   const base = mockUsers[i % mockUsers.length];
   const winRate = Math.round((base.wins / (base.wins + base.losses)) * 100);
   return {
