@@ -275,6 +275,23 @@ const sparringCandidates = Array.from({ length: 20 }, (_, i) => {
 }).sort((a, b) => b.winRate - a.winRate);
 
 
+const sparringCandidates = Array.from({ length: 20 }, (_, i) => {
+  const base = mockUsers[i % mockUsers.length];
+  const winRate = Math.round((base.wins / (base.wins + base.losses)) * 100);
+  return {
+    id: i + 1,
+    name: i < mockUsers.length ? base.name : `${base.name} ${Math.floor(i / mockUsers.length) + 1}`,
+    location: base.location,
+    officialRank: base.officialRank,
+    dojang: base.dojang,
+    experience: 3 + (i % 5),
+    winRate,
+    features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
+    strategy: ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
+  };
+}).sort((a, b) => b.winRate - a.winRate);
+
+
 const communityPosts = [
   { id: 1, author: mockUsers[0], type: 'video', title: '기본 머리치기 연습 영상', content: '기본기 훈련은 아무리 강조해도 지나치지 않습니다. 함께 보며 의견 나뉀요.', likes: 128, comments: 15, timestamp: '2h ago' },
   { id: 2, author: currentUser, type: 'review', title: '이노연님과의 경기 후기', content: '세메(攻め)가 정말 날카로웠던 경기였습니다. 덕분에 많이 배울 수 있었습니다. 다음에는 오지와자(応じ技)를 더 연습해야겠습니다.', likes: 45, comments: 8, timestamp: '1d ago' },
@@ -1524,7 +1541,6 @@ const GoalChecklistModal = ({ goals, onClose }) => {
         </div>
     );
 };
-
 const OpponentSuggestionModal = ({ onClose }) => {
     const [visibleCount, setVisibleCount] = React.useState(10);
 
@@ -1683,7 +1699,6 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 </div>
             </Card>
         </div>
-
         <div className="space-y-2">
             {newsBanners.map((msg, idx) => (
                 <Card
@@ -1815,7 +1830,6 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   </>
   );
 };
-
 const MatchRequestModal = ({ user, onClose }) => {
     const [message, setMessage] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
