@@ -146,7 +146,7 @@ const currentUser = {
   wins: 42,
   losses: 15,
   badges: ['First Match', 'Community Contributor', '5-Win Streak'],
-  avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=SO',
+  avatarUrl: 'https://placehold.co/100x100/1e293b/1e293b?text=',
   avatarItems: { jukdoCount: 3 },
   rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1500}, {date: '2024-05-01', rank: 1490}, {date: '2024-07-01', rank: 1510}],
   detailedStats: {
@@ -256,6 +256,23 @@ const additionalLosses = Array.from({ length: 13 }, (_, i) => {
 });
 
 const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...additionalLosses];
+
+
+const sparringCandidatesList = Array.from({ length: 20 }, (_, i) => {
+  const base = mockUsers[i % mockUsers.length];
+  const winRate = Math.round((base.wins / (base.wins + base.losses)) * 100);
+  return {
+    id: i + 1,
+    name: i < mockUsers.length ? base.name : `${base.name} ${Math.floor(i / mockUsers.length) + 1}`,
+    location: base.location,
+    officialRank: base.officialRank,
+    dojang: base.dojang,
+    experience: 3 + (i % 5),
+    winRate,
+    features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
+    strategy: ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
+  };
+}).sort((a, b) => b.winRate - a.winRate);
 
 
 const communityPosts = [
@@ -1475,6 +1492,86 @@ const GoalChecklistModal = ({ goals, onClose }) => {
     );
 };
 
+
+const SparringStatusModal = ({ candidates, onClose }) => {
+  const [visibleCount, setVisibleCount] = React.useState(7);
+  const [requesting, setRequesting] = React.useState(null);
+  const visible = candidates.slice(0, visibleCount);
+
+  const openRequest = (candidate) => setRequesting(candidate);
+  const closeRequest = () => setRequesting(null);
+
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="relative bg-slate-800 rounded-2xl p-6 w-full max-w-md border border-slate-700 text-white max-h-[80vh] overflow-y-auto">
+        <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+        <h2 className="text-xl font-bold text-center mb-1">추천 대련상대</h2>
+        <p className="text-xs text-slate-400 mb-4 text-center">AI 알고리즘이 수학적으로 분석하여 추천한 상대 목록입니다.</p>
+        <div className="space-y-3">
+          {visible.map(c => (
+            <Card key={c.id} className="bg-slate-700/50 p-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center text-sm font-bold">
+                  {c.name.slice(0,2)}
+                </div>
+                <div className="flex-1 grid grid-cols-2 gap-1 text-xs">
+                  <div className="bg-slate-600/50 rounded p-1">
+                    <p className="font-semibold truncate">{c.name}</p>
+                    <p className="text-slate-300 truncate">{c.location} / {c.officialRank}</p>
+                  </div>
+                  <div className="bg-slate-600/50 rounded p-1">
+                    <p className="text-slate-300 truncate">{c.dojang}</p>
+                    <p className="text-slate-300">검력 {c.experience}년</p>
+                  </div>
+                  <div className="bg-slate-600/50 rounded p-1 col-span-2">
+                    <p className="text-slate-300 truncate">특징: {c.features.join(', ')}</p>
+                    <p className="text-slate-300 truncate">전략: {c.strategy.join(', ')}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-lg font-bold text-blue-400">{c.winRate}%</span>
+                  <button onClick={() => openRequest(c)} className="px-2 py-1 bg-blue-500 hover:bg-blue-600 rounded text-xs">대련신청</button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+        {visibleCount < candidates.length && (
+          <button onClick={() => setVisibleCount(v => Math.min(v + 10, candidates.length))} className="mt-4 w-full bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg">더보기</button>
+        )}
+      </div>
+
+      {requesting && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-60 p-4">
+          <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 text-white">
+            <h3 className="text-lg font-bold mb-4">{requesting.name}님께 대련 신청</h3>
+            <label className="block mb-2 text-sm">
+              날짜
+              <input type="date" className="mt-1 w-full bg-slate-700 rounded p-2 text-white" />
+            </label>
+            <label className="block mb-2 text-sm">
+              시간
+              <input type="time" className="mt-1 w-full bg-slate-700 rounded p-2 text-white" />
+            </label>
+            <label className="block mb-2 text-sm">
+              장소
+              <input type="text" className="mt-1 w-full bg-slate-700 rounded p-2 text-white" placeholder="예: 주이회 도장" />
+            </label>
+            <label className="block mb-4 text-sm">
+              신청메세지
+              <textarea className="mt-1 w-full bg-slate-700 rounded p-2 text-white" rows={3}></textarea>
+            </label>
+            <div className="flex justify-end gap-2">
+              <button onClick={closeRequest} className="px-3 py-1 bg-slate-600 rounded">취소</button>
+              <button onClick={closeRequest} className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded">발송</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
   const [modal, setModal] = React.useState(null); 
@@ -1510,37 +1607,38 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 <p className="text-xs text-slate-400">환영합니다, <span className="text-white font-medium">한승오님</span></p>
             </div>
             <Card className="py-2">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
                     <div className="flex items-center space-x-3">
                         <UserAvatar user={user} size="sm" onClick={() => onNavigate('profile')} />
-                        <div className="flex-1 text-sm">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-white font-bold text-lg">한승오, 4단, 대전, 주이회</span>
+                        <div className="text-sm">
+                            <div className="flex flex-wrap items-center gap-x-1 text-white font-bold text-lg">
+                                <span>한승오</span>
+                                <span>4단</span>
+                                <span>대전</span>
+                                <span>주이회</span>
                             </div>
                         </div>
                     </div>
-                <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3">
-                            <p className="text-sm font-semibold text-white">미니도장</p>
-                        </div>
+                    <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer rounded-lg overflow-hidden">
                         <div className="relative">
-                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover rounded-lg" />
-                            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-end justify-center pb-1">
-                                <div className="flex items-center gap-2 text-xs text-white">
-                                    <div className="flex items-center gap-1">
+                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover" />
+                            <div className="absolute inset-0 bg-black/50">
+                                <div className="absolute bottom-1 left-1 flex gap-3 text-xs text-white">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <Heart size={10} className="text-red-400" />
-                                        <span>2.5k</span>
+                                        <span>좋아요 2.5k</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <MessageSquare size={10} className="text-blue-400" />
-                                        <span>124</span>
+                                        <span>댓글 124</span>
                                     </div>
                                 </div>
+                                <span className="absolute bottom-1 w-full text-center text-[8px] text-white">- 한승오의 미니도장</span>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </Card>
         </div>
@@ -1650,7 +1748,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         <div>
             <h2 className="text-xl font-semibold mb-3">빠른 메뉴</h2>
             <div className="grid grid-cols-2 gap-4">
-                <Card onClick={() => onNavigate('match')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련 상대 찾기</span></Card>
+                <Card onClick={() => openModal('sparring')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련상태찾기</span></Card>
                 <Card onClick={() => onNavigate('community')} className="items-center justify-center flex flex-col text-center"><Users className="w-8 h-8 text-green-400 mb-2" /><span className="font-semibold">커뮤니티</span></Card>
             </div>
         </div>
@@ -1663,6 +1761,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
     {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
     {modal === 'quest_detail' && <QuestDetailModal quest={selectedItem} onClose={closeModal} />}
     {modal === 'goal_check' && <GoalChecklistModal goals={mockGoals} onClose={closeModal} />}
+    {modal === 'sparring' && <SparringStatusModal candidates={sparringCandidatesList} onClose={closeModal} />}
     {showMiniDojo && <MiniDojoModal onClose={() => setShowMiniDojo(false)} />}
   </>
   );
