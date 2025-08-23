@@ -1508,6 +1508,84 @@ const GoalChecklistModal = ({ goals, onClose }) => {
     );
 };
 
+const OpponentSuggestionModal = ({ onClose }) => {
+    const [visibleCount, setVisibleCount] = React.useState(10);
+
+    const opponents = React.useMemo(() => {
+        const extras = Array.from({ length: 12 }, (_, i) => ({
+            ...mockUsers[i % mockUsers.length],
+            id: 100 + i,
+            name: `추천상대${i + 1}`,
+            experienceYears: 1 + Math.floor(Math.random() * 10),
+        }));
+        const pool = [...mockUsers, ...extras];
+        return pool.map(u => {
+            const diff = currentUser.platformRank - u.platformRank;
+            const winRate = Math.max(5, Math.min(95, Math.round(50 + diff / 10)));
+            const characteristics = [
+                u.characteristics[0] || '분석력이 뛰어남',
+                u.characteristics[1] || '속도가 빠름',
+                u.characteristics[2] || '체력이 좋음',
+                '집중력이 강함',
+            ];
+            const strategies = [
+                '초반 주도권을 잡으세요',
+                '상대의 빈틈을 공략하세요',
+                '지속적인 압박으로 체력을 소모시키세요',
+                '기회가 오면 과감히 치세요',
+            ];
+            const years = u.experienceYears || (1 + Math.floor(Math.random() * 10));
+            return { ...u, winRate, aiCharacteristics: characteristics, aiStrategies: strategies, experienceYears: years };
+        }).sort((a, b) => b.winRate - a.winRate);
+    }, []);
+
+    const displayed = opponents.slice(0, visibleCount);
+    const canLoadMore = visibleCount < opponents.length;
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh] relative">
+                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                <h2 className="text-xl font-bold text-center my-4">AI 추천 대련 상대</h2>
+                <div className="px-4 overflow-y-auto space-y-4">
+                    {displayed.map(op => (
+                        <div key={op.id} className="bg-slate-700/50 rounded-lg p-4">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="font-bold">{op.name}</p>
+                                    <p className="text-sm text-slate-400">{op.location} / {op.dojang}</p>
+                                    <p className="text-sm text-slate-300">단: {op.officialRank} | 검력: {op.experienceYears}년</p>
+                                </div>
+                                <span className="text-blue-400 font-bold text-lg">{op.winRate}%</span>
+                            </div>
+                            <div className="mt-2">
+                                <p className="text-sm font-semibold">특징</p>
+                                {op.aiCharacteristics.map((c, i) => (
+                                    <p key={i} className="text-sm text-slate-300">- {c}</p>
+                                ))}
+                            </div>
+                            <div className="mt-2">
+                                <p className="text-sm font-semibold">승리 전략</p>
+                                {op.aiStrategies.map((s, i) => (
+                                    <p key={i} className="text-sm text-slate-300">- {s}</p>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                    {canLoadMore && (
+                        <button
+                            onClick={() => setVisibleCount(v => v + 10)}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg mb-4"
+                        >
+                            더보기
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
   const [modal, setModal] = React.useState(null);
@@ -1700,7 +1778,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         <div>
             <h2 className="text-xl font-semibold mb-3">빠른 메뉴</h2>
             <div className="grid grid-cols-2 gap-4">
-                <Card onClick={() => onNavigate('match')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련 상대 찾기</span></Card>
+                <Card onClick={() => openModal('ai_opponent')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련 상대 찾기</span></Card>
                 <Card onClick={() => onNavigate('community')} className="items-center justify-center flex flex-col text-center"><Users className="w-8 h-8 text-green-400 mb-2" /><span className="font-semibold">커뮤니티</span></Card>
             </div>
         </div>
@@ -1713,6 +1791,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
     {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
     {modal === 'quest_detail' && <QuestDetailModal quest={selectedItem} onClose={closeModal} />}
     {modal === 'goal_check' && <GoalChecklistModal goals={mockGoals} onClose={closeModal} />}
+    {modal === 'ai_opponent' && <OpponentSuggestionModal onClose={closeModal} />}
     {showMiniDojo && <MiniDojoModal onClose={() => setShowMiniDojo(false)} />}
   </>
   );
