@@ -373,7 +373,7 @@ const shopItems = [
     { id: 9, name: "전죽 죽도 세트 (37,38,39)", price: "240,000원", imageUrl: "https://placehold.co/400x400/dc2626/fef2f2?text=Jukdo+Set" },
     { id: 10, name: "검도 이론 도서 세트", price: "89,000원", imageUrl: "https://placehold.co/400x400/8b5cf6/f3e8ff?text=Kendo+Books" }
 ];
-const questList = [
+const initialQuestList = [
     { id: 1, text: "손목 10점 따기", current: 1, target: 10, unit: "점", reward: 500, selected: true, description: '대련에서 상대방의 손목을 가격하여 10점을 획득하세요.' },
     { id: 2, text: "연속 5승 달성하기", current: 2, target: 5, unit: "승", reward: 800, selected: false, description: '대련에서 5연승을 달성하세요. 패배 시 카운트가 초기화됩니다.' },
     { id: 3, text: "머리치기 마스터", current: 15, target: 20, unit: "점", reward: 600, selected: false, description: '대련에서 머리치기로 20점을 획득하세요.' },
@@ -388,7 +388,75 @@ const questList = [
     { id: 12, text: "기본기 마스터", current: 25, target: 50, unit: "회", reward: 800, selected: false, description: '소메우치(기본베기) 연습을 50회 완료하세요.' }
 ];
 
-const questCompletionBonus = { totalQuests: questList.length, completionBonus: 5000, currentCompleted: 2 };
+const QUEST_COMPLETION_BONUS = 5000;
+
+const locationCoordinates = {
+    '서울': { lat: 37.5665, lng: 126.9780 },
+    '대전': { lat: 36.3504, lng: 127.3845 },
+    '부산': { lat: 35.1796, lng: 129.0756 },
+    '구미': { lat: 36.1195, lng: 128.3446 },
+    '인천': { lat: 37.4563, lng: 126.7052 },
+};
+
+const toRadians = (value) => (value * Math.PI) / 180;
+
+const calculateDistanceKm = (locationA, locationB) => {
+    const pointA = locationCoordinates[locationA];
+    const pointB = locationCoordinates[locationB];
+
+    if (!pointA || !pointB) {
+        return Number.POSITIVE_INFINITY;
+    }
+
+    const R = 6371; // Earth radius in km
+    const dLat = toRadians(pointB.lat - pointA.lat);
+    const dLon = toRadians(pointB.lng - pointA.lng);
+    const lat1 = toRadians(pointA.lat);
+    const lat2 = toRadians(pointB.lat);
+
+    const a = Math.sin(dLat / 2) ** 2 + Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+};
+
+const GEMINI_MODEL_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+
+const extractGeminiText = (result) => {
+    const content = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+    return typeof content === 'string' ? content : null;
+};
+
+const callGemini = async (prompt) => {
+    const apiKey = import.meta.env?.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+        return { ok: false, reason: 'missing_api_key' };
+    }
+
+    try {
+        const payload = { contents: [{ role: 'user', parts: [{ text: prompt }] }] };
+        const response = await fetch(`${GEMINI_MODEL_URL}?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            return { ok: false, reason: 'network_error' };
+        }
+
+        const result = await response.json();
+        const message = extractGeminiText(result);
+        if (!message) {
+            return { ok: false, reason: 'empty_response' };
+        }
+
+        return { ok: true, message };
+    } catch (error) {
+        console.error('Error calling Gemini API:', error);
+        return { ok: false, reason: 'exception' };
+    }
+};
 
 const miniDojoComments = [
     { id: 1, author: '익명', text: '완전 싸이월드네요!', timestamp: '5분 전', replies: [
@@ -400,8 +468,8 @@ const miniDojoComments = [
         { id: 41, author: '익명', text: '저도 문의합니다!', timestamp: '18분 전' },
         { id: 42, author: '익명', text: '미니도장 쇼핑몰에서 살 수 있어요~', timestamp: '17분 전' }
     ] },
-    { id: 5, author: '익명', text: '저도 미니도장 만들고 싶어요~', timestamp: '25뵔 전', replies: [] },
-    { id: 6, author: '익명', text: '호구 대신 전시한 것도 재밌네요!', timestamp: '30뵔 전', replies: [] }
+    { id: 5, author: '익명', text: '저도 미니도장 만들고 싶어요~', timestamp: '25분 전', replies: [] },
+    { id: 6, author: '익명', text: '호구 대신 전시한 것도 재밌네요!', timestamp: '30분 전', replies: [] }
 ];
 
 const miniDojoItems = [
@@ -1106,10 +1174,10 @@ const AvatarSpaceModal = ({ user, onClose }) => {
                             <div className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">NEW</div>
                         </div>
                         <div className="text-xs text-slate-300">
-                            나만의 미니도장을 꿔라보세요! 죽도, 도복, 호구부터 인테리어까지!
+                            나만의 미니도장을 꾸며보세요! 죽도, 도복, 호구부터 인테리어까지!
                         </div>
                         <div className="text-xs text-orange-400 font-semibold mt-1">
-                            클릭해서 둥러보기 ▶
+                            클릭해서 둘러보기 ▶
                         </div>
                     </div>
                     
@@ -1260,17 +1328,26 @@ const GifticonModal = ({ onClose }) => (
     </div>
 );
 
-const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
-    const [selectedQuests, setSelectedQuests] = React.useState(activeQuests);
+const QuestSelectionModal = ({ onClose, quests, onSave, completionSummary }) => {
+    const [selectedIds, setSelectedIds] = React.useState(() => quests.filter(q => q.selected).map(q => q.id));
 
-    const handleToggle = (quest) => {
-        setSelectedQuests(prev => {
-            const isSelected = prev.some(q => q.id === quest.id);
-            if (isSelected) { return prev.filter(q => q.id !== quest.id); }
-            if (prev.length < 10) { return [...prev, quest]; }
+    const handleToggle = (questId) => {
+        setSelectedIds(prev => {
+            const isSelected = prev.includes(questId);
+            if (isSelected) {
+                return prev.filter(id => id !== questId);
+            }
+            if (prev.length < 10) {
+                return [...prev, questId];
+            }
             return prev;
         });
     };
+
+    const selectedQuests = React.useMemo(() => quests.filter(q => selectedIds.includes(q.id)), [quests, selectedIds]);
+    const totalReward = selectedQuests.reduce((sum, quest) => sum + quest.reward, 0);
+    const selectionRatio = quests.length === 0 ? 0 : Math.round((selectedIds.length / Math.min(10, quests.length)) * 100);
+    const completionRatio = completionSummary.totalQuests === 0 ? 0 : Math.round((completionSummary.completedQuests / completionSummary.totalQuests) * 100);
 
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -1286,18 +1363,18 @@ const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
                             <span className="text-sm font-semibold text-yellow-300">모든 퀘스트 완수 보너스</span>
                         </div>
                         <div className="text-xs text-slate-300">
-                            전체 {questCompletionBonus.totalQuests}개 퀘스트 완성 시 <span className="text-yellow-400 font-bold">+{questCompletionBonus.completionBonus.toLocaleString()}P</span> 추가 지급!
+                            전체 {completionSummary.totalQuests}개 퀘스트 완성 시 <span className="text-yellow-400 font-bold">+{completionSummary.completionBonus.toLocaleString()}P</span> 추가 지급!
                         </div>
                         <div className="text-xs text-slate-400 mt-1">
-                            현재 진행률: {questCompletionBonus.currentCompleted}/{questCompletionBonus.totalQuests} ({Math.round(questCompletionBonus.currentCompleted / questCompletionBonus.totalQuests * 100)}%)
+                            현재 진행률: {completionSummary.completedQuests}/{completionSummary.totalQuests} ({completionRatio}%)
                         </div>
                     </div>
                     <p className="text-xs text-slate-400 mb-2">최대 10개의 퀘스트를 선택할 수 있습니다.</p>
-                    {questList.map(quest => {
-                        const isSelected = selectedQuests.some(q => q.id === quest.id);
-                        const canSelectMore = selectedQuests.length < 10;
+                    {quests.map(quest => {
+                        const isSelected = selectedIds.includes(quest.id);
+                        const canSelectMore = selectedIds.length < 10;
                         return (
-                            <button key={quest.id} onClick={() => handleToggle(quest)} disabled={!isSelected && !canSelectMore}
+                            <button key={quest.id} onClick={() => handleToggle(quest.id)} disabled={!isSelected && !canSelectMore}
                                 className={cn("w-full text-left p-3 rounded-lg flex items-start gap-3 transition-colors", "bg-slate-700/50 text-slate-200 hover:bg-slate-700", !canSelectMore && !isSelected && "opacity-60 cursor-not-allowed")}>
                                 {isSelected ? <CheckSquare className="w-5 h-5 text-blue-400 mt-0.5" /> : <Square className="w-5 h-5 text-slate-500 mt-0.5" />}
                                 <div className="flex-1">
@@ -1315,13 +1392,15 @@ const QuestSelectionModal = ({ onClose, activeQuests, onSave }) => {
                 </div>
                 <div className="p-4 flex-shrink-0 border-t border-slate-700">
                     <div className="mb-3 text-center text-sm text-slate-300">
-                        선택된 퀘스트: <span className="font-bold text-blue-400">{selectedQuests.length}/10</span>
+                        선택된 퀘스트: <span className="font-bold text-blue-400">{selectedIds.length}/10</span>
                         <br />
-                        예상 리워드: <span className="font-bold text-yellow-400">{selectedQuests.reduce((sum, quest) => sum + quest.reward, 0).toLocaleString()}P</span>
+                        예상 리워드: <span className="font-bold text-yellow-400">{totalReward.toLocaleString()}P</span>
+                        <br />
+                        선택 비율: <span className="font-bold text-slate-200">{selectionRatio}%</span>
                     </div>
                     <div className="flex gap-3">
                         <button onClick={onClose} className="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">취소</button>
-                        <button onClick={() => onSave(selectedQuests)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">저장</button>
+                        <button onClick={() => onSave(selectedIds)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">저장</button>
                     </div>
                 </div>
             </div>
@@ -1607,6 +1686,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showMiniDojo, setShowMiniDojo] = React.useState(false);
+  const [quests, setQuests] = React.useState(() => initialQuestList.map(quest => ({ ...quest })));
   const newsBanners = [
     '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
     '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
@@ -1618,7 +1698,16 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
 
   const openModal = (type, item = null) => { setModal(type); setSelectedItem(item); };
   const closeModal = () => { setModal(null); setSelectedItem(null); };
-  
+  const handleQuestSelectionSave = (selectedIds) => {
+    setQuests(prev => prev.map(quest => ({ ...quest, selected: selectedIds.includes(quest.id) })));
+    closeModal();
+  };
+  const completionSummary = React.useMemo(() => ({
+    totalQuests: quests.length,
+    completionBonus: QUEST_COMPLETION_BONUS,
+    completedQuests: quests.filter(q => q.current >= q.target).length,
+  }), [quests]);
+
   const getNotificationMessage = (notification) => {
     if (!notification) return '';
     const opponentName = notification.opponent.name;
@@ -1633,11 +1722,14 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
   };
 
   const getDday = (dateString) => {
-      const today = new Date('2025-07-21');
+      const today = new Date();
       const matchDate = new Date(dateString);
-      const diffTime = matchDate - today;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffTime = matchDate.setHours(0,0,0,0) - today.setHours(0,0,0,0);
+      const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return Math.max(0, days);
   };
+
+  const selectedQuests = quests.filter(q => q.selected);
 
   return (
   <>
@@ -1751,7 +1843,7 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 <button onClick={() => openModal('quest_select')} className="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg transition-colors">퀘스트 설정</button>
             </div>
             <div className="space-y-3">
-                {questList.filter(q => q.selected).map(quest => (
+                {selectedQuests.map(quest => (
                      <Card key={quest.id} onClick={() => openModal('quest_detail', quest)} className="bg-gradient-to-r from-green-500 to-teal-600 border-green-500">
                         <div className="flex justify-between items-center">
                             <p className="font-bold">{quest.text}</p>
@@ -1802,7 +1894,14 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
     </div>
     {modal === 'goal_edit' && <GoalSettingModal onClose={closeModal} />}
     {modal === 'gift' && <GifticonModal onClose={closeModal} />}
-    {modal === 'quest_select' && <QuestSelectionModal onClose={closeModal} activeQuests={questList.filter(q => q.selected)} onSave={() => {}} />}
+    {modal === 'quest_select' && (
+        <QuestSelectionModal
+            onClose={closeModal}
+            quests={quests}
+            onSave={handleQuestSelectionSave}
+            completionSummary={completionSummary}
+        />
+    )}
     {modal === 'avatar_space' && <AvatarSpaceModal user={user} onClose={closeModal} />}
     {modal === 'points' && <PointHistoryModal history={mockPointHistory} onClose={closeModal} />}
     {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
@@ -1828,32 +1927,17 @@ const MatchRequestModal = ({ user, onClose }) => {
         const date = new Date().toISOString().split('T')[0];
         const prompt = `너는 검도를 즐기는 예의 바른 검도인이야. ${user.name}님에게 대련을 신청하려고 해. 정중하고 친근한 어조로 대련 신청 메시지를 작성해줘. 날짜는 ${date} 근처로 제안해줘.`;
 
-        try {
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            const apiKey = "" 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-              const text = result.candidates[0].content.parts[0].text;
-              setMessage(text);
-            } else {
-              setMessage("메시지 생성에 실패했습니다. 다시 시도해주세요.");
-            }
-        } catch (error) {
-            console.error("Error generating message:", error);
-            setMessage("오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
-        } finally {
-            setIsLoading(false);
+        const result = await callGemini(prompt);
+
+        if (result.ok) {
+            setMessage(result.message);
+        } else if (result.reason === 'missing_api_key') {
+            setMessage('API 키가 설정되지 않아 준비된 예시 메시지를 제공합니다.\n이번 주 중 시간 괜찮으시면 대련 한 판 어떠실까요?');
+        } else {
+            setMessage('메시지 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
         }
+
+        setIsLoading(false);
     };
 
     const handleSendRequest = () => { setIsSent(true); setTimeout(() => { onClose(); }, 1500); };
@@ -1929,12 +2013,35 @@ const MatchScreen = () => {
 
     const sortedUsers = [...mockUsers].sort((a, b) => {
         switch(filter) {
-            case 'experience': return (b.wins + b.losses) - (a.wins + a.losses);
-            case 'rank': return parseInt(b.officialRank) - parseInt(a.officialRank);
-            case 'score': return b.platformRank - a.platformRank;
-            case 'wins': return b.wins - a.wins;
-            case 'matches': return (b.wins + b.losses) - (a.wins + a.losses);
-            case 'distance': default: return Math.abs(a.platformRank - currentUser.platformRank) - Math.abs(b.platformRank - currentUser.platformRank);
+            case 'experience':
+                return (b.wins + b.losses) - (a.wins + a.losses);
+            case 'rank':
+                return parseInt(b.officialRank) - parseInt(a.officialRank);
+            case 'score':
+                return b.platformRank - a.platformRank;
+            case 'wins':
+                return b.wins - a.wins;
+            case 'matches':
+                return (b.wins + b.losses) - (a.wins + a.losses);
+            case 'distance':
+            default: {
+                const distanceA = calculateDistanceKm(currentUser.location, a.location);
+                const distanceB = calculateDistanceKm(currentUser.location, b.location);
+                const isFiniteA = Number.isFinite(distanceA);
+                const isFiniteB = Number.isFinite(distanceB);
+
+                if (!isFiniteA && !isFiniteB) {
+                    return 0;
+                }
+                if (!isFiniteA) {
+                    return 1;
+                }
+                if (!isFiniteB) {
+                    return -1;
+                }
+
+                return distanceA - distanceB;
+            }
         }
     });
 
@@ -1950,7 +2057,11 @@ const MatchScreen = () => {
                     ))}
                 </div>
                 <div className="space-y-3">
-                    {sortedUsers.map(user => (
+                    {sortedUsers.map(user => {
+                        const distanceKm = calculateDistanceKm(currentUser.location, user.location);
+                        const hasDistance = Number.isFinite(distanceKm);
+
+                        return (
                         <Card key={user.id} className="flex items-center space-x-4">
                             <UserAvatar user={user} />
                             <div className="flex-grow">
@@ -1960,10 +2071,14 @@ const MatchScreen = () => {
                                 </div>
                                 <p className="text-sm text-slate-400 flex items-center"><MapPin className="w-3 h-3 mr-1.5" />{user.location} / {user.dojang}</p>
                                 <p className="text-sm text-slate-300 mt-1">{user.platformRank}P ({user.wins}승 / {user.losses}패)</p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    {hasDistance ? `나와의 거리 약 ${distanceKm.toFixed(1)}km` : '거리 정보가 없습니다'}
+                                </p>
                             </div>
                             <button onClick={() => setModalUser(user)} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm transition-colors flex-shrink-0">신청</button>
                         </Card>
-                    ))}
+                    );
+                    })}
                 </div>
             </div>
             {modalUser && <MatchRequestModal user={modalUser} onClose={() => setModalUser(null)} />}
@@ -1975,7 +2090,13 @@ const RankingTrendModal = ({ user, onClose }) => {
     const data = user.rankHistory;
     const minRank = Math.min(...data.map(p => p.rank));
     const maxRank = Math.max(...data.map(p => p.rank));
-    const points = data.map((p, i) => `${i * 60},${90 - (p.rank - minRank) / (maxRank - minRank) * 80}`).join(' ');
+    const getY = (rank) => {
+        if (maxRank === minRank) {
+            return 50;
+        }
+        return 90 - ((rank - minRank) / (maxRank - minRank)) * 80;
+    };
+    const points = data.map((p, i) => `${i * 60},${getY(p.rank)}`).join(' ');
 
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -1991,7 +2112,7 @@ const RankingTrendModal = ({ user, onClose }) => {
                 <div className="h-40">
                     <svg viewBox="0 0 180 100" className="w-full h-full">
                         <polyline fill="none" stroke="#3b82f6" strokeWidth="2" points={points} />
-                        {data.map((p, i) => <circle key={i} cx={i * 60} cy={90 - (p.rank - minRank) / (maxRank - minRank) * 80} r="3" fill="#3b82f6" />)}
+                        {data.map((p, i) => <circle key={i} cx={i * 60} cy={getY(p.rank)} r="3" fill="#3b82f6" />)}
                     </svg>
                 </div>
                 <div className="flex justify-between text-xs text-slate-500 mt-1">
@@ -2295,43 +2416,35 @@ const CommunityScreen = () => {
 const MatchDetailModal = ({ match, onClose }) => {
     const [aiCommentary, setAiCommentary] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
+    const scoreDetail = match.scoreDetail ?? { myScore: [], opponentScore: [] };
 
     const handleGenerateCommentary = async () => {
         setIsLoading(true);
-        setAiCommentary("AI가 경기 내용을 분석하고 있습니다...");
+        setAiCommentary('AI가 경기 내용을 분석하고 있습니다...');
+
+        if (!match.result || !match.score) {
+            setAiCommentary('경기 결과가 확정된 이후에 해설을 생성할 수 있습니다.');
+            setIsLoading(false);
+            return;
+        }
 
         const winner = match.result === 'win' ? currentUser.name : match.opponent.name;
-        const myScoreText = match.scoreDetail.myScore.length > 0 ? match.scoreDetail.myScore.join(', ') : "득점 없음";
-        const opponentScoreText = match.scoreDetail.opponentScore.length > 0 ? match.scoreDetail.opponentScore.join(', ') : "득점 없음";
+        const myScoreText = scoreDetail.myScore.length > 0 ? scoreDetail.myScore.join(', ') : '득점 없음';
+        const opponentScoreText = scoreDetail.opponentScore.length > 0 ? scoreDetail.opponentScore.join(', ') : '득점 없음';
 
         const prompt = `너는 검도 해설가야. 다음 경기 결과에 대한 해설을 작성해줘. 경기는 ${currentUser.name} 선수와 ${match.opponent.name} 선수 간에 치러졌어. 최종 스코어는 ${match.score}로 ${winner} 선수가 승리했어. ${currentUser.name} 선수는 ${myScoreText} 부위로 득점했고, ${match.opponent.name} 선수는 ${opponentScoreText} 부위로 득점했어. 이 정보를 바탕으로 박진감 넘치는 경기 해설을 작성해줘.`;
 
-        try {
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            const apiKey = "" 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-              const text = result.candidates[0].content.parts[0].text;
-              setAiCommentary(text);
-            } else {
-              setAiCommentary("해설 생성에 실패했습니다. 다시 시도해주세요.");
-            }
-        } catch (error) {
-            console.error("Error generating commentary:", error);
-            setAiCommentary("오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
-        } finally {
-            setIsLoading(false);
+        const result = await callGemini(prompt);
+
+        if (result.ok) {
+            setAiCommentary(result.message);
+        } else if (result.reason === 'missing_api_key') {
+            setAiCommentary(`${currentUser.name} 선수의 빠른 한판이 빛난 경기였습니다. API 키가 설정되지 않아 기본 해설을 제공합니다.`);
+        } else {
+            setAiCommentary('해설 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
         }
+
+        setIsLoading(false);
     };
 
     const PrivacySettingItem = ({ enabled, label }) => (
@@ -2751,32 +2864,17 @@ const AIAnalysisModal = ({ user, onClose }) => {
 - **주요 기록**:
 ${interestingStatsText}`;
 
-            try {
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "" 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                  const text = result.candidates[0].content.parts[0].text;
-                  setAnalysis(text);
-                } else {
-                  setAnalysis("분석 데이터를 생성하는 데 실패했습니다. 다시 시도해주세요.");
-                }
-            } catch (error) {
-                console.error("Error generating analysis:", error);
-                setAnalysis("오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
-            } finally {
-                setIsLoading(false);
+            const result = await callGemini(prompt);
+
+            if (result.ok) {
+                setAnalysis(result.message);
+            } else if (result.reason === 'missing_api_key') {
+                setAnalysis('API 키가 설정되지 않아 준비된 분석을 제공합니다. 현재 수비적 성향과 손목 득점 비중이 높아 안정감 있는 플레이가 돋보이며, 허리와 찌름 득점을 보완하면 더 완성도 높은 경기를 펼칠 수 있습니다.');
+            } else {
+                setAnalysis('분석 데이터를 생성하는 데 실패했습니다. 다시 시도해주세요.');
             }
+
+            setIsLoading(false);
         };
 
         generateAnalysis();
