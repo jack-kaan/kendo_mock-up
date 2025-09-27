@@ -2910,5 +2910,3 @@ const KendoAppPage = () => {
     </main>
   );
 };
-
-export default KendoAppPage;
