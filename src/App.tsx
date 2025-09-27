@@ -146,7 +146,7 @@ const currentUser = {
   wins: 42,
   losses: 15,
   badges: ['First Match', 'Community Contributor', '5-Win Streak'],
-  avatarUrl: 'https://placehold.co/100x100/1e293b/94a3b8?text=SO',
+  avatarUrl: 'https://placehold.co/100x100/1e293b/1e293b?text=',
   avatarItems: { jukdoCount: 3 },
   rankHistory: [{date: '2024-01-01', rank: 1480}, {date: '2024-03-01', rank: 1500}, {date: '2024-05-01', rank: 1490}, {date: '2024-07-01', rank: 1510}],
   detailedStats: {
@@ -256,6 +256,23 @@ const additionalLosses = Array.from({ length: 13 }, (_, i) => {
 });
 
 const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...additionalLosses];
+
+
+const sparringCandidatesList = Array.from({ length: 20 }, (_, i) => {
+  const base = mockUsers[i % mockUsers.length];
+  const winRate = Math.round((base.wins / (base.wins + base.losses)) * 100);
+  return {
+    id: i + 1,
+    name: i < mockUsers.length ? base.name : `${base.name} ${Math.floor(i / mockUsers.length) + 1}`,
+    location: base.location,
+    officialRank: base.officialRank,
+    dojang: base.dojang,
+    experience: 3 + (i % 5),
+    winRate,
+    features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
+    strategy: ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
+  };
+}).sort((a, b) => b.winRate - a.winRate);
 
 
 const communityPosts = [
@@ -401,7 +418,25 @@ const miniDojoItems = [
 ];
 const mockPointHistory = [
     { date: '2025-07-21', change: '+10', reason: '김형섭님과 대련 승리' },
+    { date: '2025-07-20', change: '+5', reason: '일일 출석 보너스' },
     { date: '2025-07-19', change: '-8', reason: '이노연님과 대련 패배' },
+    { date: '2025-07-18', change: '+12', reason: '커뮤니티 글 작성' },
+    { date: '2025-07-17', change: '+7', reason: '댓글 호응' },
+    { date: '2025-07-16', change: '+20', reason: '주간 랭킹 보상' },
+    { date: '2025-07-15', change: '-5', reason: '기프트콘 교환' },
+    { date: '2025-07-14', change: '+3', reason: '일일 미션 완료' },
+    { date: '2025-07-13', change: '+9', reason: '대회 참여' },
+    { date: '2025-07-12', change: '+4', reason: '친구 초대 보너스' },
+    { date: '2025-07-11', change: '+8', reason: '훈련 참여' },
+    { date: '2025-07-10', change: '-3', reason: '패널티' },
+    { date: '2025-07-09', change: '+6', reason: '커뮤니티 댓글 작성' },
+    { date: '2025-07-08', change: '+5', reason: '연속 출석 보너스' },
+    { date: '2025-07-07', change: '+11', reason: '도전 과제 완료' },
+    { date: '2025-07-06', change: '+2', reason: '동영상 업로드' },
+    { date: '2025-07-05', change: '-4', reason: '신고 처리' },
+    { date: '2025-07-04', change: '+7', reason: '대련 승리' },
+    { date: '2025-07-03', change: '+3', reason: '일일 출석 보너스' },
+    { date: '2025-07-02', change: '+5', reason: '커뮤니티 글 작성' },
 ];
 const mockGoals = [
     { id: 1, text: '사범자격심사 도전', completed: true },
@@ -1327,29 +1362,44 @@ const GoalSettingModal = ({ onClose }) => {
     );
 };
 
-const PointHistoryModal = ({ history, onClose }) => (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
-            <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
-                <h2 className="text-lg font-bold">포인트 누적 히스토리</h2>
-                <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
-            </div>
-            <div className="p-4 overflow-y-auto">
-                <div className="space-y-2">
-                    {history.map((item, index) => (
-                        <div key={index} className="bg-slate-700/50 p-3 rounded-lg flex justify-between items-center">
-                            <div>
-                                <p className="text-sm font-semibold">{item.reason}</p>
-                                <p className="text-xs text-slate-400">{item.date}</p>
+const PointHistoryModal = ({ history, onClose }) => {
+    const maxHistory = 20;
+    const [visibleCount, setVisibleCount] = React.useState(10);
+    const displayedHistory = history.slice(0, Math.min(visibleCount, maxHistory));
+    const canLoadMore = visibleCount < Math.min(maxHistory, history.length);
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-sm border border-slate-700 text-white flex flex-col max-h-[90vh]">
+                <div className="flex justify-between items-center p-4 border-b border-slate-700 flex-shrink-0">
+                    <h2 className="text-lg font-bold">포인트 누적 히스토리</h2>
+                    <button onClick={onClose} className="p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <div className="p-4 overflow-y-auto">
+                    <div className="space-y-2">
+                        {displayedHistory.map((item, index) => (
+                            <div key={index} className="bg-slate-700/50 p-3 rounded-lg flex justify-between items-center">
+                                <div>
+                                    <p className="text-sm font-semibold">{item.reason}</p>
+                                    <p className="text-xs text-slate-400">{item.date}</p>
+                                </div>
+                                <span className={cn("font-bold", item.change.startsWith('+') ? 'text-green-400' : 'text-red-400')}>{item.change}P</span>
                             </div>
-                            <span className={cn("font-bold", item.change.startsWith('+') ? 'text-green-400' : 'text-red-400')}>{item.change}P</span>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                    {canLoadMore && (
+                        <button
+                            onClick={() => setVisibleCount(v => Math.min(v + 10, maxHistory))}
+                            className="mt-4 w-full bg-slate-700/50 hover:bg-slate-600/50 text-white font-semibold py-2 rounded-lg"
+                        >
+                            더보기
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const MatchActionModal = ({ opponent, type, onClose }) => {
     const title = type === 'cancel' ? '대련 취소' : '대련 연장';
@@ -1474,12 +1524,93 @@ const GoalChecklistModal = ({ goals, onClose }) => {
         </div>
     );
 };
+const OpponentSuggestionModal = ({ onClose }) => {
+    const [visibleCount, setVisibleCount] = React.useState(10);
+
+    const opponents = React.useMemo(() => {
+        const extras = Array.from({ length: 12 }, (_, i) => ({
+            ...mockUsers[i % mockUsers.length],
+            id: 100 + i,
+            name: `추천상대${i + 1}`,
+            experienceYears: 1 + Math.floor(Math.random() * 10),
+        }));
+        const pool = [...mockUsers, ...extras];
+        return pool.map(u => {
+            const diff = currentUser.platformRank - u.platformRank;
+            const winRate = Math.max(5, Math.min(95, Math.round(50 + diff / 10)));
+            const characteristics = [
+                u.characteristics[0] || '분석력이 뛰어남',
+                u.characteristics[1] || '속도가 빠름',
+                u.characteristics[2] || '체력이 좋음',
+                '집중력이 강함',
+            ];
+            const strategies = [
+                '초반 주도권을 잡으세요',
+                '상대의 빈틈을 공략하세요',
+                '지속적인 압박으로 체력을 소모시키세요',
+                '기회가 오면 과감히 치세요',
+            ];
+            const years = u.experienceYears || (1 + Math.floor(Math.random() * 10));
+            return { ...u, winRate, aiCharacteristics: characteristics, aiStrategies: strategies, experienceYears: years };
+        }).sort((a, b) => b.winRate - a.winRate);
+    }, []);
+
+    const displayed = opponents.slice(0, visibleCount);
+    const canLoadMore = visibleCount < opponents.length;
+
+    return (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh] relative">
+                <button onClick={onClose} className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white"><X size={20} /></button>
+                <h2 className="text-xl font-bold text-center my-4">AI 추천 대련 상대</h2>
+                <div className="px-4 overflow-y-auto space-y-4">
+                    {displayed.map(op => (
+                        <div key={op.id} className="bg-slate-700/50 rounded-lg p-4">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="font-bold">{op.name}</p>
+                                    <p className="text-sm text-slate-400">{op.location} / {op.dojang}</p>
+                                    <p className="text-sm text-slate-300">단: {op.officialRank} | 검력: {op.experienceYears}년</p>
+                                </div>
+                                <span className="text-blue-400 font-bold text-lg">{op.winRate}%</span>
+                            </div>
+                            <div className="mt-2">
+                                <p className="text-sm font-semibold">특징</p>
+                                {op.aiCharacteristics.map((c, i) => (
+                                    <p key={i} className="text-sm text-slate-300">- {c}</p>
+                                ))}
+                            </div>
+                            <div className="mt-2">
+                                <p className="text-sm font-semibold">승리 전략</p>
+                                {op.aiStrategies.map((s, i) => (
+                                    <p key={i} className="text-sm text-slate-300">- {s}</p>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                    {canLoadMore && (
+                        <button
+                            onClick={() => setVisibleCount(v => v + 10)}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg mb-4"
+                        >
+                            더보기
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
   const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showMiniDojo, setShowMiniDojo] = React.useState(false);
+  const newsBanners = [
+    '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
+    '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
+  ];
   const bannerMessages = [
     '새로운소식, 정승연님으로부터 새로운 댓글이 달렸습니다',
     '새로운소식, 이정연님으로부터 좋아요를 받았습니다',
@@ -1516,48 +1647,49 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 <p className="text-xs text-slate-400">환영합니다, <span className="text-white font-medium">한승오님</span></p>
             </div>
             <Card className="py-2">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
                     <div className="flex items-center space-x-3">
                         <UserAvatar user={user} size="sm" onClick={() => onNavigate('profile')} />
-                        <div className="flex-1 text-sm">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-white font-bold text-lg">한승오, 4단, 대전, 주이회</span>
+                        <div className="text-sm">
+                            <div className="flex flex-wrap items-center gap-x-1 text-white font-bold text-lg">
+                                <span>한승오</span>
+                                <span>4단</span>
+                                <span>대전</span>
+                                <span>주이회</span>
                             </div>
                         </div>
                     </div>
-                <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer p-2 rounded-lg hover:bg-slate-700/50">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3">
-                            <p className="text-sm font-semibold text-white">미니도장</p>
-                        </div>
+                    <div onClick={() => setShowMiniDojo(true)} className="cursor-pointer rounded-lg overflow-hidden">
                         <div className="relative">
-                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover rounded-lg" />
-                            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-end justify-center pb-1">
-                                <div className="flex items-center gap-2 text-xs text-white">
-                                    <div className="flex items-center gap-1">
+                            <img src={dojoImage} alt="미니도장" className="w-full aspect-video object-cover" />
+                            <div className="absolute inset-0 bg-black/50 flex flex-col justify-between items-start p-1">
+                                <span className="text-[8px] text-white">- 한승오의 미니도장</span>
+                                <div className="flex gap-3 text-xs text-white">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <Heart size={10} className="text-red-400" />
-                                        <span>2.5k</span>
+                                        <span>좋아요 2.5k</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="relative flex items-center gap-1">
+                                        <span className="absolute -top-3 left-0 text-[8px] text-yellow-300 font-bold animate-pulse">[new]</span>
                                         <MessageSquare size={10} className="text-blue-400" />
-                                        <span>124</span>
+                                        <span>댓글 124</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
             </Card>
         </div>
-
         <div className="space-y-2">
-            {bannerMessages.map((msg, idx) => (
-                <div key={idx} className="overflow-hidden">
-                    <div className="bg-yellow-400 text-black px-4 py-2 rounded animate-marquee whitespace-nowrap">
-                        {msg}
-                    </div>
-                </div>
+            {newsBanners.map((msg, idx) => (
+                <Card
+                    key={idx}
+                    className="bg-yellow-400/40 border-yellow-500/50 text-black overflow-hidden"
+                >
+                    <p className="text-sm font-bold whitespace-nowrap animate-marquee">{msg}</p>
+                </Card>
             ))}
             {notifications.map(notification => (
                 <Card key={notification.id} onClick={() => onSelectNotification(notification)} className="bg-red-900/40 border-red-500/50 animate-pulse hover:bg-red-900/60 cursor-pointer">
@@ -1571,7 +1703,6 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
                 </Card>
             ))}
         </div>
-
         <Card onClick={() => openModal('points')} className="bg-gradient-to-br from-blue-600 to-blue-800 border-blue-500">
             <div className="flex justify-between items-start">
                 <div>
@@ -1663,9 +1794,10 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
         <div>
             <h2 className="text-xl font-semibold mb-3">빠른 메뉴</h2>
             <div className="grid grid-cols-2 gap-4">
-                <Card onClick={() => onNavigate('match')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련 상대 찾기</span></Card>
+                <Card onClick={() => openModal('ai_opponent')} className="items-center justify-center flex flex-col text-center"><Swords className="w-8 h-8 text-blue-400 mb-2" /><span className="font-semibold">대련 상대 찾기</span></Card>
                 <Card onClick={() => onNavigate('community')} className="items-center justify-center flex flex-col text-center"><Users className="w-8 h-8 text-green-400 mb-2" /><span className="font-semibold">커뮤니티</span></Card>
             </div>
+
         </div>
     </div>
     {modal === 'goal_edit' && <GoalSettingModal onClose={closeModal} />}
@@ -1676,11 +1808,11 @@ const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) =
     {modal === 'opponent' && <OpponentDetailModal opponent={selectedItem} onClose={closeModal} />}
     {modal === 'quest_detail' && <QuestDetailModal quest={selectedItem} onClose={closeModal} />}
     {modal === 'goal_check' && <GoalChecklistModal goals={mockGoals} onClose={closeModal} />}
+    {modal === 'ai_opponent' && <OpponentSuggestionModal onClose={closeModal} />}
     {showMiniDojo && <MiniDojoModal onClose={() => setShowMiniDojo(false)} />}
   </>
   );
 };
-
 const MatchRequestModal = ({ user, onClose }) => {
     const [message, setMessage] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
