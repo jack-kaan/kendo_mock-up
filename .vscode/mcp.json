@@ -1,0 +1,14 @@
+{
+  "inputs": [
+    { "type": "promptString", "id": "context7-key", "description": "Context7 API Key", "password": true }
+  ],
+  "servers": {
+    "context7": {
+      "type": "stdio",
+      "command": "/bin/bash",
+      "args": ["-lc","source ~/.nvm/nvm.sh && npx -y @upstash/context7-mcp --api-key ${input:context7-key}"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
+
