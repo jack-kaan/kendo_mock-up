@@ -259,7 +259,7 @@ const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...addition
 
 
     location: base.location,
-    officialRank: base.officialRank,
+    officialRank; base.officialRank,
     dojang: base.dojang,
     experience: 3 + (i % 5),
     winRate,
@@ -3048,3 +3048,4 @@ const KendoAppPage = () => {
 };
 
 export default KendoAppPage;
+
