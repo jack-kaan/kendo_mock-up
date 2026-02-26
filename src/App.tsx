@@ -260,7 +260,7 @@ const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...addition
 
     location: base.location,
     officialRank; base.officialRank,
-    dojang: base.dojang,
+    dojang; base.dojang,
     experience: 3 + (i % 5),
     winRate,
     features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
@@ -3048,4 +3048,5 @@ const KendoAppPage = () => {
 };
 
 export default KendoAppPage;
+
 
