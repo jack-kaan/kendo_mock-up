@@ -1574,7 +1574,6 @@ const OpponentSuggestionModal = ({ onClose }) => {
 
     const displayed = opponents.slice(0, visibleCount);
     const canLoadMore = visibleCount < opponents.length;
-
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-800 rounded-2xl w-full max-w-md border border-slate-700 text-white flex flex-col max-h-[90vh] relative">
@@ -1619,7 +1618,7 @@ const OpponentSuggestionModal = ({ onClose }) => {
     );
 };
 
-const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
+  const HomeScreen = ({ user, onNavigate, notifications, onSelectNotification }) => {
   const upcomingMatches = mockMatchHistory.filter(m => m.status === 'upcoming');
   const [modal, setModal] = React.useState(null);
   const [selectedItem, setSelectedItem] = React.useState(null);
