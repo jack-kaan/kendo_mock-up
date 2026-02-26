@@ -263,8 +263,8 @@ const mockMatchHistory = [...initialMatchHistory, ...additionalWins, ...addition
     dojang; base.dojang,
     experience; 3 + (i % 5),
     winRate,
-    features: ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
-    strategy: ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
+    features; ['공격적 스타일', '빠른 발놀림', '침착한 수비', '강한 체력'],
+    strategy; ['초반 적극 공세', '중반 페이스 조절', '상대 빈틈 분석', '마지막에 결정타'],
 
 
 const communityPosts = [
@@ -3048,6 +3048,7 @@ const KendoAppPage = () => {
 };
 
 export default KendoAppPage;
+
 
 
 
